@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import type {AppProps} from 'next/app'
-import Layouts from "@/../../components/Layouts";
+import Layouts from "../src/components/layouts/Layouts";
 import {ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import {CacheProvider, EmotionCache} from '@emotion/react';
-import theme from '../styles/theme';
-import createEmotionCache from "../styles/createEmotionCache";
+import theme from '../src/styles/theme';
+import createEmotionCache from "../src/styles/createEmotionCache";
 import {SessionProvider} from "next-auth/react"
 import type { Session } from "next-auth"
 
@@ -29,6 +29,5 @@ export default function App({Component, pageProps, emotionCache = clientSideEmot
                 </CacheProvider>
             </SessionProvider>
         </>
-
     )
 }
