@@ -15,10 +15,10 @@ interface MyAppProps extends AppProps<{session: Session}> {
     emotionCache?: EmotionCache
 }
 
-export default function App({Component, pageProps: {session, ...pageProps}, emotionCache = clientSideEmotionCache}: MyAppProps) {
+export default function App({Component, pageProps, emotionCache = clientSideEmotionCache}: MyAppProps) {
     return (
         <>
-            <SessionProvider session={session}>
+            <SessionProvider session={pageProps.session}>
                 <CacheProvider value={emotionCache}>
                     <ThemeProvider theme={theme}>
                         <Layouts>
