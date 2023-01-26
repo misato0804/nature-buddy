@@ -1,4 +1,5 @@
 import {Html, Head, Main, NextScript} from 'next/document'
+import Hero from "@/components/layouts/Hero";
 
 export default function Document() {
     return (
@@ -7,7 +8,7 @@ export default function Document() {
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
             </Head>
             <body>
-                <Main/>
+                <main/>
                 <NextScript/>
             </body>
         </Html>
