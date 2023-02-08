@@ -1,4 +1,4 @@
-import {gql} from "apollo-server"
+import {gql} from "apollo-server-micro"
 
 const typeDefs = gql`
     scalar Date
@@ -42,7 +42,8 @@ const typeDefs = gql`
     }
     
     type Query {
-        user(id: ID!): User!
+        getAllUsers: [User]
+        getUser(id: ID!): User!
         Activity(id: ID!): Activity!
         ActivitiesByGenre(genre: String): [Activity]
     }
@@ -71,6 +72,8 @@ const typeDefs = gql`
     
     type Mutation {
         createUser(input: CreateUserInput): User!
-        createActivity(input: CreateActivity): Activity!
+#        createActivity(input: CreateActivity): Activity!
     }
 `
+
+export default typeDefs
