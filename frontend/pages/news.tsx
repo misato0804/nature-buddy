@@ -1,5 +1,6 @@
 import { getSession, useSession } from "next-auth/react";
 import {GetServerSideProps, GetStaticProps} from 'next';
+import {Button} from "@mui/material";
 
 type Data = {
     data: string
@@ -12,6 +13,7 @@ const News = ({ data } : Data) => {
     return (
         <div>
             <h1>Blog Page { data }</h1>
+            <Button variant="contained" color="error" size="small">Super</Button>
         </div>
     );
 };
