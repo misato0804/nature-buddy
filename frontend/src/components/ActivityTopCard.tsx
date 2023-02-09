@@ -1,7 +1,8 @@
-import {Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
+import {Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
 import {FC} from "react";
 import Link from "next/link";
-import {StaticImageData} from "next/image";
+import Image, {StaticImageData} from "next/image";
+import {auto} from "@popperjs/core";
 
 type CardProps = {
     title: string,
@@ -9,28 +10,21 @@ type CardProps = {
     link: string,
 }
 
-const ActivityTopCard : FC<CardProps> = ({title, activityImage, link}: CardProps) => {
+
+const ActivityTopCard: FC<CardProps> = ({title, activityImage, link}: CardProps) => {
     return (
-        <Card sx={{ maxWidth: 345 }}>
-            <CardActionArea>
-                <CardMedia
-                    component="img"
-                    height="140"
-                    image="/assets/images/hiking.jpg"
-                    alt="green iguana"
+        <>
+            <Box sx={{width: "300px"}}>
+                <Image
+                    src={activityImage}
+                    alt={title}
+                    width={300}
                 />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        {title}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary">
-                    <Link href={`/activities/${title}`}>{title}</Link>
-                </Button>
-            </CardActions>
-        </Card>
+            </Box>
+            <Link href={title} style={{textDecoration:"none", color: "black"}}>
+                <Typography variant="h4">{title}</Typography>
+            </Link>
+        </>
     );
 };
 

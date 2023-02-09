@@ -31,6 +31,26 @@ export const activitiesList : Activity[] = [
         id: 4,
         title: "Snow activities",
         image: snowactivity
+    },
+    {
+        id: 5,
+        title: "Road trip",
+        image: snowactivity
+    },
+    {
+        id: 6,
+        title: "Fishing",
+        image: snowactivity
+    },
+    {
+        id: 7,
+        title: "Picnicking",
+        image: snowactivity
+    },
+    {
+        id: 8,
+        title: "Exploring town",
+        image: snowactivity
     }
 ]
 
