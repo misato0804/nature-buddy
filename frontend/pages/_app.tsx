@@ -7,27 +7,30 @@ import {CacheProvider, EmotionCache} from '@emotion/react';
 import theme from '../src/styles/theme';
 import createEmotionCache from "../src/styles/createEmotionCache";
 import {SessionProvider} from "next-auth/react"
-import type { Session } from "next-auth"
+import type {Session} from "next-auth"
 
 const clientSideEmotionCache = createEmotionCache();
 
-interface MyAppProps extends AppProps<{session: Session}> {
+interface MyAppProps extends AppProps<{ session: Session }> {
     emotionCache?: EmotionCache
 }
 
 export default function App({Component, pageProps, emotionCache = clientSideEmotionCache}: MyAppProps) {
     return (
         <>
-            <SessionProvider session={pageProps.session}>
-                <CacheProvider value={emotionCache}>
-                    <ThemeProvider theme={theme}>
+            <CacheProvider value={emotionCache}>
+                <Head>
+                    <meta name="viewport" content="initial-scale=1, width=device-width" />
+                </Head>
+                <ThemeProvider theme={theme}>
+                    <SessionProvider session={pageProps.session}>
                         <Layouts>
                             <CssBaseline/>
                             <Component {...pageProps} />
                         </Layouts>
-                    </ThemeProvider>
-                </CacheProvider>
-            </SessionProvider>
+                    </SessionProvider>
+                </ThemeProvider>
+            </CacheProvider>
         </>
     )
 }
