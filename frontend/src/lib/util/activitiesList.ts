@@ -1,7 +1,7 @@
-import hiking from "../../public/assets/images/hikingpic.jpg";
-import biking from "../../public/assets/images/biking.jpg";
-import climbing from "../../public/assets/images/climbing.jpg";
-import snowactivity from "../../public/assets/images/snowactivity.jpg";
+import hiking from "../../../public/assets/images/hikingpic.jpg";
+import biking from "../../../public/assets/images/biking.jpg";
+import climbing from "../../../public/assets/images/climbing.jpg";
+import snowactivity from "../../../public/assets/images/snowactivity.jpg";
 
 import {StaticImageData} from "next/image";
 

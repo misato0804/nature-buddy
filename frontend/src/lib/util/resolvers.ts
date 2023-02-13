@@ -1,4 +1,4 @@
-import userModel from "@/util/schema";
+import userModel from "@/lib/util/schema";
 
 const resolvers = {
     Query: {

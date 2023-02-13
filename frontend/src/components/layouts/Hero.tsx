@@ -7,7 +7,7 @@ import hiking from "../../../public/assets/images/hiking.jpg"
 import biking from "../../../public/assets/images/pexels-photomix-company-172484.jpg"
 import {FC, useEffect, useState} from "react";
 import {Screen} from "../../styles/styles_components/hero.style";
-import {activitiesList} from "@/util/activitiesList";
+import {activitiesList} from "@/lib/util/activitiesList";
 import ActivityTopCard from "@/components/ActivityTopCard";
 
 const Hero: FC = () => {
