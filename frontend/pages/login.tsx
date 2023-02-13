@@ -15,7 +15,7 @@ const Login = () => {
         <div>
             <button onClick={() => signIn()}>Signin</button>
             <button onClick={() => signOut()}>SignOut</button>
-            { session ? <h1>Hello</h1> : <h2>bAD</h2> }
+            { session ? <h1>Hello{session.user!.name}</h1> : <h2>bAD</h2> }
         </div>
     );
 };

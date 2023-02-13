@@ -1,14 +1,37 @@
-import {Grid, makeStyles, Typography} from "@mui/material";
-import Image, {StaticImageData} from 'next/image';
+import {Container, Grid, Typography, Box} from "@mui/material";
+import Image from 'next/image';
 import camping from "../../../public/assets/images/climbing.jpg"
 import picnic
     from "../../../public/assets/images/group-laughing-girls-happily-spending-time-beautiful-picnic-with-little-dog-park.jpg"
 import hiking from "../../../public/assets/images/hiking.jpg"
 import biking from "../../../public/assets/images/pexels-photomix-company-172484.jpg"
 import {FC, useEffect, useState} from "react";
-import {Screen} from "../../styles/styles_components/hero.style";
 import {activitiesList} from "@/lib/util/activitiesList";
 import ActivityTopCard from "@/components/ActivityTopCard";
+import {styled} from "@mui/system";
+
+const HeroTop = styled('div')({
+    position: "relative",
+    width: "100%"
+});
+
+const styles = {
+    imageStyle: {
+        objectFit: "cover",
+        height: "80%",
+        width: "100%"
+    }
+}
+
+const activitiesCard = activitiesList.map((activity) => (
+    <Grid item key={activity.id} xs={3}>
+        <ActivityTopCard
+            title={activity.title}
+            activityImage={activity.image}
+            link={activity.title}
+        />
+    </Grid>
+))
 
 const Hero: FC = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0)
@@ -22,33 +45,44 @@ const Hero: FC = () => {
     }, [])
 
     return (
-        <section className="hero">
-            <Screen>
+        <Box component="main" className="hero">
+            <HeroTop>
                 <Image
                     src={imagesArr[currentIndex]}
                     alt="outdoor pictures"
                     layout="responsive"
+                    style={styles.imageStyle as React.CSSProperties}
                 />
                 <Typography
+                    textAlign="center"
                     variant="h1"
-                    className="hero-title"
-                    sx={{fontSize: {xs: "1.6rem", md: 30}}}
-                >Your buddy is around you
+                    sx={{
+                        width: "100%",
+                        backgroundColor: "#ECCC77",
+                        "-webkit-text-fill-color": "transparent",
+                        "-webkit-background-clip": "text",
+                        position: "absolute",
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)'
+                    }}>
+                    Your buddy is around you
                 </Typography>
-            </Screen>
-            <Typography　align={"center"}>Top popular activities</Typography>
-            <Grid container spacing={2} mt={4}>
-                {activitiesList.map(activity =>
-                    <Grid key={activity.id} item >
-                        <ActivityTopCard
-                            title={activity.title}
-                            activityImage={activity.image}
-                            link={activity.title}
-                        />
+            </HeroTop>
+            <Box my={4}>
+                <Container maxWidth="xl">
+                    <Typography variant="h2">Top popular activities</Typography>
+                    <Grid container rowSpacing={2}>
+                        {activitiesCard}
                     </Grid>
-                )}
-            </Grid>
-        </section>
+                </Container>
+            </Box>
+            <Box>
+                <Typography variant="h2" textAlign="center">How nature buddy works</Typography>
+
+            </Box>
+
+        </Box>
     );
 };
 
