@@ -5,7 +5,7 @@ const Login = () => {
 
     const {data: session, status} = useSession()
 
-    console.log(status)
+    console.log(signIn)
 
     useEffect(() => {
         console.log({session})
@@ -13,9 +13,9 @@ const Login = () => {
 
     return (
         <div>
-            <button onClick={() => signIn()}>Signin</button>
+            <button onClick={() => signIn("google")}>Signin</button>
             <button onClick={() => signOut()}>SignOut</button>
-            { session ? <h1>Hello</h1> : <h2>bAD</h2> }
+            { session ? <h1>Hello{session.user!.name}</h1> : <h2>bAD</h2> }
         </div>
     );
 };

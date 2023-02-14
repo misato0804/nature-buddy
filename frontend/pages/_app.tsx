@@ -4,12 +4,11 @@ import Layouts from "../src/components/layouts/Layouts";
 import {ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import {CacheProvider, EmotionCache} from '@emotion/react';
-// import theme from '../src/styles/theme';
+import theme from '../src/styles/theme';
 import createEmotionCache from "../src/styles/createEmotionCache";
 import {SessionProvider} from "next-auth/react"
 import type {Session} from "next-auth"
-import { unstable_createMuiStrictModeTheme } from '@mui/material/styles';
-const theme = unstable_createMuiStrictModeTheme();
+import {UserProvider} from "@/lib/context/userInputContext";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -26,10 +25,12 @@ export default function App({Component, pageProps, emotionCache = clientSideEmot
                 </Head>
                 <ThemeProvider theme={theme}>
                     <SessionProvider session={pageProps.session}>
-                        <Layouts>
-                            <CssBaseline/>
-                            <Component {...pageProps} />
-                        </Layouts>
+                        <UserProvider>
+                            <Layouts>
+                                <CssBaseline/>
+                                <Component {...pageProps} />
+                            </Layouts>
+                        </UserProvider>
                     </SessionProvider>
                 </ThemeProvider>
             </CacheProvider>

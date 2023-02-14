@@ -1,15 +1,17 @@
 import {Html, Head, Main, NextScript} from 'next/document'
-import Hero from "@/components/layouts/Hero";
+import Hero from "@/components/hero-page/Hero";
 
 export default function Document() {
     return (
         <Html lang="en">
             <Head>
-                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
+                <script
+                    async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWpYi0SxFbY9ko7pVvW9aEkvAycSNt9io&libraries=places"
+                ></script>
             </Head>
             <body>
-                <main/>
-                <NextScript/>
+            <Main/>
+            <NextScript/>
             </body>
         </Html>
     )

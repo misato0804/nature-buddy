@@ -22,6 +22,17 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please confirm your password'],
         //    validate
+    },
+    location: {
+        type: {
+            type: String,
+            coordinates: [Number]
+        },
+        required: [true, 'Location must be provided']
+    },
+    interests: {
+        type: [String],
+        required: [true, 'Interests must be provided']
     }
 })
 
