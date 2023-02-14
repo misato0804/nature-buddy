@@ -7,7 +7,7 @@ import hiking from "../../../public/assets/images/hiking.jpg"
 import biking from "../../../public/assets/images/pexels-photomix-company-172484.jpg"
 import {FC, useEffect, useState} from "react";
 import {activitiesList} from "@/lib/util/activitiesList";
-import ActivityTopCard from "@/components/ActivityTopCard";
+import ActivityTopCard from "@/components/hero-page/ActivityTopCard";
 import {styled} from "@mui/system";
 
 const HeroTop = styled('div')({
@@ -79,7 +79,6 @@ const Hero: FC = () => {
             </Box>
             <Box>
                 <Typography variant="h2" textAlign="center">How nature buddy works</Typography>
-
             </Box>
 
         </Box>

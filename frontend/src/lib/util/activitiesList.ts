@@ -53,12 +53,3 @@ export const activitiesList : Activity[] = [
         image: snowactivity
     }
 ]
-
-
-    //
-    //
-    //
-    // "Road trip",
-    // "Fishing",
-    // "Picnicking",
-    // "Exploring town"

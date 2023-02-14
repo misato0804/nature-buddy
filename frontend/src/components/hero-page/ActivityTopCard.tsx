@@ -21,7 +21,7 @@ const ActivityTopCard: FC<CardProps> = ({title, activityImage, link}: CardProps)
                     width={300}
                 />
             </Box>
-            <Link href={title} style={{textDecoration:"none", color: "black"}}>
+            <Link href={"/activity/" + title.toLocaleLowerCase()} style={{textDecoration:"none", color: "black"}}>
                 <Typography variant="h4">{title}</Typography>
             </Link>
         </>
