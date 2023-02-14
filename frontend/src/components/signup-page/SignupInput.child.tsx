@@ -71,6 +71,7 @@ const SignupInputChild = ({setChildComponent}: Props) => {
                     label="Email"
                     variant="outlined"
                     value={email}
+                    onChange={(e) => setEmail(e.target.value) }
                 />
                 <FormControl sx={{width: '100%'}} variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>

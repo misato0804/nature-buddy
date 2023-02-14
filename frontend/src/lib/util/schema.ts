@@ -23,18 +23,17 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Please confirm your password'],
         //    validate
     },
-    location: {
-        type: {
-            type: String,
-            coordinates: [Number]
-        },
-        required: [true, 'Location must be provided']
-    },
     interests: {
         type: [String],
         required: [true, 'Interests must be provided']
-    }
+    },
+    location: {
+        type: {type: String, default: 'Point'},
+        coordinates: {type: [Number], required: true},
+    },
 })
+
+UserSchema.index({location:'2dsphere'})
 
 const userModel = mongoose.models.User || mongoose.model("User", UserSchema)
 export default userModel;

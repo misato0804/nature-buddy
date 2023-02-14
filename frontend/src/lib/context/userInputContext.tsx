@@ -1,19 +1,28 @@
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useState} from "react";
 
+type Props = {
+    children: ReactNode
+};
+
+type Location = {
+    lat: number,
+    lng: number
+}
+
 type userContext = {
     name: string,
     email: string,
     password: string,
     passwordConfirm: string,
-    setName:Dispatch<SetStateAction<string>>;
-    setEmail:Dispatch<SetStateAction<string>>;
-    setPassword:Dispatch<SetStateAction<string>>;
-    setPasswordConfirm:Dispatch<SetStateAction<string>>;
+    location:Location | undefined,
+    interests: string[],
+    setInterests: Dispatch<SetStateAction<string[]>>,
+    setLocation: Dispatch<SetStateAction<Location | undefined>>,
+    setName:Dispatch<SetStateAction<string>>,
+    setEmail:Dispatch<SetStateAction<string>>,
+    setPassword:Dispatch<SetStateAction<string>>,
+    setPasswordConfirm:Dispatch<SetStateAction<string>>,
 }
-
-type Props = {
-    children: ReactNode
-};
 
 const userContext = createContext({} as userContext)
 
@@ -26,6 +35,8 @@ export const UserProvider = ({children}: Props) => {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [passwordConfirm, setPasswordConfirm] = useState<string>("")
+    const [location, setLocation] = useState<Location | undefined>()
+    const [interests, setInterests] = useState<string[]>([])
 
     return(
         <userContext.Provider value={{
@@ -36,7 +47,11 @@ export const UserProvider = ({children}: Props) => {
             password,
             setPassword,
             passwordConfirm,
-            setPasswordConfirm
+            setPasswordConfirm,
+            location,
+            setLocation,
+            interests,
+            setInterests
         }}>
             {children}
         </userContext.Provider>
