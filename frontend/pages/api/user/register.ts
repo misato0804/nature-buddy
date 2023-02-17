@@ -1,18 +1,23 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import userModel from "@/lib/util/schema";
+import dbConnect from "@/lib/util/mongo";
+import {User} from "@/lib/util/schema";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    try {
-        console.log(req.body)
-        const newUser = req.body
-        // console.log(newUser)
-        res.status(200).json({
-            status: "Success",
-            data: {
-                newUser
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    const {method} = req;
+    await dbConnect()
+    switch (method) {
+        case "POST":
+            try{ 
+                const user = await User.create(req.body)
+                res.status(200).json({
+                    status: "success",
+                    data: user
+                })
+            } catch (e: any) {
+                console.log(e)
             }
-        })
-    } catch (e: any) {
-        console.log(e.message)
     }
 }
+
+export default handler;
