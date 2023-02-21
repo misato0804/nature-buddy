@@ -18,20 +18,11 @@ const HeroTop = styled('div')({
 const styles = {
     imageStyle: {
         objectFit: "cover",
-        height: "80%",
+        objectPosition: "top",
+        height: "80vh",
         width: "100%"
     }
 }
-
-const activitiesCard = activitiesList.map((activity) => (
-    <Grid item key={activity.id} xs={3}>
-        <ActivityTopCard
-            title={activity.title}
-            activityImage={activity.image}
-            link={activity.title}
-        />
-    </Grid>
-))
 
 const Hero: FC = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0)
@@ -50,7 +41,6 @@ const Hero: FC = () => {
                 <Image
                     src={imagesArr[currentIndex]}
                     alt="outdoor pictures"
-                    layout="responsive"
                     style={styles.imageStyle as React.CSSProperties}
                 />
                 <Typography
@@ -59,8 +49,8 @@ const Hero: FC = () => {
                     sx={{
                         width: "100%",
                         backgroundColor: "#ECCC77",
-                        "-webkit-text-fill-color": "transparent",
-                        "-webkit-background-clip": "text",
+                        WebkitTextFillColor: "transparent",
+                        WebkitBackgroundClip: "text",
                         position: "absolute",
                         top: '50%',
                         left: '50%',
@@ -69,11 +59,19 @@ const Hero: FC = () => {
                     Your buddy is around you
                 </Typography>
             </HeroTop>
-            <Box my={4}>
+            <Box my={4} >
                 <Container maxWidth="xl">
                     <Typography variant="h2">Top popular activities</Typography>
-                    <Grid container rowSpacing={2}>
-                        {activitiesCard}
+                    <Grid container rowSpacing={4} sx={{ marginX: "auto", marginY: 4, display: "flex", justifyContent: "center"}}>
+                        {activitiesList.map((activity) => (
+                            <Grid item key={activity.id} sm={6} md={5} lg={4} sx={{display: "flex", justifyContent: "center"}}>
+                                <ActivityTopCard
+                                    title={activity.title}
+                                    activityImage={activity.image}
+                                    link={activity.title}
+                                />
+                            </Grid>
+                        ))}
                     </Grid>
                 </Container>
             </Box>

@@ -31,7 +31,6 @@ const SignupLocationChild = ({setChildComponent}: Props) => {
         setValue(e.target.value);
     };
 
-
     const handleSelect =
         ({description}: { description: string }) => () => {
             // When user selects a place, we can replace the keyword without request data from API

@@ -2,7 +2,6 @@ import {NextApiRequest, NextApiResponse} from "next";
 import dbConnect from "@/lib/util/mongo";
 import {User} from "@/lib/util/schema";
 
-
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const {method} = req;
     await dbConnect()

@@ -52,4 +52,16 @@ theme.typography.h4 = {
     },
 }
 
+theme.typography.h5 = {
+    fontFamily: prompt.style.fontFamily,
+    fontSize: '.6rem',
+    fontWeight: 500,
+    [theme.breakpoints.up("sm")]: {
+        fontSize: ".8rem",
+    },
+    [theme.breakpoints.up("md")]: {
+        fontSize: "1.0rem"
+    },
+}
+
 export default theme;

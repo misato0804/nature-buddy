@@ -31,7 +31,7 @@ const AuthButton = ({logo, company, color, onClick}: AuthButton) => {
     return (
         <Box sx={buttonContainerStyle(color)} onClick={onClick}>
             <Box sx={{display: "flex", justifyContent: "center", alignItems: "center",}}>{logo}</Box>
-            <Typography variant="subtitle1" fontWeight="700" ml={3}>Create with {company}</Typography>
+            <Typography variant="subtitle1" fontWeight="700" ml={3}>{company}</Typography>
         </Box>
     );
 };

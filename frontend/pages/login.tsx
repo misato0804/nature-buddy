@@ -1,22 +1,32 @@
-import {signIn, signOut, useSession} from "next-auth/react"
-import {useEffect} from "react";
+import {useSession} from "next-auth/react"
+import {useEffect, useState} from "react";
+import mountain from "../public/assets/images/climbing.jpg";
+import FormTemplate from "@/components/elements/organisms/FormTemplate";
+import LoginTopChild from "@/components/login-page/LoginTop.child";
+import LoginInputChild from "@/components/login-page/LoginInput.child";
+
 
 const Login = () => {
-
+    const [childComponent, setChildComponent] = useState<number>(1)
     const {data: session, status} = useSession()
-
-    console.log(signIn)
 
     useEffect(() => {
         console.log({session})
     }, [status])
 
+    const LoginChild = (childComponent: number) => {
+        switch (childComponent) {
+            case 1:
+                return <LoginTopChild setChildComponent={setChildComponent}/>
+            case 2:
+                return <LoginInputChild setChildComponent={setChildComponent}/>
+            default:
+                return <LoginTopChild setChildComponent={setChildComponent}/>
+        }
+    }
+
     return (
-        <div>
-            <button onClick={() => signIn("google")}>Signin</button>
-            <button onClick={() => signOut()}>SignOut</button>
-            { session ? <h1>Hello{session.user!.name}</h1> : <h2>bAD</h2> }
-        </div>
+        <FormTemplate image={mountain} childComponent={LoginChild(childComponent)}/>
     );
 };
 

@@ -13,18 +13,21 @@ type CardProps = {
 
 const ActivityTopCard: FC<CardProps> = ({title, activityImage, link}: CardProps) => {
     return (
-        <>
-            <Box sx={{width: "300px"}}>
+        <Box>
+            <Box sx={{width:{xs:250, md:350}}}>
                 <Image
+                    priority
                     src={activityImage}
                     alt={title}
-                    width={300}
+                    style={{ width: '100%', height: 'auto', borderRadius: "25px"}}
+                    width="0"
+                    height="0"
                 />
             </Box>
-            <Link href={"/activity/" + title.toLocaleLowerCase()} style={{textDecoration:"none", color: "black"}}>
+            <Link href={"/[activity]/" + title.toLocaleLowerCase()} style={{textDecoration:"none", color: "black"}}>
                 <Typography variant="h4">{title}</Typography>
             </Link>
-        </>
+        </Box>
     );
 };
 

@@ -18,9 +18,9 @@ const SignupTopChild = ({setChildComponent}: Props) => {
         <Box width="100%">
             <Typography variant="h2" textAlign="center" my={4}>Create your account</Typography>
             <Stack direction="column" spacing={2}>
-                <AuthButton company="Google" color="#4184F2" logo={<GoogleIcon/>} onClick={() => signIn("google")}/>
-                <AuthButton company="Facebook" color="#3C5997" logo={<FacebookIcon/>} onClick={() => signIn("facebook")}/>
-                <AuthButton company="Github" color="#000000" logo={<GithubIcon/>} onClick={() => signIn("github")}/>
+                <AuthButton company="Sign up with Google" color="#4184F2" logo={<GoogleIcon/>} onClick={() => signIn("google")}/>
+                <AuthButton company="Sign up with Facebook" color="#3C5997" logo={<FacebookIcon/>} onClick={() => signIn("facebook")}/>
+                <AuthButton company="Sign up with Github" color="#000000" logo={<GithubIcon/>} onClick={() => signIn("github")}/>
             </Stack>
             <Stack direction="row"  sx={{alignItems: "center", my:4}}>
                 <hr style={{width: "45%", height: .5, backgroundColor: "black"}}/>
