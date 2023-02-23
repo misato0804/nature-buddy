@@ -15,24 +15,26 @@ type Props = {
 
 type activityContext = {
     title: string,
-    date: Date,
-    endDate: Date | undefined,
+    date: string,
+    endDate: string,
     location: Location | undefined,
+    destination: string,
     description: string,
     meetingPoint: Location | undefined,
     meetingTime: string,
     genre: string,
-    spots: number,
+    spots: number | undefined,
     duration : string,
     setTitle: Dispatch<SetStateAction<string>>
-    setDate: Dispatch<SetStateAction<Date>>
-    setEndDate: Dispatch<SetStateAction<Date| undefined>>
+    setDate: Dispatch<SetStateAction<string>>
+    setEndDate: Dispatch<SetStateAction<string>>
     setLocation: Dispatch<SetStateAction<Location | undefined>>
+    setDestination: Dispatch<SetStateAction<string>>
     setDescription: Dispatch<SetStateAction<string>>
     setMeetingPoint: Dispatch<SetStateAction<Location | undefined>>
     setMeetingTime: Dispatch<SetStateAction<string>>
     setGenre: Dispatch<SetStateAction<string>>
-    setSpots: Dispatch<SetStateAction<number>>
+    setSpots: Dispatch<SetStateAction<number | undefined>>
     setDuration: Dispatch<SetStateAction<string>>
 }
 
@@ -43,15 +45,20 @@ export const useActivityContext = () => {
 }
 
 export const ActivityProvider = ({children}: Props) => {
+
+    const defaultDate = new Date().toISOString().slice(0, 10)
+    const defaultTime =  new Date().toLocaleTimeString();
+
     const [title, setTitle] = useState<string>("")
-    const [date, setDate] = useState<Date>(new Date())
-    const [endDate, setEndDate] = useState<Date | undefined>()
+    const [date, setDate] = useState<string>(defaultDate)
+    const [endDate, setEndDate] = useState<string>(defaultDate)
     const [description, setDescription] = useState<string>("")
     const [location, setLocation] = useState<Location | undefined>()
+    const [destination, setDestination] = useState("")
     const [meetingPoint, setMeetingPoint] = useState<Location| undefined>()
     const [meetingTime, setMeetingTime] = useState<string>("")
-    const [genre, setGenre] = useState<string>("")
-    const [spots, setSpots] = useState<number>(0)
+    const [genre, setGenre] = useState<string>("Hiking")
+    const [spots, setSpots] = useState<number | undefined>()
     const [duration, setDuration] = useState<string>("")
 
     return(
@@ -76,6 +83,8 @@ export const ActivityProvider = ({children}: Props) => {
             setSpots,
             duration,
             setDuration,
+            destination,
+            setDestination
         }}>
             {children}
         </activityContext.Provider>

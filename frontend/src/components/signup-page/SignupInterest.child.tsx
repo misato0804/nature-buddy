@@ -40,7 +40,6 @@ const SignupInterestChild = () => {
             })
             console.log(res)
             const userdata = await res.json()
-            console.log(userdata)
         } catch (e: any) {
             console.log(e)
         }

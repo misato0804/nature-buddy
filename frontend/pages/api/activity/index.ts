@@ -22,7 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             //Delete
             break
         }
-
+        default:
+            break
     }
 
 

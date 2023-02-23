@@ -5,5 +5,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method } = req;
     const {genre} = req.query;
     await dbConnect();
-
 }
