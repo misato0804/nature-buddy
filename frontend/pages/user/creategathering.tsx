@@ -6,6 +6,7 @@ import ConfirmModal from "@/components/elements/organisms/ConfirmModal";
 import {useActivityContext} from "@/lib/context/activityInputContext";
 import useWindowSize from "@/lib/hooks/useWindowSize";
 import LocationInput from "@/components/elements/molecules/LocationInput";
+import ImageConfirmModal from "@/components/elements/organisms/ImageConfirmModal";
 
 
 const CreateGathering = () => {
@@ -19,7 +20,9 @@ const CreateGathering = () => {
     const [width, height] = useWindowSize();
     const [endDate, setEndDate] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
-    const [uploadDate, setUploadDate] = useState()
+    const [uploadDate, setUploadDate] = useState<string | undefined>()
+
+    console.log(context)
 
     const AddEndDate = (
         <Box width="100%"
@@ -33,10 +36,13 @@ const CreateGathering = () => {
         </Box>
     )
 
-    function handleOnChange () {
-        const reader = new FileReader();
+    const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const reader = new FileReader()
+        reader.onload = function (loadEvent) {
+            loadEvent.target && setUploadDate(loadEvent.target.result as string)
+        }
+        e.target.files && reader.readAsDataURL(e.target.files[0])
     }
-
 
     return (
         <Box component="main" sx={{backgroundColor: "#E0EFDC", mt: 5, display: "flex", justifyContent: "center"}}>
@@ -45,18 +51,18 @@ const CreateGathering = () => {
                 <Paper sx={{maxWidth: "lg", py: 4, mb: 6}}>
                     <Container>
                         <Box width="100%" sx={{height: "10rem", backgroundColor: "#EFF2F5", position: "relative"}}>
-
+                            {uploadDate ? <img src={uploadDate} style={{objectFit:"cover", width:"100%", "height": "100%"}}/> : null}
                             <label htmlFor="upload-photo">
                                 <input
                                     style={{display: "none"}}
                                     id="upload-photo"
                                     name="upload-photo"
                                     type="file"
+                                    onChange={handleOnchange}
                                 />
                                 <TriggerButton
                                     title="+ Add cover"
                                     color="green"
-                                    onClick={() => {}}
                                     style={{
                                         position: "absolute",
                                         right: 10,
@@ -71,7 +77,7 @@ const CreateGathering = () => {
                             </Grid>
                             <Grid item>
                                 <Typography variant="subtitle1" sx={{color: "grey"}}>Misato Tanno</Typography>
-                                <Typography variant="subtitle1" sx={{color: "grey"}}>Host {context.title}</Typography>
+                                <Typography variant="subtitle1" sx={{color: "grey"}}>Host</Typography>
                             </Grid>
                         </Grid>
                         <Stack direction='column' my={2} spacing={3}>
@@ -182,7 +188,7 @@ const CreateGathering = () => {
                     </Container>
                 </Paper>
             </Box>
-            {openModal ? <ConfirmModal openModal={openModal} setOpenModal={setOpenModal}/> : null}
+            {openModal ? <ConfirmModal openModal={openModal} setOpenModal={setOpenModal} uploadDate={uploadDate}/> : null}
         </Box>
     );
 };

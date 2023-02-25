@@ -4,7 +4,7 @@ import Link from "next/link";
 type LinkButton = {
     title: string,
     color: string,
-    onClick: () => void,
+    onClick?: () => void,
     style? : object
 }
 

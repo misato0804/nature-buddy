@@ -23,7 +23,7 @@ type activityContext = {
     meetingPoint: Location | undefined,
     meetingTime: string,
     genre: string,
-    spots: number | undefined,
+    spots: number ,
     duration : string,
     setTitle: Dispatch<SetStateAction<string>>
     setDate: Dispatch<SetStateAction<string>>
@@ -34,7 +34,7 @@ type activityContext = {
     setMeetingPoint: Dispatch<SetStateAction<Location | undefined>>
     setMeetingTime: Dispatch<SetStateAction<string>>
     setGenre: Dispatch<SetStateAction<string>>
-    setSpots: Dispatch<SetStateAction<number | undefined>>
+    setSpots: Dispatch<SetStateAction<number>>
     setDuration: Dispatch<SetStateAction<string>>
 }
 
@@ -47,7 +47,6 @@ export const useActivityContext = () => {
 export const ActivityProvider = ({children}: Props) => {
 
     const defaultDate = new Date().toISOString().slice(0, 10)
-    const defaultTime =  new Date().toLocaleTimeString();
 
     const [title, setTitle] = useState<string>("")
     const [date, setDate] = useState<string>(defaultDate)
@@ -58,7 +57,7 @@ export const ActivityProvider = ({children}: Props) => {
     const [meetingPoint, setMeetingPoint] = useState<Location| undefined>()
     const [meetingTime, setMeetingTime] = useState<string>("")
     const [genre, setGenre] = useState<string>("Hiking")
-    const [spots, setSpots] = useState<number | undefined>()
+    const [spots, setSpots] = useState<number >(0)
     const [duration, setDuration] = useState<string>("")
 
     return(
