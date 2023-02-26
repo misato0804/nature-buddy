@@ -1,6 +1,6 @@
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useState} from "react";
 
-type Location = {
+export type Location = {
     lat: number,
     lng: number
 }
@@ -25,6 +25,7 @@ type activityContext = {
     genre: string,
     spots: number ,
     duration : string,
+    coverImage: string,
     setTitle: Dispatch<SetStateAction<string>>
     setDate: Dispatch<SetStateAction<string>>
     setEndDate: Dispatch<SetStateAction<string>>
@@ -36,6 +37,7 @@ type activityContext = {
     setGenre: Dispatch<SetStateAction<string>>
     setSpots: Dispatch<SetStateAction<number>>
     setDuration: Dispatch<SetStateAction<string>>
+    setCoverImage: Dispatch<SetStateAction<string>>
 }
 
 const activityContext = createContext({} as activityContext)
@@ -59,6 +61,7 @@ export const ActivityProvider = ({children}: Props) => {
     const [genre, setGenre] = useState<string>("Hiking")
     const [spots, setSpots] = useState<number >(0)
     const [duration, setDuration] = useState<string>("")
+    const [coverImage, setCoverImage] = useState<string>("")
 
     return(
         <activityContext.Provider value={{
@@ -83,7 +86,9 @@ export const ActivityProvider = ({children}: Props) => {
             duration,
             setDuration,
             destination,
-            setDestination
+            setDestination,
+            coverImage,
+            setCoverImage
         }}>
             {children}
         </activityContext.Provider>

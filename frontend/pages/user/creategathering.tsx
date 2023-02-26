@@ -1,28 +1,41 @@
 import React, {useState} from 'react';
-import {Box, Button, Container, Grid, MenuItem, Paper, Stack, TextField, Typography} from "@mui/material";
+import {Box, Container, Grid, MenuItem, Paper, Stack, TextField, Typography} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {activitiesList} from "@/lib/util/activitiesList";
 import ConfirmModal from "@/components/elements/organisms/ConfirmModal";
 import {useActivityContext} from "@/lib/context/activityInputContext";
-import useWindowSize from "@/lib/hooks/useWindowSize";
 import LocationInput from "@/components/elements/molecules/LocationInput";
-import ImageConfirmModal from "@/components/elements/organisms/ImageConfirmModal";
-
+import {
+    dateValidator,
+    descriptionValidator,
+    locationValidator,
+    meetingTimeValidation, spotsValidation,
+    titleValidator
+} from "@/lib/helpers/inputValidators";
 
 const CreateGathering = () => {
 
     /**
      * TODO: GET USER DATA
-     * TODO: CONNECT TO CLOUDINARY
      */
 
     const {...context} = useActivityContext()
-    const [width, height] = useWindowSize();
     const [endDate, setEndDate] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [uploadDate, setUploadDate] = useState<string | undefined>()
-
-    console.log(context)
+    const [fileData, setFileData] = useState<FileList | undefined>()
+    const [errorObj, setErrorObj] = useState<any>({
+        title: false,
+        date: false,
+        location: false,
+        destination: false,
+        description: false,
+        meetingTime: false,
+        meetingPoint: false,
+        genre: false,
+        spots: false,
+        duration: false
+    })
 
     const AddEndDate = (
         <Box width="100%"
@@ -41,7 +54,27 @@ const CreateGathering = () => {
         reader.onload = function (loadEvent) {
             loadEvent.target && setUploadDate(loadEvent.target.result as string)
         }
+        e.target.files && setFileData(e.target.files)
         e.target.files && reader.readAsDataURL(e.target.files[0])
+    }
+
+    const ableToGoToConfirm = () => {
+        titleValidator(context.title) ? setErrorObj({...errorObj, title: true}) : null
+        !dateValidator(context.date) ? errorObj.date = true : null
+        !locationValidator(context.location) ? errorObj.location = true : null
+        descriptionValidator(context.description) ? setErrorObj({...errorObj, description: true}) : null
+        !meetingTimeValidation(context.meetingTime) ? setErrorObj({...errorObj, meetingTime: true}) : null
+        !spotsValidation(context.spots) ? setErrorObj({...errorObj, spots: true}) : null
+        descriptionValidator(context.description) ? setErrorObj({...errorObj, duration: true}) : null
+
+        const allClear = Object.values(errorObj)
+
+        if (allClear.includes(true)) {
+            setOpenModal(false)
+            return;
+        }
+
+        setOpenModal(true)
     }
 
     return (
@@ -51,12 +84,13 @@ const CreateGathering = () => {
                 <Paper sx={{maxWidth: "lg", py: 4, mb: 6}}>
                     <Container>
                         <Box width="100%" sx={{height: "10rem", backgroundColor: "#EFF2F5", position: "relative"}}>
-                            {uploadDate ? <img src={uploadDate} style={{objectFit:"cover", width:"100%", "height": "100%"}}/> : null}
-                            <label htmlFor="upload-photo">
+                            {uploadDate ? <img src={uploadDate}
+                                               style={{objectFit: "cover", width: "100%", "height": "100%"}}/> : null}
+                            <label htmlFor="file">
                                 <input
                                     style={{display: "none"}}
-                                    id="upload-photo"
-                                    name="upload-photo"
+                                    id="file"
+                                    name="file"
                                     type="file"
                                     onChange={handleOnchange}
                                 />
@@ -85,6 +119,7 @@ const CreateGathering = () => {
                                 id="title"
                                 label="Event title"
                                 variant="outlined"
+                                error={errorObj.title}
                                 fullWidth={true}
                                 value={context.title}
                                 onChange={(e) => context.setTitle(e.target.value)}
@@ -94,6 +129,7 @@ const CreateGathering = () => {
                                     id="date"
                                     label="Date"
                                     type="date"
+                                    error={errorObj.date}
                                     value={context.date}
                                     onChange={(e) => context.setDate(e.target.value)}
                                     InputLabelProps={{
@@ -122,6 +158,7 @@ const CreateGathering = () => {
                             <TextField
                                 id="outlined-multiline-static"
                                 label="Description"
+                                error={errorObj.description}
                                 multiline
                                 rows={4}
                                 defaultValue="Description"
@@ -133,6 +170,7 @@ const CreateGathering = () => {
                                 <TextField
                                     id="time"
                                     label="Meeting time"
+                                    error={errorObj.meetingTime}
                                     type="time"
                                     value={context.meetingTime}
                                     onChange={(e) => context.setMeetingTime(e.target.value)}
@@ -164,6 +202,7 @@ const CreateGathering = () => {
                                     id="outlined-select-currency"
                                     type="number"
                                     label="Spots"
+                                    error={errorObj.spots}
                                     value={context.spots}
                                     onChange={(e) => context.setSpots(Number(e.target.value))}
                                     helperText="Please input how many buddies you need"
@@ -174,6 +213,7 @@ const CreateGathering = () => {
                                     id="duration"
                                     label="Duration"
                                     variant="outlined"
+                                    error={errorObj.duration}
                                     fullWidth={true}
                                     value={context.duration}
                                     onChange={(e) => context.setDuration(e.target.value)}
@@ -181,14 +221,14 @@ const CreateGathering = () => {
 
                                 />
                             </Stack>
-                            <TriggerButton title="Confirm" color={"green"} onClick={() => {
-                                setOpenModal(true)
-                            }}/>
+                            <TriggerButton title="Confirm" color={openModal ? "green" : "grey"} onClick={
+                                ableToGoToConfirm}/>
                         </Stack>
                     </Container>
                 </Paper>
             </Box>
-            {openModal ? <ConfirmModal openModal={openModal} setOpenModal={setOpenModal} uploadDate={uploadDate}/> : null}
+            {openModal ? <ConfirmModal openModal={openModal} setOpenModal={setOpenModal} uploadDate={uploadDate}
+                                       fileData={fileData}/> : null}
         </Box>
     );
 };

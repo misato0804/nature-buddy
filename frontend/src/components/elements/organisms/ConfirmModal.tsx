@@ -19,7 +19,8 @@ import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 type ModalProps = {
     openModal: boolean,
     setOpenModal: Dispatch<SetStateAction<boolean>>
-    uploadDate?: string
+    uploadDate?: string,
+    fileData?: FileList | undefined,
 }
 
 const style = {
@@ -33,13 +34,25 @@ const style = {
     p: 4,
 };
 
-const ConfirmModal = ({openModal, setOpenModal, uploadDate}: ModalProps) => {
+const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProps) => {
 
     const {...activity} = useActivityContext()
     const eventDate = getStringDate(activity.date)
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        const formData = new FormData()
+        fileData && formData.append("file", fileData[0])
+        formData.append('upload_preset', 'nature-buddy')
         try {
+            const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
+                method: "POST",
+                body: formData
+            })
+            const imageData = await resFromCloudinary.json()
+            console.log(imageData)
+            await activity.setCoverImage(imageData.secure_url)
+
             const res = await fetch("/api/activity", {
                 method: "POST",
                 body: JSON.stringify({...activity}),
@@ -52,6 +65,7 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate}: ModalProps) => {
             console.log(e)
         }
     }
+
 
     return (
         <Modal
@@ -102,8 +116,7 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate}: ModalProps) => {
                     </Box>
                     <Stack direction={{xs: "column", md: "row"}} spacing={2}>
                         <TriggerButton color="grey" title="Back" onClick={() => setOpenModal(false)}/>
-                        <TriggerButton color="green" title="Create" onClick={() => {
-                        }}/>
+                        <TriggerButton color="green" title="Create" onClick={() => handleSubmit}/>
                     </Stack>
                 </Box>
             </Fade>
