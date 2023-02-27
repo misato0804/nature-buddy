@@ -1,8 +1,6 @@
-import React, {ChangeEvent, Dispatch, SetStateAction, useEffect} from 'react';
-import {List, ListItemText, TextField} from "@mui/material";
+import React, {ChangeEvent, Dispatch, SetStateAction} from 'react';
+import {Box, List, ListItemText, TextField} from "@mui/material";
 import usePlacesAutocomplete, {getGeocode, getLatLng} from "use-places-autocomplete";
-import {suggestionList} from "graphql/jsutils/suggestionList";
-import {useActivityContext} from "@/lib/context/activityInputContext";
 
 type Location = {
     lat: number,
@@ -29,10 +27,6 @@ const LocationInput = ({location, setLocation, placeholder, setDestination}: Loc
         },
         debounce: 300
     })
-
-    const {destination} = useActivityContext()
-
-
 
     const handleInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         // Update the keyword of the input element
@@ -69,7 +63,7 @@ const LocationInput = ({location, setLocation, placeholder, setDestination}: Loc
         });
 
     return (
-        <>
+        <Box position="relative" width="100%">
             <TextField
                 value={value}
                 onChange={handleInput}
@@ -79,8 +73,8 @@ const LocationInput = ({location, setLocation, placeholder, setDestination}: Loc
                 fullWidth={true}
             />
             {/* We can use the "status" to decide whether we should display the dropdown or not */}
-            {status === "OK" && <List sx={{backgroundColor: "rgb(228,229,231)", zIndex:10}}>{renderSuggestions()}</List>}
-        </>
+            {status === "OK" && <List sx={{position:"absolute", top:60,backgroundColor: "rgb(228,229,231)", zIndex:10, width:"100%"}}>{renderSuggestions()}</List>}
+        </Box>
     );
 };
 

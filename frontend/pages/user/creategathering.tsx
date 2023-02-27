@@ -5,13 +5,9 @@ import {activitiesList} from "@/lib/util/activitiesList";
 import ConfirmModal from "@/components/elements/organisms/ConfirmModal";
 import {useActivityContext} from "@/lib/context/activityInputContext";
 import LocationInput from "@/components/elements/molecules/LocationInput";
-import {
-    dateValidator,
-    descriptionValidator,
-    locationValidator,
-    meetingTimeValidation, spotsValidation,
-    titleValidator
-} from "@/lib/helpers/inputValidators";
+import useValidator from "@/lib/hooks/useValidator";
+import initialActivityError from "@/lib/helpers/initialActivityError";
+import {dateValidation, getDate, modifier} from "@/lib/helpers/dateModifyer";
 
 const CreateGathering = () => {
 
@@ -19,29 +15,23 @@ const CreateGathering = () => {
      * TODO: GET USER DATA
      */
 
+    const today = new Date()
+
     const {...context} = useActivityContext()
-    const [endDate, setEndDate] = useState<boolean>(false)
+    const {stringValidator} = useValidator()
+    const [endDateOpen, setEndDateOpen] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [uploadDate, setUploadDate] = useState<string | undefined>()
     const [fileData, setFileData] = useState<FileList | undefined>()
-    const [errorObj, setErrorObj] = useState<any>({
-        title: false,
-        date: false,
-        location: false,
-        destination: false,
-        description: false,
-        meetingTime: false,
-        meetingPoint: false,
-        genre: false,
-        spots: false,
-        duration: false
-    })
+    const [errorObj, setErrorObj] = useState(initialActivityError)
+    const [date, setDate] = useState<string>(getDate(today))
+    const [endDate, setEndDate] = useState<string>(getDate(today))
 
     const AddEndDate = (
         <Box width="100%"
              sx={{display: "flex", justifyContent: "center", alignItems: "center"}}
              onClick={() => {
-                 setEndDate(!endDate)
+                 setEndDateOpen(!endDateOpen)
              }}
         >
             <Typography variant="subtitle1" fontWeight="bold" sx={{color: "green", cursor: "pointer"}}>+ End
@@ -58,23 +48,32 @@ const CreateGathering = () => {
         e.target.files && reader.readAsDataURL(e.target.files[0])
     }
 
-    const ableToGoToConfirm = () => {
-        titleValidator(context.title) ? setErrorObj({...errorObj, title: true}) : null
-        !dateValidator(context.date) ? errorObj.date = true : null
-        !locationValidator(context.location) ? errorObj.location = true : null
-        descriptionValidator(context.description) ? setErrorObj({...errorObj, description: true}) : null
-        !meetingTimeValidation(context.meetingTime) ? setErrorObj({...errorObj, meetingTime: true}) : null
-        !spotsValidation(context.spots) ? setErrorObj({...errorObj, spots: true}) : null
-        descriptionValidator(context.description) ? setErrorObj({...errorObj, duration: true}) : null
 
-        const allClear = Object.values(errorObj)
+    const titleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        context.setTitle(e.target.value)
+        const titleError = stringValidator(e.target.value,  "title is between 2-50 letters", 2,50)
+        setErrorObj({...errorObj, title: titleError})
+    }
 
-        if (allClear.includes(true)) {
-            setOpenModal(false)
-            return;
-        }
+    const dateOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDate(e.target.value)
+        const dateCtx = modifier(e.target.value)
+        context.setDate(dateCtx)
+        endDateOpen && dateValidation(date, endDate) > 0 ? setErrorObj({...errorObj, endDate: {error: false, message: ""}, date: {error: false, message: ""}}) : setErrorObj({...errorObj, endDate: {error: true, message: "End date must be after Date"}, date: {error: true, message: "End date must be after Date"}})
 
-        setOpenModal(true)
+    }
+
+    const endDateOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEndDate(e.target.value)
+        const endDateCtx = modifier(e.target.value)
+        context.setEndDate(endDateCtx)
+        dateValidation(date, endDate) > 0 ? setErrorObj({...errorObj, endDate: {error: false, message: ""}, date: {error: false, message: ""}}) : setErrorObj({...errorObj, endDate: {error: true, message: "End date must be after Date"}, date: {error: true, message: "End date must be after Date"}})
+    }
+
+    const descriptionOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        context.setDescription(e.target.value)
+        const descriptionError = stringValidator(e.target.value, "description must be between 20 and 1000", 20,1000)
+        setErrorObj({...errorObj, description: descriptionError})
     }
 
     return (
@@ -119,32 +118,36 @@ const CreateGathering = () => {
                                 id="title"
                                 label="Event title"
                                 variant="outlined"
-                                error={errorObj.title}
+                                error={errorObj.title.error}
                                 fullWidth={true}
                                 value={context.title}
-                                onChange={(e) => context.setTitle(e.target.value)}
+                                onChange={titleOnChange}
+                                helperText={errorObj.title.error ? errorObj.title.message : ""}
                             />
                             <Stack direction="row" spacing={2}>
                                 <TextField
                                     id="date"
                                     label="Date"
                                     type="date"
-                                    error={errorObj.date}
-                                    value={context.date}
-                                    onChange={(e) => context.setDate(e.target.value)}
+                                    error={errorObj.date.error}
+                                    value={date}
+                                    helperText={errorObj.date.error ? errorObj.date.message : ""}
+                                    onChange={dateOnChange}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
                                     fullWidth={true}
                                 />
                                 {
-                                    endDate ?
+                                    endDateOpen ?
                                         <TextField
                                             id="endDate"
                                             label="End date"
+                                            error={errorObj.endDate.error}
                                             type="date"
-                                            value={context.endDate}
-                                            onChange={(e) => context.setEndDate(e.target.value)}
+                                            value={endDate}
+                                            helperText={errorObj.endDate.error ? errorObj.endDate.message : ""}
+                                            onChange={endDateOnChange}
                                             InputLabelProps={{
                                                 shrink: true,
                                             }}
@@ -158,11 +161,12 @@ const CreateGathering = () => {
                             <TextField
                                 id="outlined-multiline-static"
                                 label="Description"
-                                error={errorObj.description}
+                                error={errorObj.description.error}
                                 multiline
                                 rows={4}
                                 defaultValue="Description"
-                                onChange={(e) => context.setDescription(e.target.value)}
+                                helperText={errorObj.description.error ? errorObj.description.message : ""}
+                                onChange={descriptionOnChange}
                             />
                             <Stack direction={{xs: "column", md: "row"}} spacing={2}>
                                 <LocationInput placeholder="Meeting point" setLocation={context.setMeetingPoint}
@@ -170,7 +174,6 @@ const CreateGathering = () => {
                                 <TextField
                                     id="time"
                                     label="Meeting time"
-                                    error={errorObj.meetingTime}
                                     type="time"
                                     value={context.meetingTime}
                                     onChange={(e) => context.setMeetingTime(e.target.value)}
@@ -202,7 +205,6 @@ const CreateGathering = () => {
                                     id="outlined-select-currency"
                                     type="number"
                                     label="Spots"
-                                    error={errorObj.spots}
                                     value={context.spots}
                                     onChange={(e) => context.setSpots(Number(e.target.value))}
                                     helperText="Please input how many buddies you need"
@@ -213,7 +215,6 @@ const CreateGathering = () => {
                                     id="duration"
                                     label="Duration"
                                     variant="outlined"
-                                    error={errorObj.duration}
                                     fullWidth={true}
                                     value={context.duration}
                                     onChange={(e) => context.setDuration(e.target.value)}
@@ -221,8 +222,7 @@ const CreateGathering = () => {
 
                                 />
                             </Stack>
-                            <TriggerButton title="Confirm" color={openModal ? "green" : "grey"} onClick={
-                                ableToGoToConfirm}/>
+                            <TriggerButton title="Confirm" color={openModal ? "green" : "grey"} onClick={() => {}}/>
                         </Stack>
                     </Container>
                 </Paper>

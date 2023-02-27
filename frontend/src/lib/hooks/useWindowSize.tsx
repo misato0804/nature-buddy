@@ -13,6 +13,7 @@ const useWindowSize = () : number[] => {
 
         return () => window.removeEventListener("resize", updateSize)
     }, [])
+
     return size;
 }
 

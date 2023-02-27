@@ -9,14 +9,10 @@ type Props = {
     children: ReactNode
 };
 
-/**
- * TODO: Add image
- */
-
 type activityContext = {
     title: string,
-    date: string,
-    endDate: string,
+    date: Date,
+    endDate: Date,
     location: Location | undefined,
     destination: string,
     description: string,
@@ -27,8 +23,8 @@ type activityContext = {
     duration : string,
     coverImage: string,
     setTitle: Dispatch<SetStateAction<string>>
-    setDate: Dispatch<SetStateAction<string>>
-    setEndDate: Dispatch<SetStateAction<string>>
+    setDate: Dispatch<SetStateAction<Date>>
+    setEndDate: Dispatch<SetStateAction<Date>>
     setLocation: Dispatch<SetStateAction<Location | undefined>>
     setDestination: Dispatch<SetStateAction<string>>
     setDescription: Dispatch<SetStateAction<string>>
@@ -48,11 +44,11 @@ export const useActivityContext = () => {
 
 export const ActivityProvider = ({children}: Props) => {
 
-    const defaultDate = new Date().toISOString().slice(0, 10)
+    const defaultDate = new Date()
 
     const [title, setTitle] = useState<string>("")
-    const [date, setDate] = useState<string>(defaultDate)
-    const [endDate, setEndDate] = useState<string>(defaultDate)
+    const [date, setDate] = useState<Date>(defaultDate)
+    const [endDate, setEndDate] = useState<Date>(defaultDate)
     const [description, setDescription] = useState<string>("")
     const [location, setLocation] = useState<Location | undefined>()
     const [destination, setDestination] = useState("")
