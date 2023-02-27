@@ -1,9 +1,24 @@
 type Error = {
     error: boolean,
-    message: string
+    message?: string | undefined
 }
 
-const initialActivityError = {
+type ErrorObj = {
+    title: Error,
+    date: Error,
+    endDate: Error,
+    location: Error,
+    destination: Error,
+    description: Error,
+    meetingPoint: Error,
+    meetingTime: Error,
+    genre: Error,
+    spots: Error,
+    image: Error,
+    duration: Error
+}
+
+let initialActivityError : ErrorObj = {
     title: {
         error: false,
         message: ""
@@ -34,7 +49,7 @@ const initialActivityError = {
     },
     meetingPoint: {
         error: false,
-        messge: ""
+        message: ""
     },
     genre: {
         error: false,
@@ -47,6 +62,10 @@ const initialActivityError = {
     duration: {
         error: false,
         message: ""
+    },
+    image: {
+        error: true,
+        message:""
     }
 }
 

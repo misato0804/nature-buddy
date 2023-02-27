@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Container, Grid, MenuItem, Paper, Stack, TextField, Typography} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {activitiesList} from "@/lib/util/activitiesList";
@@ -16,9 +16,8 @@ const CreateGathering = () => {
      */
 
     const today = new Date()
-
     const {...context} = useActivityContext()
-    const {stringValidator} = useValidator()
+    const {stringValidator, allValidator} = useValidator()
     const [endDateOpen, setEndDateOpen] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [uploadDate, setUploadDate] = useState<string | undefined>()
@@ -39,6 +38,7 @@ const CreateGathering = () => {
         </Box>
     )
 
+
     const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reader = new FileReader()
         reader.onload = function (loadEvent) {
@@ -46,12 +46,16 @@ const CreateGathering = () => {
         }
         e.target.files && setFileData(e.target.files)
         e.target.files && reader.readAsDataURL(e.target.files[0])
+        uploadDate ? setErrorObj({...errorObj, image: {error: false, message: ""}}) : setErrorObj({
+            ...errorObj,
+            image: {error: true}
+        })
+        console.log(errorObj.image)
     }
-
 
     const titleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         context.setTitle(e.target.value)
-        const titleError = stringValidator(e.target.value,  "title is between 2-50 letters", 2,50)
+        const titleError = stringValidator(e.target.value, "title is between 2-50 letters", 2, 50)
         setErrorObj({...errorObj, title: titleError})
     }
 
@@ -59,7 +63,15 @@ const CreateGathering = () => {
         setDate(e.target.value)
         const dateCtx = modifier(e.target.value)
         context.setDate(dateCtx)
-        endDateOpen && dateValidation(date, endDate) > 0 ? setErrorObj({...errorObj, endDate: {error: false, message: ""}, date: {error: false, message: ""}}) : setErrorObj({...errorObj, endDate: {error: true, message: "End date must be after Date"}, date: {error: true, message: "End date must be after Date"}})
+        endDateOpen && dateValidation(date, endDate) > 0 ? setErrorObj({
+            ...errorObj,
+            endDate: {error: false, message: ""},
+            date: {error: false, message: ""}
+        }) : setErrorObj({
+            ...errorObj,
+            endDate: {error: true, message: "End date must be after Date"},
+            date: {error: true, message: "End date must be after Date"}
+        })
 
     }
 
@@ -67,13 +79,42 @@ const CreateGathering = () => {
         setEndDate(e.target.value)
         const endDateCtx = modifier(e.target.value)
         context.setEndDate(endDateCtx)
-        dateValidation(date, endDate) > 0 ? setErrorObj({...errorObj, endDate: {error: false, message: ""}, date: {error: false, message: ""}}) : setErrorObj({...errorObj, endDate: {error: true, message: "End date must be after Date"}, date: {error: true, message: "End date must be after Date"}})
+        dateValidation(date, endDate) > 0 ? setErrorObj({
+            ...errorObj,
+            endDate: {error: false, message: ""},
+            date: {error: false, message: ""}
+        }) : setErrorObj({
+            ...errorObj,
+            endDate: {error: true, message: "End date must be after Date"},
+            date: {error: true, message: "End date must be after Date"}
+        })
     }
 
     const descriptionOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         context.setDescription(e.target.value)
-        const descriptionError = stringValidator(e.target.value, "description must be between 20 and 1000", 20,1000)
+        const descriptionError = stringValidator(e.target.value, "description must be between 20 and 1000", 20, 1000)
         setErrorObj({...errorObj, description: descriptionError})
+    }
+
+    const spotsOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        context.setSpots(Number(e.target.value))
+        context.spots < 1 ? setErrorObj({
+            ...errorObj,
+            spots: {error: true, message: "Please add your group size"}
+        }) : setErrorObj({...errorObj, spots: {error: false, message: ""}})
+    }
+
+    const durationOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        context.setDuration(e.target.value)
+        const durationError = stringValidator(e.target.value, "Please input duration", 3)
+        setErrorObj({...errorObj, duration: durationError})
+    }
+
+    const onClickHandler = () => {
+        const errorArr = Object.values(errorObj)
+        const newArr = errorArr.filter(item => item.error)
+        allValidator() && uploadDate ? setOpenModal(true) : setOpenModal(false)
+
     }
 
     return (
@@ -82,9 +123,14 @@ const CreateGathering = () => {
                 <Typography variant="h1" textAlign="center" py={2}> Create Gathering </Typography>
                 <Paper sx={{maxWidth: "lg", py: 4, mb: 6}}>
                     <Container>
+
                         <Box width="100%" sx={{height: "10rem", backgroundColor: "#EFF2F5", position: "relative"}}>
                             {uploadDate ? <img src={uploadDate}
-                                               style={{objectFit: "cover", width: "100%", "height": "100%"}}/> : null}
+                                               style={{
+                                                   objectFit: "cover",
+                                                   width: "100%",
+                                                   "height": "100%"
+                                               }}/> : null}
                             <label htmlFor="file">
                                 <input
                                     style={{display: "none"}}
@@ -104,6 +150,7 @@ const CreateGathering = () => {
                                         borderRadius: 0
                                     }}/>
                             </label>
+
                         </Box>
                         <Grid container columnSpacing={1} my={2}>
                             <Grid item sx={{backgroundColor: "#C9CCD1", borderRadius: "50%", ml: 2}} xs={.8}>
@@ -156,8 +203,13 @@ const CreateGathering = () => {
                                         : AddEndDate
                                 }
                             </Stack>
-                            <LocationInput placeholder="Destination" setLocation={context.setLocation}
-                                           location={context.location} setDestination={context.setDestination}/>
+                            <LocationInput
+                                placeholder="Destination"
+                                setLocation={context.setLocation}
+                                errorObj={errorObj.location}
+                                location={context.location}
+                                setDestination={context.setDestination}
+                            />
                             <TextField
                                 id="outlined-multiline-static"
                                 label="Description"
@@ -169,12 +221,17 @@ const CreateGathering = () => {
                                 onChange={descriptionOnChange}
                             />
                             <Stack direction={{xs: "column", md: "row"}} spacing={2}>
-                                <LocationInput placeholder="Meeting point" setLocation={context.setMeetingPoint}
-                                               location={context.meetingPoint}/>
+                                <LocationInput
+                                    placeholder="Meeting point"
+                                    setLocation={context.setMeetingPoint}
+                                    location={context.meetingPoint}
+                                    errorObj={errorObj.meetingPoint}
+                                />
                                 <TextField
                                     id="time"
                                     label="Meeting time"
                                     type="time"
+                                    error={errorObj.meetingTime.error}
                                     value={context.meetingTime}
                                     onChange={(e) => context.setMeetingTime(e.target.value)}
                                     InputLabelProps={{
@@ -205,8 +262,9 @@ const CreateGathering = () => {
                                     id="outlined-select-currency"
                                     type="number"
                                     label="Spots"
+                                    error={errorObj.spots.error}
                                     value={context.spots}
-                                    onChange={(e) => context.setSpots(Number(e.target.value))}
+                                    onChange={spotsOnChange}
                                     helperText="Please input how many buddies you need"
                                     fullWidth={true}
                                 >
@@ -216,13 +274,15 @@ const CreateGathering = () => {
                                     label="Duration"
                                     variant="outlined"
                                     fullWidth={true}
+                                    error={errorObj.duration.error}
                                     value={context.duration}
-                                    onChange={(e) => context.setDuration(e.target.value)}
+                                    onChange={durationOnChange}
                                     helperText="e.g. 1h30, 2days etc.."
 
                                 />
                             </Stack>
-                            <TriggerButton title="Confirm" color={openModal ? "green" : "grey"} onClick={() => {}}/>
+                            <TriggerButton title="Confirm" color={allValidator() && uploadDate ? "green" : "grey"}
+                                           onClick={onClickHandler}/>
                         </Stack>
                     </Container>
                 </Paper>

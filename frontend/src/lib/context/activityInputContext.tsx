@@ -55,7 +55,7 @@ export const ActivityProvider = ({children}: Props) => {
     const [meetingPoint, setMeetingPoint] = useState<Location| undefined>()
     const [meetingTime, setMeetingTime] = useState<string>("")
     const [genre, setGenre] = useState<string>("Hiking")
-    const [spots, setSpots] = useState<number >(0)
+    const [spots, setSpots] = useState<number>(0)
     const [duration, setDuration] = useState<string>("")
     const [coverImage, setCoverImage] = useState<string>("")
 

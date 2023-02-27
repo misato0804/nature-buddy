@@ -2,7 +2,6 @@ import React, {Dispatch, SetStateAction} from "react";
 import {Backdrop, Box, Fade, Modal, Stack, Typography} from "@mui/material";
 import {useActivityContext} from "@/lib/context/activityInputContext";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
-import getStringDate from "@/lib/helpers/toDateString";
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import DepartureBoardOutlinedIcon from '@mui/icons-material/DepartureBoardOutlined';
@@ -11,6 +10,7 @@ import ConfirmationCard from "@/components/elements/atoms/ConfirmationCard";
 import AvTimerOutlinedIcon from '@mui/icons-material/AvTimerOutlined';
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
 import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
+import {getDate} from "@/lib/helpers/dateModifyer";
 
 /**
  * TODO: Meetup Location
@@ -37,33 +37,34 @@ const style = {
 const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProps) => {
 
     const {...activity} = useActivityContext()
-    const eventDate = getStringDate(activity.date)
+    const eventDate = getDate(activity.date)
 
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        const formData = new FormData()
-        fileData && formData.append("file", fileData[0])
-        formData.append('upload_preset', 'nature-buddy')
-        try {
-            const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
-                method: "POST",
-                body: formData
-            })
-            const imageData = await resFromCloudinary.json()
-            console.log(imageData)
-            await activity.setCoverImage(imageData.secure_url)
-
-            const res = await fetch("/api/activity", {
-                method: "POST",
-                body: JSON.stringify({...activity}),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            console.log(res)
-        } catch (e: any) {
-            console.log(e)
-        }
+        console.log(activity)
+        // const formData = new FormData()
+        // fileData && formData.append("file", fileData[0])
+        // formData.append('upload_preset', 'nature-buddy')
+        // try {
+        //     const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
+        //         method: "POST",
+        //         body: formData
+        //     })
+        //     const imageData = await resFromCloudinary.json()
+        //     console.log(imageData)
+        //     await activity.setCoverImage(imageData.secure_url)
+        //
+        //     const res = await fetch("/api/activity", {
+        //         method: "POST",
+        //         body: JSON.stringify({...activity}),
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //     console.log(res)
+        // } catch (e: any) {
+        //     console.log(e)
+        // }
     }
 
 
@@ -116,7 +117,7 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProp
                     </Box>
                     <Stack direction={{xs: "column", md: "row"}} spacing={2}>
                         <TriggerButton color="grey" title="Back" onClick={() => setOpenModal(false)}/>
-                        <TriggerButton color="green" title="Create" onClick={() => handleSubmit}/>
+                        <TriggerButton color="green" title="Create" onClick={() => console.log(activity)}/>
                     </Stack>
                 </Box>
             </Fade>

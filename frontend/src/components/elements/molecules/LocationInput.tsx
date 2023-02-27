@@ -11,10 +11,11 @@ type LocationProps = {
     location: Location | undefined,
     setLocation: Dispatch<SetStateAction<Location | undefined>>,
     placeholder: string,
-    setDestination? : Dispatch<SetStateAction<string>>
+    setDestination? : Dispatch<SetStateAction<string>>,
+    errorObj?: {error: boolean, message?: string}
 }
 
-const LocationInput = ({location, setLocation, placeholder, setDestination}: LocationProps) => {
+const LocationInput = ({location, setLocation, placeholder, setDestination, errorObj}: LocationProps) => {
     const {
         ready,
         value,
@@ -71,6 +72,8 @@ const LocationInput = ({location, setLocation, placeholder, setDestination}: Loc
                 placeholder={placeholder}
                 label={placeholder}
                 fullWidth={true}
+                error={errorObj && errorObj.error}
+                helperText={errorObj && errorObj.message}
             />
             {/* We can use the "status" to decide whether we should display the dropdown or not */}
             {status === "OK" && <List sx={{position:"absolute", top:60,backgroundColor: "rgb(228,229,231)", zIndex:10, width:"100%"}}>{renderSuggestions()}</List>}
