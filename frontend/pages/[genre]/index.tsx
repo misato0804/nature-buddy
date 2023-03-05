@@ -8,7 +8,8 @@ import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 const Activity = () => {
     const {query} = useRouter()
     let activity : string;
-    activity = query.activity as string
+    activity = query.genre as string
+    console.log(activity)
 
     if(!activity) return <h1>Loading...</h1>
 

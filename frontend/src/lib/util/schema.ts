@@ -14,13 +14,13 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, "Password must be provided"],
-        minLength: 8,
+        // required: [true, "Password must be provided"],
+        // minLength: 8,
         select: false,
     },
     passwordConfirm: {
         type: String,
-        required: [true, 'Please confirm your password'],
+        // required: [true, 'Please confirm your password'],
         //    validate
     },
     interests: {

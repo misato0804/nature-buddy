@@ -9,7 +9,7 @@ const Event = () => {
 
     return (
         <div style={{marginTop:"200px"}}>
-
+            {event}
         </div>
     );
 };

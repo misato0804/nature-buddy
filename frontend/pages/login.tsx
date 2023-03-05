@@ -5,7 +5,6 @@ import FormTemplate from "@/components/elements/organisms/FormTemplate";
 import LoginTopChild from "@/components/login-page/LoginTop.child";
 import LoginInputChild from "@/components/login-page/LoginInput.child";
 
-
 const Login = () => {
     const [childComponent, setChildComponent] = useState<number>(1)
     const {data: session, status} = useSession()

@@ -8,20 +8,24 @@ const ActivitySchema = new mongoose.Schema({
         trim: true
     },
     date: {
-        type: String,
+        type: Date,
         required: [true, "Date must be provided"],
     },
     endDate: {
-        type: String,
+        type: Date,
     },
-    description: {
-        type: String,
-        minLength: 20,
-        required: [true, "Description must be provided"]
-    },
+    // description: {
+    //     type: String,
+    //     minLength: 20,
+    //     required: [true, "Description must be provided"]
+    // },
     location: {
         type: {type: String, default: 'Point'},
         coordinates: {type: [Number], required: true},
+        destination: String,
+        address: String,
+        place_id: String
+
     },
     destination: {
         type: String,
@@ -31,7 +35,8 @@ const ActivitySchema = new mongoose.Schema({
         type: {type: String, default: 'Point'},
         coordinates: {type: [Number], required: true},
         destination: String,
-        address: String
+        address: String,
+        place_id: String
     },
     meetingTime: {
         type: String,

@@ -1,10 +1,13 @@
 import {Box, Stack, Typography, Grid} from "@mui/material";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Option from "@/components/elements/atoms/Option";
 import {activitiesList}from "../../lib/util/activitiesList"
 import {StaticImageData} from "next/image";
 import {useUserContext} from "@/lib/context/userInputContext";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
+import {session} from "next-auth/core/routes";
+import {useSession} from "next-auth/react";
+import Router from 'next/router'
 
 type Activity = {
     id: number
@@ -17,7 +20,15 @@ const activitiesRender = (list: Activity[]) => {
 }
 
 const SignupInterestChild = () => {
-    const {location, name, email, password, passwordConfirm, interests} = useUserContext()
+    const { data: session, status } = useSession()
+    const {location, name, email, password, passwordConfirm, interests, setName, setEmail} = useUserContext()
+
+    useEffect(() => {
+        if(session && session.user) {
+            setName(session.user.name as string)
+            setEmail(session.user.email as string)
+        }
+    }, [])
 
     const handleSubmit = async () => {
         try {
@@ -40,6 +51,7 @@ const SignupInterestChild = () => {
             })
             console.log(res)
             const userdata = await res.json()
+            userdata.status === "success" ? await Router.push('/user') : await Router.push('/error')
         } catch (e: any) {
             console.log(e)
         }

@@ -8,12 +8,30 @@ import LocationInput from "@/components/elements/molecules/LocationInput";
 import useValidator from "@/lib/hooks/useValidator";
 import initialActivityError from "@/lib/helpers/initialActivityError";
 import {dateValidation, getDate, modifier} from "@/lib/helpers/dateModifyer";
+import {getSession, signIn} from "next-auth/react";
 
 const CreateGathering = () => {
 
     /**
      * TODO: GET USER DATA
      */
+
+    const [name, setName] = useState<string | null | undefined>("")
+
+    useEffect(() => {
+        const securePage = async () => {
+            const session = await getSession()
+            console.log(session)
+            if (!session) {
+                signIn()
+            } else {
+                // setLoading(false)
+                setName(session.user?.name)
+                console.log(session.user?.name)
+            }
+        }
+        securePage()
+    }, [])
 
     const today = new Date()
     const {...context} = useActivityContext()
@@ -156,7 +174,7 @@ const CreateGathering = () => {
                             <Grid item sx={{backgroundColor: "#C9CCD1", borderRadius: "50%", ml: 2}} xs={.8}>
                             </Grid>
                             <Grid item>
-                                <Typography variant="subtitle1" sx={{color: "grey"}}>Misato Tanno</Typography>
+                                <Typography variant="subtitle1" sx={{color: "grey"}}>{name}</Typography>
                                 <Typography variant="subtitle1" sx={{color: "grey"}}>Host</Typography>
                             </Grid>
                         </Grid>

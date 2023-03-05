@@ -1,10 +1,12 @@
 import React from 'react';
 import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
 import Link from "next/link";
+import { signOut } from "next-auth/react"
 
 const Header = () => {
 
     const navItems = ["HOME", "Log in", "Sign up"]
+
 
     return (
         <AppBar component="nav">
@@ -36,6 +38,7 @@ const Header = () => {
                             </Link>
                         </Button>
                     ))}
+                    <Button sx={{color: '#fff'}} onClick={()=> signOut()}>SIGN OUT</Button>
                 </Box>
             </Toolbar>
         </AppBar>

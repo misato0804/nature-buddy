@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (method) {
         case "POST": {
-            //Create [activity]
+            //Create [genre]
             try {
                 console.log(req.body)
                 const activity = await Activity.create(req.body)
@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             break
         }
         case "GET": {
-            //Get [activity] info
+            //Get [genre] info
             break
         }
         case "PUT": {
