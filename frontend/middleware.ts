@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
     getCookie('next-auth.session-token');
 
     if(hasToken) {
-        return NextResponse.rewrite(new URL(`/user/userid`, request.url))
+        return NextResponse.rewrite(new URL(`/user/userId`, request.url))
     } else {
         return  NextResponse.rewrite(new URL(`/login`, request.url))
     }
@@ -17,5 +17,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: '/user/:path*',
+    matcher: '/user',
 }

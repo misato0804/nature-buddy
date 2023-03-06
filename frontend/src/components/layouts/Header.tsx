@@ -1,12 +1,38 @@
 import React from 'react';
 import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
 import Link from "next/link";
-import { signOut } from "next-auth/react"
+import {signOut, useSession} from "next-auth/react"
 
 const Header = () => {
 
     const navItems = ["HOME", "Log in", "Sign up"]
+    const {data: session, status} = useSession()
+    const unauthorizedHeader = [
+        {
+            title: "home",
+            link: "/"
+        },
+        {
+            title: "log in",
+            link: "/login"
+        },
+        {
+            title: "sign up",
+            link: "/signup"
+        },
 
+    ]
+
+    const authorizedHeader = [
+        {
+            title: "home",
+            link: "/"
+        },
+        {
+            title: "my page",
+            link: "/user"
+        }
+    ]
 
     return (
         <AppBar component="nav">
@@ -31,14 +57,22 @@ const Header = () => {
                     </Link>
                 </Typography>
                 <Box sx={{display: {xs: 'none', sm: 'block'}}}>
-                    {navItems.map((item) => (
-                        <Button key={item} sx={{color: '#fff'}}>
-                            <Link href="/login" style={{textDecoration: "none", color: "#fff"}}>
-                                {item}
+                    {session ?
+                        authorizedHeader.map((item) => (
+                            <Button key={item.title} sx={{color: '#fff'}}>
+                                <Link href={item.link} style={{textDecoration: "none", color: "#fff"}}>
+                                    {item.title}
+                                </Link>
+                            </Button>))
+                        :
+                        unauthorizedHeader.map((item) => (
+                        <Button key={item.title} sx={{color: '#fff'}}>
+                            <Link href={item.link} style={{textDecoration: "none", color: "#fff"}}>
+                                {item.title}
                             </Link>
                         </Button>
                     ))}
-                    <Button sx={{color: '#fff'}} onClick={()=> signOut()}>SIGN OUT</Button>
+                    {session && <Button sx={{color: '#fff'}} onClick={() => signOut()}>SIGN OUT</Button>}
                 </Box>
             </Toolbar>
         </AppBar>

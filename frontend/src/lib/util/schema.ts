@@ -31,6 +31,18 @@ const UserSchema = new mongoose.Schema({
         type: {type: String, default: 'Point'},
         coordinates: {type: [Number], required: true},
     },
+    myBuddies: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ],
+    activities: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Activities"
+        }
+    ]
 })
 
 export const User = mongoose.models.User || mongoose.model("User", UserSchema, "User")

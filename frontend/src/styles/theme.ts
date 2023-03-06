@@ -1,4 +1,4 @@
-import {createTheme} from '@mui/material/styles';
+import {createTheme, duration} from '@mui/material/styles';
 import {Prompt} from '@next/font/google'
 
 const theme = createTheme();
@@ -83,5 +83,8 @@ theme.typography.h6 = {
         fontSize: "1.0rem"
     },
 }
+
+
+
 
 export default theme;

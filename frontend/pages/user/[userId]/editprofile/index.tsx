@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Buddies = () => {
+const Index = () => {
     return (
         <div>
-            
+
         </div>
     );
 };
 
-export default Buddies;
+export default Index;
