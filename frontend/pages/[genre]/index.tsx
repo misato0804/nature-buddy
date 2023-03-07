@@ -29,7 +29,7 @@ const Activity = () => {
                 <SortButton title={"distance"} sortedByArr={["tomorrow", "Today", "This week"]}/>
             </Stack>
             <hr style={{}}/>
-            <Grid container display="flex" justifyContent="space-evenly" rowSpacing={3}>
+            <Grid container display="flex" justifyContent="space-evenly" rowSpacing={3} columnSpacing={2}>
                 <Grid item xs={10} lg={6}>
                     <ActivityBlock
                         image={mountain}
@@ -37,6 +37,8 @@ const Activity = () => {
                         date={new Date().toString()}
                         host={"Misato"}
                         number={3}
+                        genre={"Hiking"}
+                        url={"/"}
                     />
                 </Grid>
                 <Grid item xs={10} lg={6}>
@@ -46,6 +48,8 @@ const Activity = () => {
                         date={new Date().toString()}
                         host={"Misato"}
                         number={3}
+                        genre={"Hiking"}
+                        url={"/"}
                     />
                 </Grid>
                 <Grid item xs={10} lg={6}>
@@ -55,6 +59,8 @@ const Activity = () => {
                         date={new Date().toString()}
                         host={"Misato"}
                         number={3}
+                        genre={"Hiking"}
+                        url={"/"}
                     />
                 </Grid>
                 <Grid item xs={10} lg={6}>
@@ -64,6 +70,8 @@ const Activity = () => {
                         date={new Date().toString()}
                         host={"Misato"}
                         number={3}
+                        genre={"Hiking"}
+                        url={"/"}
                     />
                 </Grid>
             </Grid>
