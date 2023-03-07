@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await dbConnect();
 
     switch (method) {
-        case "POST": {
+        case "POST":
             //Create [genre]
             try {
                 console.log(req.body)
@@ -20,7 +20,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 console.log(e)
             }
             break
-        }
         case "GET": {
             //Get [genre] info
             break

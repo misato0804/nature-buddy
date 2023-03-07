@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {bool} from "prop-types";
 
 const ActivitySchema = new mongoose.Schema({
     title: {
@@ -14,27 +15,21 @@ const ActivitySchema = new mongoose.Schema({
     endDate: {
         type: Date,
     },
-    // description: {
-    //     type: String,
-    //     minLength: 20,
-    //     required: [true, "Description must be provided"]
-    // },
+    description: {
+        type: String,
+        minLength: 20,
+        required: [true, "Description must be provided"]
+    },
     location: {
         type: {type: String, default: 'Point'},
         coordinates: {type: [Number], required: true},
-        destination: String,
         address: String,
-        place_id: String
-
-    },
-    destination: {
-        type: String,
-        required: [true, "Destination must be provided"]
+        place_id: String,
+        required: [true, "Location must be provided"]
     },
     meetingPoint: {
         type: {type: String, default: 'Point'},
         coordinates: {type: [Number], required: true},
-        destination: String,
         address: String,
         place_id: String
     },
@@ -74,6 +69,10 @@ const ActivitySchema = new mongoose.Schema({
             ref: "User"
         }
     ],
+    available: {
+        type: Boolean,
+        default: true
+    }
 });
 
 export const Activity = mongoose.models.Activity || mongoose.model("Activity", ActivitySchema, "Activities")

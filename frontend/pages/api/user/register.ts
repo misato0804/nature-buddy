@@ -20,6 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }
 
                 const user = await User.create(req.body)
+                console.log(req.headers)
                 const token = jwt.sign({id: user._id}, process.env.JWT_SECRET as string, {
                     expiresIn: 30 * 24 * 60 * 60
                 })

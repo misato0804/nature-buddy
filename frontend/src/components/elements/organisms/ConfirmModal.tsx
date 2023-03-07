@@ -39,32 +39,33 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProp
     const {...activity} = useActivityContext()
     const eventDate = getDate(activity.date)
 
+    console.log(activity.meetingPoint?.place_id)
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         console.log(activity)
-        // const formData = new FormData()
-        // fileData && formData.append("file", fileData[0])
-        // formData.append('upload_preset', 'nature-buddy')
-        // try {
-        //     const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
-        //         method: "POST",
-        //         body: formData
-        //     })
-        //     const imageData = await resFromCloudinary.json()
-        //     console.log(imageData)
-        //     await activity.setCoverImage(imageData.secure_url)
-        //
-        //     const res = await fetch("/api/activity", {
-        //         method: "POST",
-        //         body: JSON.stringify({...activity}),
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     console.log(res)
-        // } catch (e: any) {
-        //     console.log(e)
-        // }
+        const formData = new FormData()
+        fileData && formData.append("file", fileData[0])
+        formData.append('upload_preset', 'nature-buddy')
+        try {
+            const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
+                method: "POST",
+                body: formData
+            })
+            const imageData = await resFromCloudinary.json()
+            console.log(imageData)
+            await activity.setCoverImage(imageData.secure_url)
+
+            const res = await fetch("/api/activity", {
+                method: "POST",
+                body: JSON.stringify({...activity}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(res)
+        } catch (e: any) {
+            console.log(e)
+        }
     }
 
 
@@ -96,22 +97,26 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProp
                                 <PlaceOutlinedIcon fontSize="medium" sx={{mr: 1}}/>
                                 <Typography variant="h4">Destination</Typography>
                             </Box>
-                            <Typography variant="subtitle2" pl={4}>{activity.destination}</Typography>
+                            <Typography variant="subtitle2" pl={4}>{activity.location?.address}</Typography>
                             <Stack direction="column" my={2}>
                                 <Typography variant="h4"
                                             sx={{display: "flex", alignItems: "center"}}><DepartureBoardOutlinedIcon
                                     sx={{mr: 1}}/>Meeting
                                     Detail</Typography>
                                 <Typography variant="subtitle2" sx={{pl: 4}}>{activity.meetingTime}</Typography>
-                                <Typography variant="subtitle2" sx={{pl: 4}}>{activity.destination}</Typography>
+                                <Typography variant="subtitle2" sx={{pl: 4}}>
+                                    <a rel='noopener noreferrer' href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${activity.meetingPoint?.place_id}`} target="_blank">{activity.meetingPoint?.address}</a>
+                                </Typography>
                             </Stack>
                             <Typography variant="h4" sx={{display: "flex", alignItems: "center"}}><InfoOutlinedIcon
                                 sx={{mr: 1}}/>Description</Typography>
                             <Typography variant="subtitle2" pl={4} mb={4}>{activity.description}</Typography>
                         </Box>
                         <Stack width="60%" direction="row" marginX="auto" justifyContent="space-between" mb={4}>
-                            <ConfirmationCard title="Spots" detail={activity.spots.toString()} logo={<Groups2OutlinedIcon/>}/>
-                            <ConfirmationCard title="Duration" detail={activity.duration} logo={<AvTimerOutlinedIcon/>}/>
+                            <ConfirmationCard title="Spots" detail={activity.spots.toString()}
+                                              logo={<Groups2OutlinedIcon/>}/>
+                            <ConfirmationCard title="Duration" detail={activity.duration}
+                                              logo={<AvTimerOutlinedIcon/>}/>
                             <ConfirmationCard title="Genre" detail={activity.genre} logo={<HikingOutlinedIcon/>}/>
                         </Stack>
                     </Box>

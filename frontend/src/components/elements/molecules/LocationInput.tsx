@@ -1,21 +1,17 @@
 import React, {ChangeEvent, Dispatch, SetStateAction} from 'react';
 import {Box, List, ListItemText, TextField} from "@mui/material";
 import usePlacesAutocomplete, {getGeocode, getLatLng} from "use-places-autocomplete";
+import {Location} from "@/lib/context/activityInputContext"
 
-type Location = {
-    lat: number,
-    lng: number
-}
 
 type LocationProps = {
     location: Location | undefined,
     setLocation: Dispatch<SetStateAction<Location | undefined>>,
     placeholder: string,
-    setDestination? : Dispatch<SetStateAction<string>>,
-    errorObj?: {error: boolean, message?: string}
+    errorObj?: { error: boolean, message?: string }
 }
 
-const LocationInput = ({location, setLocation, placeholder, setDestination, errorObj}: LocationProps) => {
+const LocationInput = ({location, setLocation, placeholder, errorObj}: LocationProps) => {
     const {
         ready,
         value,
@@ -43,8 +39,14 @@ const LocationInput = ({location, setLocation, placeholder, setDestination, erro
             getGeocode({address: description}).then((results) => {
                 const {lat, lng} = getLatLng(results[0]);
                 console.log(results)
-                setDestination && setDestination(results[0].formatted_address)
-                setLocation({...location, lat, lng})
+                // setDestination && setDestination(results[0].formatted_address)
+                // setLocation({...location, lat, lng})
+                setLocation({
+                    ...location!,
+                    coordinates: [lat, lng],
+                    address: results[0].formatted_address,
+                    place_id: results[0].place_id,
+                })
             });
         };
 
@@ -76,7 +78,13 @@ const LocationInput = ({location, setLocation, placeholder, setDestination, erro
                 helperText={errorObj && errorObj.message}
             />
             {/* We can use the "status" to decide whether we should display the dropdown or not */}
-            {status === "OK" && <List sx={{position:"absolute", top:60,backgroundColor: "rgb(228,229,231)", zIndex:10, width:"100%"}}>{renderSuggestions()}</List>}
+            {status === "OK" && <List sx={{
+                position: "absolute",
+                top: 60,
+                backgroundColor: "rgb(228,229,231)",
+                zIndex: 10,
+                width: "100%"
+            }}>{renderSuggestions()}</List>}
         </Box>
     );
 };

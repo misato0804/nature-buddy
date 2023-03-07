@@ -1,8 +1,15 @@
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useState} from "react";
 
+// export type Location = {
+//     lat: number,
+//     lng: number
+// }
+
 export type Location = {
-    lat: number,
-    lng: number
+    type: string,
+    coordinates: Number[],
+    address: string,
+    place_id: string,
 }
 
 type Props = {

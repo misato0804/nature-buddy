@@ -135,6 +135,10 @@ const CreateGathering = () => {
 
     }
 
+    // if (user === undefined) {
+    //     return <h1>Loading...</h1>
+    // }
+
     return (
         <Box component="main" sx={{backgroundColor: "#E0EFDC", mt: 5, display: "flex", justifyContent: "center"}}>
             <Box width="80%">
@@ -312,3 +316,16 @@ const CreateGathering = () => {
 };
 
 export default CreateGathering;
+//
+// export async function getServerSideProps() {
+//
+//     const res = await fetch('http://localhost:3000/api/user/640046988dbaa4a6bfae6a15')
+//     const user = await res.json()
+//
+//     console.log(user)
+//     return {
+//         props: {
+//             user: user.data
+//         }
+//     }
+// }

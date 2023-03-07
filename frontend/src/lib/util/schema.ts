@@ -30,6 +30,9 @@ const UserSchema = new mongoose.Schema({
     location: {
         type: {type: String, default: 'Point'},
         coordinates: {type: [Number], required: true},
+        address: String,
+        place_id: String,
+        // required: [true, "Location must be provided"]
     },
     myBuddies: [
         {
