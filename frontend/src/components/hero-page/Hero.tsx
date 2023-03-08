@@ -1,4 +1,4 @@
-import {Container, Grid, Typography, Box} from "@mui/material";
+import {Container, Grid, Typography, Box, Stack} from "@mui/material";
 import Image from 'next/image';
 import camping from "../../../public/assets/images/climbing.jpg"
 import picnic
@@ -9,6 +9,8 @@ import {FC, useEffect, useState} from "react";
 import {activitiesList} from "@/lib/util/activitiesList";
 import ActivityTopCard from "@/components/hero-page/ActivityTopCard";
 import {styled} from "@mui/system";
+import BrowseByActivity from "@/components/elements/organisms/BrowseByActivity";
+import HowItWorks from "@/components/hero-page/HowItWorks";
 
 const HeroTop = styled('div')({
     position: "relative",
@@ -36,7 +38,7 @@ const Hero: FC = () => {
     }, [])
 
     return (
-        <Box component="main" className="hero">
+        <Box component="main" className="hero" sx={{mt: {xs: 11, sm: 4}}}>
             <HeroTop>
                 <Image
                     src={imagesArr[currentIndex]}
@@ -59,26 +61,47 @@ const Hero: FC = () => {
                     Your buddy is around you
                 </Typography>
             </HeroTop>
-            <Box my={4} >
+            <Box my={4}>
                 <Container maxWidth="xl">
-                    <Typography variant="h2">Top popular activities</Typography>
-                    <Grid container rowSpacing={4} sx={{ marginX: "auto", marginY: 4, display: "flex", justifyContent: "center"}}>
-                        {activitiesList.map((activity) => (
-                            <Grid item key={activity.id} sm={6} md={5} lg={4} sx={{display: "flex", justifyContent: "center"}}>
-                                <ActivityTopCard
-                                    title={activity.title}
-                                    activityImage={activity.image}
-                                    link={activity.title}
-                                />
-                            </Grid>
-                        ))}
-                    </Grid>
+                    {/*<Typography variant="h2">Top popular activities</Typography>*/}
+                    {/*<Grid container rowSpacing={4} sx={{ marginX: "auto", marginY: 4, display: "flex", justifyContent: "center"}}>*/}
+                    {/*    {activitiesList.map((activity) => (*/}
+                    {/*        <Grid item key={activity.id} sm={6} md={5} lg={4} sx={{display: "flex", justifyContent: "center"}}>*/}
+                    {/*            <ActivityTopCard*/}
+                    {/*                title={activity.title}*/}
+                    {/*                activityImage={activity.image}*/}
+                    {/*                link={activity.title}*/}
+                    {/*            />*/}
+                    {/*        </Grid>*/}
+                    {/*    ))}*/}
+                    {/*</Grid>*/}
+
+                    <Stack sx={{alignItems:"center"}} direction={{md: "row"}} spacing={10}>
+                        <Box>
+                            <Typography variant="h3" mb={4}>This is the platformThis is the platformThis is the platformThis is the platformThis is the platform</Typography>
+                            <Typography variant="subtitle1">t is a long established fact that a reader will be
+                                distracted by
+                                the readable content of a page when looking at its layout. The point of using Lorem
+                                Ipsum is
+                                that it has a more-or-less normal distribution of letters, as opposed to using
+                                here, content , making it look like readable English. Many desktop publishing packages
+                                and web page editors now use Lorem Ipsum as their default model text, and a search for
+                                </Typography>
+                        </Box>
+                        <Box>
+                            <Image
+                                src={hiking}
+                                alt="hiking"
+                                style={{width: "100%", height: "100%"}}
+                            />
+                        </Box>
+                    </Stack>
+                    <Box>
+                        <BrowseByActivity/>
+                        <HowItWorks/>
+                    </Box>
                 </Container>
             </Box>
-            <Box>
-                <Typography variant="h2" textAlign="center">How nature buddy works</Typography>
-            </Box>
-
         </Box>
     );
 };

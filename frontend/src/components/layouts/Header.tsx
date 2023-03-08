@@ -5,7 +5,6 @@ import {signOut, useSession} from "next-auth/react"
 
 const Header = () => {
 
-    const navItems = ["HOME", "Log in", "Sign up"]
     const {data: session, status} = useSession()
     const unauthorizedHeader = [
         {

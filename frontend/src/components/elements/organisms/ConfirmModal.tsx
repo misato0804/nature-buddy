@@ -68,7 +68,6 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProp
         }
     }
 
-
     return (
         <Modal
             aria-labelledby="transition-modal-title"
