@@ -3,9 +3,7 @@ import {IUser} from "@/types/IUser";
 import bcrypt from "bcryptjs";
 import {Genre} from "@/types/Genre";
 
-export interface IUserModel extends IUser, Document{
-
-}
+export interface IUserModel extends IUser, Document{}
 
 const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
     name: {
@@ -54,6 +52,12 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
             type: Map,
             of: String
         }
+    },
+    image: {
+        type: String
+    },
+    introduction: {
+        type: String
     }
 })
 

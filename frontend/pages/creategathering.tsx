@@ -241,29 +241,29 @@ const CreateGathering = () => {
                                 helperText={errorObj.description.error ? errorObj.description.message : ""}
                                 onChange={descriptionOnChange}
                             />
-                            <Stack direction={{xs: "column", md: "row"}} spacing={2}>
-                                <LocationInput
-                                    placeholder="Meeting point"
-                                    setLocation={context.setMeetingPoint}
-                                    location={context.meetingPoint}
-                                    errorObj={errorObj.meetingPoint}
-                                />
-                                <TextField
-                                    id="time"
-                                    label="Meeting time"
-                                    type="time"
-                                    error={errorObj.meetingTime.error}
-                                    value={context.meetingTime}
-                                    onChange={(e) => context.setMeetingTime(e.target.value)}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    inputProps={{
-                                        step: 300, // 5 min
-                                    }}
-                                    fullWidth={true}
-                                />
-                            </Stack>
+                            {/*<Stack direction={{xs: "column", md: "row"}} spacing={2}>*/}
+                            {/*    <LocationInput*/}
+                            {/*        placeholder="Meeting point"*/}
+                            {/*        setLocation={context.setMeetingPoint}*/}
+                            {/*        location={context.meetingPoint}*/}
+                            {/*        errorObj={errorObj.meetingPoint}*/}
+                            {/*    />*/}
+                            {/*    <TextField*/}
+                            {/*        id="time"*/}
+                            {/*        label="Meeting time"*/}
+                            {/*        type="time"*/}
+                            {/*        error={errorObj.meetingTime.error}*/}
+                            {/*        value={context.meetingTime}*/}
+                            {/*        onChange={(e) => context.setMeetingTime(e.target.value)}*/}
+                            {/*        InputLabelProps={{*/}
+                            {/*            shrink: true,*/}
+                            {/*        }}*/}
+                            {/*        inputProps={{*/}
+                            {/*            step: 300, // 5 min*/}
+                            {/*        }}*/}
+                            {/*        fullWidth={true}*/}
+                            {/*    />*/}
+                            {/*</Stack>*/}
                             <Stack direction={{xs: "column", sm: "row"}} spacing={2}>
                                 <TextField
                                     id="outlined-select-currency"

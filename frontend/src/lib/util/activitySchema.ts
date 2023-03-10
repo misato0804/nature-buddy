@@ -1,7 +1,9 @@
-import mongoose from "mongoose";
-import {bool} from "prop-types";
+import {IActivity} from "@/types/IActivity";
+import mongoose, {Schema, Document, CallbackWithoutResultAndOptionalError} from "mongoose";
 
-const ActivitySchema = new mongoose.Schema({
+export interface IActivityModel extends IActivity, Document{}
+
+const ActivitySchema: Schema = new mongoose.Schema<IActivityModel>({
     title: {
         type: String,
         required: [true, "must be provided"],
@@ -25,17 +27,18 @@ const ActivitySchema = new mongoose.Schema({
         coordinates: {type: [Number], required: true},
         address: String,
         place_id: String,
-        // required: [true, "Location must be provided"]
     },
-    meetingPoint: {
-        type: {type: String, default: 'Point'},
-        coordinates: {type: [Number], required: true},
-        address: String,
-        place_id: String
-    },
-    meetingTime: {
-        type: String,
-        required: [true, "Destination must be provided"]
+    meetingDetail: {
+        meetingPoint: {
+            type: {type: String, default: 'Point'},
+            coordinates: {type: [Number], required: true},
+            address: String,
+            place_id: String
+        },
+        meetingTime: {
+            type: Date,
+            required: [true, "Destination must be provided"]
+        }
     },
     genre: {
         type: String,
@@ -50,13 +53,9 @@ const ActivitySchema = new mongoose.Schema({
         type: String,
         required: [true, "Destination must be provided"]
     },
-    imageCover: {
+    coverImage: {
         type: String,
         required: [true, "Cover image must be provided"]
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now()
     },
     host: {
         type: mongoose.Schema.Types.ObjectId,
@@ -73,6 +72,10 @@ const ActivitySchema = new mongoose.Schema({
         type: Boolean,
         default: true
     }
+},{
+    timestamps: {
+        createdAt: true
+    }
 });
 
-export const Activity = mongoose.models.Activity || mongoose.model("Activity", ActivitySchema, "Activities")
+export const Activity = mongoose.models.Activity || mongoose.model<IActivityModel>("Activity", ActivitySchema, "Activities")
