@@ -1,7 +1,22 @@
 import Head from 'next/head'
 import Hero from "@/components/hero-page/Hero";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/router";
+import {useEffect} from "react";
 
 export default function Home() {
+
+    const {data: session, status} = useSession()
+    const router = useRouter()
+
+    useEffect(() => {
+        session && router.push("/user")
+    }, [status])
+
+    if(status === "loading") {
+        return <h1>Loading...</h1>
+    }
+
     return (
         <>
             <Head>

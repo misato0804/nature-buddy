@@ -55,12 +55,15 @@ export default NextAuth({
     },
     debug: process.env.NODE_ENV === "development",
     callbacks: {
-        async session({session}){
-            // console.log(session)
+        async session({session}) {
             const findUser = await User.findOne({
                 email: session.user!.email
             });
-            return {...session}
+            if (findUser) {
+                return {...session, userId: findUser._id.toString()}
+            } else {
+                return {...session}
+            }
         }
     }
 })

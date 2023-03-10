@@ -9,3 +9,4 @@ const MyActivities = () => {
 };
 
 export default MyActivities;
+

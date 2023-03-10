@@ -27,6 +27,7 @@ const styles = {
 }
 
 const Hero: FC = () => {
+
     const [currentIndex, setCurrentIndex] = useState<number>(0)
     const imagesArr = [camping, picnic, hiking, biking]
 

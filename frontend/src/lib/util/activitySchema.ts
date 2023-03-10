@@ -25,7 +25,7 @@ const ActivitySchema = new mongoose.Schema({
         coordinates: {type: [Number], required: true},
         address: String,
         place_id: String,
-        required: [true, "Location must be provided"]
+        // required: [true, "Location must be provided"]
     },
     meetingPoint: {
         type: {type: String, default: 'Point'},

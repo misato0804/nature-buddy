@@ -4,15 +4,27 @@ import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 import BuddyIcon from "@/components/elements/atoms/BuddyIcon";
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
 import BrowseByActivity from "@/components/elements/organisms/BrowseByActivity";
-
+import {getCookie} from 'cookies-next';
+import {getSession} from "next-auth/react";
+import {useEffect} from "react";
+import StickyButton from "@/components/elements/atoms/StickyButton";
 
 const User = ({user}: any) => {
 
     //user page
     const router = useRouter()
-    const border = <hr style={{marginTop:".5rem", marginBottom:"1rem", border:"none", height:"2px", backgroundColor: "#A2A2A2"}}/>
 
+    useEffect(() => {
+        async function session() {
+            const session = await getSession()
+            console.log(session)
+        }
+        session()
 
+    }, [])
+
+    const border = <hr
+        style={{marginTop: ".5rem", marginBottom: "1rem", border: "none", height: "2px", backgroundColor: "#A2A2A2"}}/>
     return (
         <Container sx={{mt: {xs: 12, sm: 6}}}>
             <Box>
@@ -82,18 +94,19 @@ const User = ({user}: any) => {
                 </Box>
                 <BrowseByActivity/>
             </Box>
+            <StickyButton/>
         </Container>
     );
 };
 
 export default User;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: { req: { cookies: { [x: string]: any; }; }; }) {
 
-    const res = await fetch('http://localhost:3000/api/user/640046988dbaa4a6bfae6a15')
+    const id = context.req.cookies['userId']
+    const res = await fetch(`http://localhost:3000/api/user/${id}`)
     const user = await res.json()
 
-    console.log(user)
     return {
         props: {
             user: user.data

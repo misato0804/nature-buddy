@@ -2,6 +2,7 @@ import React from 'react';
 import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
 import Link from "next/link";
 import {signOut, useSession} from "next-auth/react"
+import { deleteCookie } from 'cookies-next';
 
 const Header = () => {
 
@@ -32,6 +33,11 @@ const Header = () => {
             link: "/user"
         }
     ]
+
+    const signout = () => {
+        signOut()
+        deleteCookie("userId")
+    }
 
     return (
         <AppBar component="nav">
@@ -71,7 +77,7 @@ const Header = () => {
                             </Link>
                         </Button>
                     ))}
-                    {session && <Button sx={{color: '#fff'}} onClick={() => signOut()}>SIGN OUT</Button>}
+                    {session && <Button sx={{color: '#fff'}} onClick={() => signout()}>SIGN OUT</Button>}
                 </Box>
             </Toolbar>
         </AppBar>

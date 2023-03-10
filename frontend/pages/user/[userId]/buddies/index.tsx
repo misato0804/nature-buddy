@@ -1,7 +1,7 @@
 import React from 'react';
 import {Typography} from "@mui/material";
 
-const Index = () => {
+const Buddies = () => {
     return (
         <div>
            <Typography variant="h1">Buddy</Typography>
@@ -11,4 +11,10 @@ const Index = () => {
     );
 };
 
-export default Index;
+export default Buddies;
+
+export async function getServerSideProps() {
+
+
+}
+

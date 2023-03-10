@@ -230,7 +230,6 @@ const CreateGathering = () => {
                                 setLocation={context.setLocation}
                                 errorObj={errorObj.location}
                                 location={context.location}
-                                setDestination={context.setDestination}
                             />
                             <TextField
                                 id="outlined-multiline-static"

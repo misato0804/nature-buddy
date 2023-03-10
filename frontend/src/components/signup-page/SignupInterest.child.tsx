@@ -7,7 +7,7 @@ import {useUserContext} from "@/lib/context/userInputContext";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {session} from "next-auth/core/routes";
 import {useSession} from "next-auth/react";
-import Router from 'next/router'
+import Router, {useRouter} from 'next/router'
 
 type Activity = {
     id: number
@@ -21,6 +21,7 @@ const activitiesRender = (list: Activity[]) => {
 
 const SignupInterestChild = () => {
     const { data: session, status } = useSession()
+    const router = useRouter()
     const {location, name, email, password, passwordConfirm, interests, setName, setEmail} = useUserContext()
 
     useEffect(() => {
@@ -51,7 +52,7 @@ const SignupInterestChild = () => {
             })
             console.log(res)
             const userdata = await res.json()
-            userdata.status === "success" ? await Router.push('/user') : await Router.push('/error')
+            userdata.status === "success" ? await router.push('/user') : await router.push('/error')
         } catch (e: any) {
             console.log(e)
         }

@@ -2,6 +2,12 @@ import {NextApiRequest, NextApiResponse} from "next";
 import dbConnect from "@/lib/util/mongo";
 import {User} from "@/lib/util/schema";
 
+/**
+ * TODO: LOGIN
+ * @param req
+ * @param res
+ */
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const {method} = req;
     const {email, password} = req.body;

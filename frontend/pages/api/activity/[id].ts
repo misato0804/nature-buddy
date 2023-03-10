@@ -7,22 +7,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await dbConnect();
 
     switch (method) {
-        case "POST":
-            //Create [genre]
-            try {
-                console.log(req.body)
-                const activity = await Activity.create(req.body)
-                res.status(200).json({
-                    status: "success",
-                    data: activity
-                })
-            } catch (e: any) {
-                console.log(e)
-            }
-            break
         case "GET": {
             //Get [genre] info
-            break
+            const id = req.query.id
+            const activity = await Activity.findById(id);
+            console.log(activity)
+            res.status(200).json({
+                status: "success",
+                data: activity
+            })
         }
         case "PUT": {
             //Modify
