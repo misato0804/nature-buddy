@@ -1,4 +1,4 @@
-import {createTheme} from '@mui/material/styles';
+import {createTheme, duration} from '@mui/material/styles';
 import {Prompt} from '@next/font/google'
 
 const theme = createTheme();
@@ -34,6 +34,14 @@ theme.typography.h1 = {
 
 theme.typography.h2 = {
     fontFamily: prompt.style.fontFamily,
+    fontSize: '1rem',
+    [theme.breakpoints.up("sm")]: {
+        fontSize: "1.5rem"
+    }
+}
+
+theme.typography.h3 = {
+    fontFamily: prompt.style.fontFamily,
     fontSize: '1.5rem',
     [theme.breakpoints.up("sm")]: {
         fontSize: "2rem"
@@ -51,5 +59,32 @@ theme.typography.h4 = {
         fontSize: "1.2rem"
     },
 }
+
+theme.typography.h5 = {
+    fontFamily: prompt.style.fontFamily,
+    fontSize: '.6rem',
+    fontWeight: 500,
+    [theme.breakpoints.up("sm")]: {
+        fontSize: ".8rem",
+    },
+    [theme.breakpoints.up("md")]: {
+        fontSize: "1.0rem"
+    },
+}
+
+theme.typography.h6 = {
+    fontFamily: prompt.style.fontFamily,
+    fontSize: '.6rem',
+    fontWeight: 700,
+    [theme.breakpoints.up("sm")]: {
+        fontSize: ".8rem",
+    },
+    [theme.breakpoints.up("md")]: {
+        fontSize: "1.0rem"
+    },
+}
+
+
+
 
 export default theme;

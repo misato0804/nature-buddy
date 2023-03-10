@@ -1,13 +1,22 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import {Inter} from '@next/font/google'
-import styles from '@/styles/Home.module.css'
-import {Typography} from "@mui/material";
 import Hero from "@/components/hero-page/Hero";
-
-const inter = Inter({subsets: ['latin']})
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/router";
+import {useEffect} from "react";
 
 export default function Home() {
+
+    const {data: session, status} = useSession()
+    const router = useRouter()
+
+    useEffect(() => {
+        session && router.push("/user")
+    }, [status])
+
+    if(status === "loading") {
+        return <h1>Loading...</h1>
+    }
+
     return (
         <>
             <Head>

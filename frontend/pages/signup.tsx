@@ -1,13 +1,27 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import mountain from "../public/assets/images/climbing.jpg";
 import FormTemplate from "@/components/elements/organisms/FormTemplate";
 import SignupTopChild from "@/components/signup-page/SignupTop.child";
 import SignupInputChild from "@/components/signup-page/SignupInput.child";
 import SignupLocationChild from "@/components/signup-page/SignupLocation.child";
 import SignupInterestChild from "@/components/signup-page/SignupInterest.child";
+import { useSession} from "next-auth/react";
 
 const Signup = () => {
+
+    const { data: session, status } = useSession()
     const [childComponent, setChildComponent] = useState<number>(1)
+
+    useEffect(() => {
+        console.log({session}, status)
+        if(session) {
+            setChildComponent(3)
+        }
+    }, [status])
+
+    if(status === "loading") {
+        return <h1>Loading...</h1>
+    }
 
     const child = (childComponent: number) => {
         switch (childComponent) {

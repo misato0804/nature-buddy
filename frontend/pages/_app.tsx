@@ -9,6 +9,7 @@ import createEmotionCache from "../src/styles/createEmotionCache";
 import {SessionProvider} from "next-auth/react"
 import type {Session} from "next-auth"
 import {UserProvider} from "@/lib/context/userInputContext";
+import {ActivityProvider} from "@/lib/context/activityInputContext";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -21,15 +22,17 @@ export default function App({Component, pageProps, emotionCache = clientSideEmot
         <>
             <CacheProvider value={emotionCache}>
                 <Head>
-                    <meta name="viewport" content="initial-scale=1, width=device-width" />
+                    <meta name="viewport" content="initial-scale=1, width=device-width"/>
                 </Head>
                 <ThemeProvider theme={theme}>
                     <SessionProvider session={pageProps.session}>
                         <UserProvider>
-                            <Layouts>
-                                <CssBaseline/>
-                                <Component {...pageProps} />
-                            </Layouts>
+                            <ActivityProvider>
+                                <Layouts>
+                                    <CssBaseline/>
+                                    <Component {...pageProps} />
+                                </Layouts>
+                            </ActivityProvider>
                         </UserProvider>
                     </SessionProvider>
                 </ThemeProvider>

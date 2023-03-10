@@ -42,8 +42,10 @@ const FormTemplate = ({image, childComponent}: FormProps) => {
                 <Image
                     src={image}
                     alt="mountain"
-                    layout="fill"
-                    objectFit="cover"
+                    style={{objectFit: "cover"}}
+                    priority
+                    sizes="100vw"
+                    fill
                 />
             </Box>
             <Box sx={childStyle}>
