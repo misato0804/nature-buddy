@@ -43,7 +43,7 @@ const SignupInterestChild = () => {
                     interests,
                     location: {
                         type: "point",
-                        coordinates: [location!.lat, location!.lng]
+                        coordinates: [location.coordinates[0], location!.coordinates[1]]
                     }
                 }),
                 headers: {
