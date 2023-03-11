@@ -3,7 +3,8 @@ import AuthButton from "@/components/elements/atoms/AuthButton";
 import GoogleIcon from "@mui/icons-material/Google";
 import {signIn} from "next-auth/react";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import GithubIcon from "@mui/icons-material/Github"
+import GitHubIcon from '@mui/icons-material/GitHub';
+
 import Link from "next/link";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {Dispatch, SetStateAction} from "react";
@@ -19,7 +20,7 @@ const LoginTopChild = ({setChildComponent}: Props) => {
             <Stack direction="column" spacing={2}>
                 <AuthButton company="Login with Google" color="#4184F2" logo={<GoogleIcon/>} onClick={() => signIn("google", {callbackUrl: "/user"})}/>
                 <AuthButton company="Login with Facebook" color="#3C5997" logo={<FacebookIcon/>} onClick={() => signIn("facebook", {callbackUrl: "/user"})}/>
-                <AuthButton company="Login with Github" color="#000000" logo={<GithubIcon/>} onClick={() => signIn("github", {callbackUrl: "/user", })}/>
+                <AuthButton company="Login with Github" color="#000000" logo={<GitHubIcon/>} onClick={() => signIn("github", {callbackUrl: "/user", })}/>
             </Stack>
             <Stack direction="row"  sx={{alignItems: "center", my:4}}>
                 <hr style={{width: "45%", height: .5, backgroundColor: "black"}}/>
