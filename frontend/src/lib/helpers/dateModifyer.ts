@@ -34,7 +34,7 @@ const getCurrentTime = () => {
 
 const stringToDate = (date: string, time: string) => {
     const year = Number(date.slice(0,4))
-    const month = Number(date.slice(5, 7))
+    const month = Number(date.slice(5, 7)) -1
     const day = Number(date.slice(8, 11))
     const hours = Number(time.slice(0,2))
     const mins = Number(time.slice(3,5))

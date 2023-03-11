@@ -11,7 +11,7 @@ const BuddyIcon = ({src}: IconProps) => {
     const [width] = useWindowSize()
 
     return (
-        <Box>
+        <Box sx={{cursor: "pointer"}}>
             <Image
                 src="https://res.cloudinary.com/dpbmhiqim/image/upload/v1677308198/cld-sample-5.jpg"
                 alt="my icon"

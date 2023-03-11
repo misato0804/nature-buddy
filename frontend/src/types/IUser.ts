@@ -1,5 +1,6 @@
 import {ILocation} from "@/types/ILocation";
 import {Genre} from "@/types/Genre";
+import {IActivity} from "@/types/IActivity";
 
 export interface IUser {
     name: string,
@@ -11,5 +12,7 @@ export interface IUser {
     location: ILocation,
     activities: any[],
     socialMediaHandles?: Map<string, string>,
-    image?: string
+    image?: string,
+    hostedActivity? : string[],
+    joinedActivity? : string[]
 }

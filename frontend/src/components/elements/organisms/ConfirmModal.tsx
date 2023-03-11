@@ -15,6 +15,7 @@ import {ILocation} from "@/types/ILocation";
 import {IActivity} from "@/types/IActivity";
 import {  getCookie } from 'cookies-next';
 import {useRouter} from "next/router";
+import {ObjectId, Types} from "mongoose";
 
 /**
  * TODO: Meetup Location
@@ -68,7 +69,7 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
             await activity.setCoverImage(imageData.secure_url)
             const newEvent : IActivity = {
                 ...activity,
-                host: userId
+                host: new Types.ObjectId(userId as string)
             }
             const res = await fetch("/api/activity/create", {
                 method: "POST",
