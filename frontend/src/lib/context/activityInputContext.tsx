@@ -7,7 +7,7 @@ type Props = {
     children: ReactNode
 };
 
-interface MeetingDetail {
+export interface MeetingDetail {
     meetingPoint: ILocation,
     meetingTime: Date
 }
@@ -15,8 +15,8 @@ interface MeetingDetail {
 export interface IActivityContext extends IActivity {
     setTitle: Dispatch<SetStateAction<string>>
     setDate: Dispatch<SetStateAction<Date>>
-    setEndDate: Dispatch<SetStateAction<Date>>
-    setLocation: Dispatch<SetStateAction<ILocation>>
+    setEndDate: Dispatch<SetStateAction<Date | undefined>>
+    setLocation: Dispatch<SetStateAction<ILocation >>
     setDescription: Dispatch<SetStateAction<string>>
     setMeetingDetail: Dispatch<SetStateAction<MeetingDetail>>
     setGenre: Dispatch<SetStateAction<string>>
@@ -35,10 +35,9 @@ export const useActivityContext = () => {
 export const ActivityProvider = ({children}: Props) => {
 
     const defaultDate = new Date()
-
     const [title, setTitle] = useState<string>("")
     const [date, setDate] = useState<Date>(defaultDate)
-    const [endDate, setEndDate] = useState<Date>(defaultDate)
+    const [endDate, setEndDate] = useState<Date>()
     const [description, setDescription] = useState<string>("")
     const [location, setLocation] = useState<ILocation>({
         type: "spot",
@@ -59,6 +58,7 @@ export const ActivityProvider = ({children}: Props) => {
     const [spots, setSpots] = useState<number>(0)
     const [duration, setDuration] = useState<string>("")
     const [coverImage, setCoverImage] = useState<string>("")
+
 
     return(
         <activityContext.Provider value={{

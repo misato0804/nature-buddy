@@ -1,23 +1,20 @@
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useState} from "react";
+import {ILocation} from "@/types/ILocation";
 
 type Props = {
     children: ReactNode
 };
 
-type Location = {
-    lat: number,
-    lng: number
-}
 
 type userContext = {
     name: string,
     email: string,
     password: string,
     passwordConfirm: string,
-    location:Location | undefined,
+    location:ILocation,
     interests: string[],
     setInterests: Dispatch<SetStateAction<string[]>>,
-    setLocation: Dispatch<SetStateAction<Location | undefined>>,
+    setLocation: Dispatch<SetStateAction<ILocation >>,
     setName:Dispatch<SetStateAction<string>>,
     setEmail:Dispatch<SetStateAction<string>>,
     setPassword:Dispatch<SetStateAction<string>>,
@@ -35,7 +32,12 @@ export const UserProvider = ({children}: Props) => {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [passwordConfirm, setPasswordConfirm] = useState<string>("")
-    const [location, setLocation] = useState<Location | undefined>()
+    const [location, setLocation] = useState<ILocation>({
+        type: "spot",
+        address: "",
+        place_id: "",
+        coordinates: [0,0]
+    })
     const [interests, setInterests] = useState<string[]>([])
 
     return(

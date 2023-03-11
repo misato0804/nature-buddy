@@ -35,8 +35,8 @@ const Header = () => {
     ]
 
     const signout = () => {
-        signOut()
         deleteCookie("userId")
+        signOut()
     }
 
     return (

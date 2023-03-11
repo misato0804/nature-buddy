@@ -1,12 +1,12 @@
 import React, {ChangeEvent, Dispatch, SetStateAction} from 'react';
 import {Box, List, ListItemText, TextField} from "@mui/material";
 import usePlacesAutocomplete, {getGeocode, getLatLng} from "use-places-autocomplete";
-import {Location} from "@/lib/context/activityInputContext"
-
+import {ILocation} from "@/types/ILocation";
+import {MeetingDetail} from "@/lib/context/activityInputContext";
 
 type LocationProps = {
-    location: Location | undefined,
-    setLocation: Dispatch<SetStateAction<Location | undefined>>,
+    location: ILocation | undefined,
+    setLocation: Dispatch<SetStateAction<ILocation>>,
     placeholder: string,
     errorObj?: { error: boolean, message?: string }
 }
@@ -39,8 +39,6 @@ const LocationInput = ({location, setLocation, placeholder, errorObj}: LocationP
             getGeocode({address: description}).then((results) => {
                 const {lat, lng} = getLatLng(results[0]);
                 console.log(results)
-                // setDestination && setDestination(results[0].formatted_address)
-                // setLocation({...location, lat, lng})
                 setLocation({
                     ...location!,
                     coordinates: [lat, lng],

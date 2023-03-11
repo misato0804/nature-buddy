@@ -12,6 +12,12 @@ const getDate = (date: Date) => {
     return `${year}-0${month}-${day}`
 }
 
+const getTime = (time: string, date: Date) => {
+    const currentTime = date.toISOString().substring(11,16)
+    console.log(currentTime)
+    return currentTime
+}
+
 const dateValidation = (start: string, end: string) => {
     const dates = start.split("-")
     const endDates = end.split("-")
@@ -20,4 +26,20 @@ const dateValidation = (start: string, end: string) => {
     return Number(endDate) - Number(startDate)
 }
 
-export {modifier, getDate, dateValidation}
+const getCurrentTime = () => {
+    const today = new Date()
+    let time = today.getHours() + ":" + today.getMinutes()
+    return time
+}
+
+const stringToDate = (date: string, time: string) => {
+    const year = Number(date.slice(0,4))
+    const month = Number(date.slice(5, 7)) -1
+    const day = Number(date.slice(8, 11))
+    const hours = Number(time.slice(0,2))
+    const mins = Number(time.slice(3,5))
+    const result = new Date(year, month, day, hours, mins)
+    return result
+}
+
+export {modifier, getDate, dateValidation, getTime, getCurrentTime, stringToDate}

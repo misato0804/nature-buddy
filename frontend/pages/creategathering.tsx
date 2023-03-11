@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Container, Grid, MenuItem, Paper, Stack, TextField, Typography} from "@mui/material";
+import {Box, Container,  MenuItem, Paper, Stack, TextField, Typography} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {activitiesList} from "@/lib/util/activitiesList";
 import ConfirmModal from "@/components/elements/organisms/ConfirmModal";
@@ -7,8 +7,10 @@ import {useActivityContext} from "@/lib/context/activityInputContext";
 import LocationInput from "@/components/elements/molecules/LocationInput";
 import useValidator from "@/lib/hooks/useValidator";
 import initialActivityError from "@/lib/helpers/initialActivityError";
-import {dateValidation, getDate, modifier} from "@/lib/helpers/dateModifyer";
-import {getSession, signIn} from "next-auth/react";
+import {dateValidation, getCurrentTime, getDate, modifier, stringToDate} from "@/lib/helpers/dateModifyer";
+import {getSession} from "next-auth/react";
+import {ILocation} from "@/types/ILocation";
+import {useRouter} from "next/router";
 
 const CreateGathering = () => {
 
@@ -17,17 +19,16 @@ const CreateGathering = () => {
      */
 
     const [name, setName] = useState<string | null | undefined>("")
+    const router = useRouter()
 
     useEffect(() => {
         const securePage = async () => {
             const session = await getSession()
-            console.log(session)
             if (!session) {
-                signIn()
+                await router.push("/login")
             } else {
                 // setLoading(false)
                 setName(session.user?.name)
-                console.log(session.user?.name)
             }
         }
         securePage()
@@ -43,6 +44,13 @@ const CreateGathering = () => {
     const [errorObj, setErrorObj] = useState(initialActivityError)
     const [date, setDate] = useState<string>(getDate(today))
     const [endDate, setEndDate] = useState<string>(getDate(today))
+    const [meetingPoint, setMeetingPoint] = useState<ILocation>({
+        type: "spot",
+        address: "",
+        place_id: "",
+        coordinates: [0, 0]
+    })
+    const [meetingTime, setMeetingTime] = useState<string>(getCurrentTime)
 
     const AddEndDate = (
         <Box width="100%"
@@ -55,7 +63,6 @@ const CreateGathering = () => {
                 Date</Typography>
         </Box>
     )
-
 
     const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reader = new FileReader()
@@ -81,16 +88,6 @@ const CreateGathering = () => {
         setDate(e.target.value)
         const dateCtx = modifier(e.target.value)
         context.setDate(dateCtx)
-        endDateOpen && dateValidation(date, endDate) > 0 ? setErrorObj({
-            ...errorObj,
-            endDate: {error: false, message: ""},
-            date: {error: false, message: ""}
-        }) : setErrorObj({
-            ...errorObj,
-            endDate: {error: true, message: "End date must be after Date"},
-            date: {error: true, message: "End date must be after Date"}
-        })
-
     }
 
     const endDateOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,9 +132,13 @@ const CreateGathering = () => {
 
     }
 
-    // if (user === undefined) {
-    //     return <h1>Loading...</h1>
-    // }
+    const meetingTimeOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMeetingTime(e.target.value)
+        context.setMeetingDetail({
+            ...context.meetingDetail,
+            meetingTime: stringToDate(date, meetingTime)
+        })
+    }
 
     return (
         <Box component="main" sx={{backgroundColor: "#E0EFDC", mt: 5, display: "flex", justifyContent: "center"}}>
@@ -172,16 +173,11 @@ const CreateGathering = () => {
                                         borderRadius: 0
                                     }}/>
                             </label>
-
                         </Box>
-                        <Grid container columnSpacing={1} my={2}>
-                            <Grid item sx={{backgroundColor: "#C9CCD1", borderRadius: "50%", ml: 2}} xs={.8}>
-                            </Grid>
-                            <Grid item>
-                                <Typography variant="subtitle1" sx={{color: "grey"}}>{name}</Typography>
-                                <Typography variant="subtitle1" sx={{color: "grey"}}>Host</Typography>
-                            </Grid>
-                        </Grid>
+                        <Box my={2}>
+                            <Typography variant="h6" sx={{color: "grey"}}>Host</Typography>
+                            <Typography variant="h6" sx={{color: "grey"}}>{name}</Typography>
+                        </Box>
                         <Stack direction='column' my={2} spacing={3}>
                             <TextField
                                 id="title"
@@ -237,33 +233,36 @@ const CreateGathering = () => {
                                 error={errorObj.description.error}
                                 multiline
                                 rows={4}
-                                defaultValue="Description"
+                                defaultValue="i.e. This event is for all hiking lover and take place at Lynn Canyon"
                                 helperText={errorObj.description.error ? errorObj.description.message : ""}
                                 onChange={descriptionOnChange}
                             />
-                            {/*<Stack direction={{xs: "column", md: "row"}} spacing={2}>*/}
-                            {/*    <LocationInput*/}
-                            {/*        placeholder="Meeting point"*/}
-                            {/*        setLocation={context.setMeetingPoint}*/}
-                            {/*        location={context.meetingPoint}*/}
-                            {/*        errorObj={errorObj.meetingPoint}*/}
-                            {/*    />*/}
-                            {/*    <TextField*/}
-                            {/*        id="time"*/}
-                            {/*        label="Meeting time"*/}
-                            {/*        type="time"*/}
-                            {/*        error={errorObj.meetingTime.error}*/}
-                            {/*        value={context.meetingTime}*/}
-                            {/*        onChange={(e) => context.setMeetingTime(e.target.value)}*/}
-                            {/*        InputLabelProps={{*/}
-                            {/*            shrink: true,*/}
-                            {/*        }}*/}
-                            {/*        inputProps={{*/}
-                            {/*            step: 300, // 5 min*/}
-                            {/*        }}*/}
-                            {/*        fullWidth={true}*/}
-                            {/*    />*/}
-                            {/*</Stack>*/}
+                            <Stack
+                                direction={{xs: "column", md: "row"}}
+                                spacing={2}
+                            >
+                                <LocationInput
+                                    placeholder="Meeting point"
+                                    setLocation={setMeetingPoint}
+                                    location={meetingPoint}
+                                    errorObj={errorObj.meetingPoint}
+                                />
+                                <TextField
+                                    id="time"
+                                    label="Meeting time"
+                                    type="time"
+                                    error={errorObj.meetingTime.error}
+                                    value={meetingTime}
+                                    onChange={meetingTimeOnChange}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    inputProps={{
+                                        step: 300, // 5 min
+                                    }}
+                                    fullWidth={true}
+                                />
+                            </Stack>
                             <Stack direction={{xs: "column", sm: "row"}} spacing={2}>
                                 <TextField
                                     id="outlined-select-currency"
@@ -308,8 +307,14 @@ const CreateGathering = () => {
                     </Container>
                 </Paper>
             </Box>
-            {openModal ? <ConfirmModal openModal={openModal} setOpenModal={setOpenModal} uploadDate={uploadDate}
-                                       fileData={fileData}/> : null}
+            {openModal ? <ConfirmModal
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                uploadDate={uploadDate}
+                meetingPoint={meetingPoint}
+                fileData={fileData}
+                meetingTime={meetingTime}
+            /> : null}
         </Box>
     );
 };

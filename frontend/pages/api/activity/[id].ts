@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         case "GET": {
             //Get [genre] info
             const id = req.query.id
-            const activity = await Activity.findById(id);
+            const activity = await Activity.findById(id).populate("host");
             console.log(activity)
             res.status(200).json({
                 status: "success",

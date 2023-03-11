@@ -1,4 +1,4 @@
-import {Container, Grid, Typography, Box, Stack} from "@mui/material";
+import {Container, Typography, Box, Stack} from "@mui/material";
 import Image from 'next/image';
 import camping from "../../../public/assets/images/climbing.jpg"
 import picnic
@@ -6,8 +6,6 @@ import picnic
 import hiking from "../../../public/assets/images/hiking.jpg"
 import biking from "../../../public/assets/images/pexels-photomix-company-172484.jpg"
 import {FC, useEffect, useState} from "react";
-import {activitiesList} from "@/lib/util/activitiesList";
-import ActivityTopCard from "@/components/hero-page/ActivityTopCard";
 import {styled} from "@mui/system";
 import BrowseByActivity from "@/components/elements/organisms/BrowseByActivity";
 import HowItWorks from "@/components/hero-page/HowItWorks";
