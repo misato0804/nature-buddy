@@ -3,7 +3,7 @@ import AuthButton from "@/components/elements/atoms/AuthButton";
 import GoogleIcon from "@mui/icons-material/Google";
 import {signIn} from "next-auth/react";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import GithubIcon from "@mui/icons-material/Github";
+import GitHubIcon from '@mui/icons-material/GitHub';
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import Link from "next/link";
 import {Dispatch, SetStateAction} from "react";
