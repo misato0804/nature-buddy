@@ -21,7 +21,7 @@ const useValidator = () => {
     }
 
     const allValidator = () => {
-        if(context.title.length < 1 || context.description.length < 20 || context.meetingPoint === undefined || context.spots === 0 || context.duration.length < 3 ) {
+        if(context.title.length < 1 || context.description.length < 20 || context.meetingDetail === undefined || context.spots === 0 || context.duration.length < 3 ) {
             return false
         }
         return true;

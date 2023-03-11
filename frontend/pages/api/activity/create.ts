@@ -6,6 +6,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const {method} = req;
     await dbConnect()
     const newActivity = req.body
+    console.log("newActivity", newActivity)
 
     try {
         const activity = await Activity.create(newActivity)
@@ -13,6 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             status: "success",
             data: activity
         })
+
     } catch (e: any) {
         console.log(e)
     }

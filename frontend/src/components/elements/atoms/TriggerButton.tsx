@@ -1,10 +1,11 @@
 import {Box, Typography} from "@mui/material";
 import Link from "next/link";
+import React from "react";
 
 type LinkButton = {
     title: string,
     color: string,
-    onClick?: () => void,
+    onClick?: (() => void) | ((e: React.MouseEvent<HTMLElement>) => Promise<void>),
     style? : object
 }
 

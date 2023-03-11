@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction} from "react";
+import React, {Dispatch, SetStateAction, useEffect} from "react";
 import {Backdrop, Box, Fade, Modal, Stack, Typography} from "@mui/material";
 import {useActivityContext} from "@/lib/context/activityInputContext";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
@@ -11,6 +11,10 @@ import AvTimerOutlinedIcon from '@mui/icons-material/AvTimerOutlined';
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
 import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import {getDate} from "@/lib/helpers/dateModifyer";
+import {ILocation} from "@/types/ILocation";
+import {IActivity} from "@/types/IActivity";
+import {  getCookie } from 'cookies-next';
+import {useRouter} from "next/router";
 
 /**
  * TODO: Meetup Location
@@ -21,6 +25,8 @@ type ModalProps = {
     setOpenModal: Dispatch<SetStateAction<boolean>>
     uploadDate?: string,
     fileData?: FileList | undefined,
+    meetingPoint : ILocation,
+    meetingTime: string
 }
 
 const style = {
@@ -34,15 +40,22 @@ const style = {
     p: 4,
 };
 
-const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProps) => {
+const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoint, meetingTime}: ModalProps) => {
 
     const {...activity} = useActivityContext()
     const eventDate = getDate(activity.date)
+    const userId = getCookie("userId")
+    const router = useRouter()
 
-    console.log(activity.meetingPoint?.place_id)
-    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    useEffect(() => {
+        activity.setMeetingDetail({
+            ...activity.meetingDetail,
+            meetingPoint
+        })
+    }, [meetingPoint])
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault()
-        console.log(activity)
         const formData = new FormData()
         fileData && formData.append("file", fileData[0])
         formData.append('upload_preset', 'nature-buddy')
@@ -52,17 +65,22 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProp
                 body: formData
             })
             const imageData = await resFromCloudinary.json()
-            console.log(imageData)
             await activity.setCoverImage(imageData.secure_url)
-
-            const res = await fetch("/api/activity", {
+            const newEvent : IActivity = {
+                ...activity,
+                host: userId
+            }
+            const res = await fetch("/api/activity/create", {
                 method: "POST",
-                body: JSON.stringify({...activity}),
+                body: JSON.stringify(newEvent),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
             console.log(res)
+            if(res.status === 200) {
+                await router.push(`/user/${userId}`)
+            }
         } catch (e: any) {
             console.log(e)
         }
@@ -102,9 +120,10 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProp
                                             sx={{display: "flex", alignItems: "center"}}><DepartureBoardOutlinedIcon
                                     sx={{mr: 1}}/>Meeting
                                     Detail</Typography>
-                                <Typography variant="subtitle2" sx={{pl: 4}}>{activity.meetingTime}</Typography>
+                                <Typography variant="subtitle2" sx={{pl: 4}}>{activity.date.toLocaleDateString()}</Typography>
+                                <Typography variant="subtitle2" sx={{pl: 4}}>{meetingTime}</Typography>
                                 <Typography variant="subtitle2" sx={{pl: 4}}>
-                                    <a rel='noopener noreferrer' href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${activity.meetingPoint?.place_id}`} target="_blank">{activity.meetingPoint?.address}</a>
+                                    <a rel='noopener noreferrer' href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${meetingPoint.place_id}`} target="_blank">{meetingPoint.address}</a>
                                 </Typography>
                             </Stack>
                             <Typography variant="h4" sx={{display: "flex", alignItems: "center"}}><InfoOutlinedIcon
@@ -121,7 +140,7 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData}: ModalProp
                     </Box>
                     <Stack direction={{xs: "column", md: "row"}} spacing={2}>
                         <TriggerButton color="grey" title="Back" onClick={() => setOpenModal(false)}/>
-                        <TriggerButton color="green" title="Create" onClick={() => console.log(activity)}/>
+                        <TriggerButton color="green" title="Create" onClick={handleSubmit}/>
                     </Stack>
                 </Box>
             </Fade>

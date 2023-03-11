@@ -1,8 +1,7 @@
-import {Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import {FC} from "react";
 import Link from "next/link";
 import Image, {StaticImageData} from "next/image";
-import {auto} from "@popperjs/core";
 
 type CardProps = {
     title: string,
@@ -11,7 +10,7 @@ type CardProps = {
 }
 
 
-const ActivityTopCard: FC<CardProps> = ({title, activityImage, link}: CardProps) => {
+const ActivityTopCard: FC<CardProps> = ({title, activityImage}: CardProps) => {
     return (
         <Box>
             <Box sx={{width:{xs:250, md:350}}}>

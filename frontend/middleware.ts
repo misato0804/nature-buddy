@@ -8,10 +8,11 @@ export function middleware(request: NextRequest) {
     const hasToken = request.cookies.has("next-auth.session-token")
     // const decoded = jwt.verify(cookie, process.env.JWT_SECRET);
     // console.log("id", decoded.id)
-
+    const userId = request.cookies.get("userId")?.value
+    console.log(userId)
 
     if(hasToken) {
-        return NextResponse.rewrite(new URL(`/user/640858d450b116389bf218aa`, request.url))
+        return NextResponse.rewrite(new URL(`/user/${userId}`, request.url))
     } else {
         return  NextResponse.rewrite(new URL(`/login`, request.url))
     }
