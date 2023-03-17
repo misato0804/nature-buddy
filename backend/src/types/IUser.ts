@@ -1,16 +1,15 @@
-import {ILocation} from "@/types/ILocation";
-import {Genre} from "@/types/Genre";
-import {IActivity} from "@/types/IActivity";
+import {Genre} from "./Genre";
+import {ILocation} from "./ILocation";
 
 export interface IUser {
     name: string,
     email: string,
-    introduction?: string,
+    introduction: string,
     password?: string,
     passwordConfirm?: string,
     interests: Genre[],
     location: ILocation,
-    activities?: any[],
+    activities: any[],
     socialMediaHandles?: Map<string, string>,
     image?: string,
     hostedActivity? : string[],

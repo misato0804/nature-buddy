@@ -1,19 +1,24 @@
-import React, {ChangeEvent, Dispatch, SetStateAction} from 'react';
-import {Box, List, ListItemText, Stack, TextField, Typography} from "@mui/material";
-import usePlacesAutocomplete, {
-    getGeocode,
-    getLatLng,
-} from "use-places-autocomplete";
+import React, {ChangeEvent, Dispatch, SetStateAction, useEffect} from 'react';
+import {Box, Stack, TextField, Typography} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {useUserContext} from "@/lib/context/userInputContext";
 import LocationInput from "@/components/elements/molecules/LocationInput";
+import {useSession} from "next-auth/react";
 
 type Props = {
     setChildComponent: Dispatch<SetStateAction<number>>
 }
 
 const SignupLocationChild = ({setChildComponent}: Props) => {
-    const {location, setLocation} = useUserContext()
+    const {location, setLocation, setName, setEmail} = useUserContext()
+    const {data: session, status} = useSession()
+
+    // useEffect(() => {
+    //     if (session && session.user) {
+    //         setName(session.user.name as string)
+    //         setEmail(session.user.email as string)
+    //     }
+    // }, [status])
 
     return (
         <Box width="100%" height="26rem" sx={{position: "relative"}}>

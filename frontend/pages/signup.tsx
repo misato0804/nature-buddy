@@ -6,6 +6,7 @@ import SignupInputChild from "@/components/signup-page/SignupInput.child";
 import SignupLocationChild from "@/components/signup-page/SignupLocation.child";
 import SignupInterestChild from "@/components/signup-page/SignupInterest.child";
 import { useSession} from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 const Signup = () => {
 
@@ -13,7 +14,6 @@ const Signup = () => {
     const [childComponent, setChildComponent] = useState<number>(1)
 
     useEffect(() => {
-        console.log({session}, status)
         if(session) {
             setChildComponent(3)
         }

@@ -11,7 +11,8 @@ const containerStyle = {
     height: "80vh",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    mt: {xs: 12, sm: 5}
 }
 
 const innerStyle = {

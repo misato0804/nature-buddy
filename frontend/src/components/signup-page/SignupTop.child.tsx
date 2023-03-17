@@ -18,7 +18,7 @@ const SignupTopChild = ({setChildComponent}: Props) => {
         <Box width="100%">
             <Typography variant="h2" textAlign="center" my={4}>Create your account</Typography>
             <Stack direction="column" spacing={2}>
-                <AuthButton company="Sign up with Google" color="#4184F2" logo={<GoogleIcon/>} onClick={() => signIn("google", {callbackUrl:"/signup"})}/>
+                <AuthButton company="Sign up with Google" color="#4184F2" logo={<GoogleIcon/>} onClick={() => signIn("google", {callbackUrl:"/signup", redirect: false})}/>
                 <AuthButton company="Sign up with Facebook" color="#3C5997" logo={<FacebookIcon/>} onClick={() => signIn("facebook" , {callbackUrl:"/signup"})}/>
                 <AuthButton company="Sign up with Github" color="#000000" logo={<GitHubIcon/>} onClick={() => signIn("github" , {callbackUrl:"/signup"})}/>
             </Stack>

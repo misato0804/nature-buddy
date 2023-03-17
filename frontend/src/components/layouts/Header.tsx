@@ -1,12 +1,16 @@
-import React from 'react';
 import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
 import Link from "next/link";
 import {signOut, useSession} from "next-auth/react"
 import { deleteCookie } from 'cookies-next';
+import {getCookie} from 'cookies-next';
+
 
 const Header = () => {
 
     const {data: session, status} = useSession()
+    const userId = getCookie('userId')
+
+
     const unauthorizedHeader = [
         {
             title: "home",
@@ -62,7 +66,7 @@ const Header = () => {
                     </Link>
                 </Typography>
                 <Box sx={{display: {xs: 'none', sm: 'block'}}}>
-                    {session ?
+                    {userId ?
                         authorizedHeader.map((item) => (
                             <Button key={item.title} sx={{color: '#fff'}}>
                                 <Link href={item.link} style={{textDecoration: "none", color: "#fff"}}>
@@ -77,7 +81,7 @@ const Header = () => {
                             </Link>
                         </Button>
                     ))}
-                    {session && <Button sx={{color: '#fff'}} onClick={() => signout()}>SIGN OUT</Button>}
+                    {userId && <Button sx={{color: '#fff'}} onClick={() => signout()}>SIGN OUT</Button>}
                 </Box>
             </Toolbar>
         </AppBar>

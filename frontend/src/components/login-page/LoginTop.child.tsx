@@ -14,6 +14,8 @@ type Props = {
 }
 
 const LoginTopChild = ({setChildComponent}: Props) => {
+
+
     return (
         <Box width="100%">
             <Typography variant="h2" textAlign="center" my={4}>Welcome back!</Typography>

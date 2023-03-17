@@ -1,26 +1,18 @@
-import {useRouter} from "next/router";
+import React from 'react';
 import {Box, Container, Stack, Typography} from "@mui/material";
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
-import BuddyIcon from "@/components/elements/atoms/BuddyIcon";
-import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
 import BrowseByActivity from "@/components/elements/organisms/BrowseByActivity";
-import {getCookie} from 'cookies-next';
-import {getSession, useSession} from "next-auth/react";
-import {useEffect, useState} from "react";
 import StickyButton from "@/components/elements/atoms/StickyButton";
-import {IUserModel} from "@/lib/util/schema";
 import {GetServerSidePropsContext} from "next";
+import {useRouter} from "next/router";
+import {getSession} from "next-auth/react";
 
-const User = ({user}: any) => {
-    //user page
+const ProtectedHero = ({user}: any) => {
     const router = useRouter()
-    const [dataLoading, setDataLoading] = useState<boolean>(true)
-    const [userData, setUserData] = useState<IUserModel | null>()
-
-    const {data: session, status} = useSession()
-
     const border = <hr
         style={{marginTop: ".5rem", marginBottom: "1rem", border: "none", height: "2px", backgroundColor: "#A2A2A2"}}/>
+
+    // console.log(user)
 
     return (
         <Container sx={{mt: {xs: 12, sm: 6}}}>
@@ -94,17 +86,7 @@ const User = ({user}: any) => {
             <StickyButton/>
         </Container>
     );
-}
+};
 
-export default User;
+export default ProtectedHero;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const id = context.query.userId
-    const res = await fetch(`http://localhost:3000/api/user/${id}`)
-    const user = await res.json()
-    return {
-        props: {
-            user: user.data
-        }
-    }
-}
