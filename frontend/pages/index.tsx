@@ -16,7 +16,6 @@ export default function Home({user}: UserProps) {
 
     const {data: session, status} = useSession()
     const router = useRouter()
-    console.log(user, "useeeeeeee")
 
     if (status === "loading") {
         return <h1>Loading...</h1>

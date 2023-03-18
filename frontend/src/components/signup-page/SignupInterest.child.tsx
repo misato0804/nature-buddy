@@ -5,7 +5,7 @@ import {activitiesList} from "../../lib/util/activitiesList"
 import {StaticImageData} from "next/image";
 import {useUserContext} from "@/lib/context/userInputContext";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
-import {getProviders, signIn, useSession} from "next-auth/react";
+import { signIn, useSession} from "next-auth/react";
 import Router, {useRouter} from 'next/router'
 
 type Activity = {
@@ -22,7 +22,7 @@ const SignupInterestChild = () => {
     const {data: session, status} = useSession()
     const router = useRouter()
     const {
-        location, name, email, password, passwordConfirm, interests, setName, setEmail,
+        location, name, email, password, interests, setName, setEmail,
         setInterests, setLocation, setPasswordConfirm, setPassword
     } = useUserContext()
 
@@ -60,15 +60,13 @@ const SignupInterestChild = () => {
             coordinates: [0, 0]
         })
         if (userData.status === 'success' && session === null) {
-            const userId = userData.data._id.toString()
             await signIn('credentials', {
                 email,
                 password,
-                callbackUrl: `/user/${userId}`
+                callbackUrl: `/`
             })
         } else if (userData.status === 'success' && session) {
-            const userId = userData.data._id.toString()
-            await router.push(`/user/${userId}`)
+            await router.push(`/`)
         } else {
             await router.push('/error')
         }

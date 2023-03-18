@@ -76,8 +76,8 @@ const Activity = ({data}: PageProps) => {
         <Container sx={{mt: {xs: 14, sm: 12}}}>
             <Typography variant="h4">{getLocalDate(data.date)}</Typography>
             <Typography variant="h2">{data.title}</Typography>
-            <Typography variant="subtitle1">Hosted by <Link
-                href={`/user/${data.host._id}`}>{data.host.name}</Link></Typography>
+            {/*<Typogsraphy variant="subtitle1">Hosted by <Link*/}
+            {/*    href={`/user/${data.host._id}`}>{data.host.name}</Link></Typography>*/}
             <Image
                 src={hiking}
                 alt="hiking"
@@ -134,11 +134,10 @@ const Activity = ({data}: PageProps) => {
 export default Activity;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-
     const activityId = context.query
-    console.log("activityid", activityId)
     const res = await fetch(`http://localhost:3000/api/activity/640c0a66972a1438a79c95be`)
     const activity = await res.json()
+    console.log(activity)
     return {
         props: {
             data: activity.data

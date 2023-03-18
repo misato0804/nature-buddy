@@ -3,16 +3,12 @@ import {Box, Container, Stack, Typography} from "@mui/material";
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 import BrowseByActivity from "@/components/elements/organisms/BrowseByActivity";
 import StickyButton from "@/components/elements/atoms/StickyButton";
-import {GetServerSidePropsContext} from "next";
 import {useRouter} from "next/router";
-import {getSession} from "next-auth/react";
 
 const ProtectedHero = ({user}: any) => {
     const router = useRouter()
     const border = <hr
         style={{marginTop: ".5rem", marginBottom: "1rem", border: "none", height: "2px", backgroundColor: "#A2A2A2"}}/>
-
-    // console.log(user)
 
     return (
         <Container sx={{mt: {xs: 12, sm: 6}}}>

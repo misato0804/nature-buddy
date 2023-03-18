@@ -20,7 +20,6 @@ type Props = {
 }
 
 const SignupInputChild = ({setChildComponent}: Props) => {
-
     const {
         name,
         email,

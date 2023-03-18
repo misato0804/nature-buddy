@@ -20,9 +20,9 @@ const LoginTopChild = ({setChildComponent}: Props) => {
         <Box width="100%">
             <Typography variant="h2" textAlign="center" my={4}>Welcome back!</Typography>
             <Stack direction="column" spacing={2}>
-                <AuthButton company="Login with Google" color="#4184F2" logo={<GoogleIcon/>} onClick={() => signIn("google", {callbackUrl: "/user"})}/>
-                <AuthButton company="Login with Facebook" color="#3C5997" logo={<FacebookIcon/>} onClick={() => signIn("facebook", {callbackUrl: "/user"})}/>
-                <AuthButton company="Login with Github" color="#000000" logo={<GitHubIcon/>} onClick={() => signIn("github", {callbackUrl: "/user", })}/>
+                <AuthButton company="Login with Google" color="#4184F2" logo={<GoogleIcon/>} onClick={() => signIn("google", {callbackUrl: "/"})}/>
+                <AuthButton company="Login with Facebook" color="#3C5997" logo={<FacebookIcon/>} onClick={() => signIn("facebook", {callbackUrl: "/"})}/>
+                <AuthButton company="Login with Github" color="#000000" logo={<GitHubIcon/>} onClick={() => signIn("github", {callbackUrl: "/", })}/>
             </Stack>
             <Stack direction="row"  sx={{alignItems: "center", my:4}}>
                 <hr style={{width: "45%", height: .5, backgroundColor: "black"}}/>

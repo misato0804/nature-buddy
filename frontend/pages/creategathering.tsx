@@ -8,7 +8,7 @@ import LocationInput from "@/components/elements/molecules/LocationInput";
 import useValidator from "@/lib/hooks/useValidator";
 import initialActivityError from "@/lib/helpers/initialActivityError";
 import {dateValidation, getCurrentTime, getDate, modifier, stringToDate} from "@/lib/helpers/dateModifyer";
-import {getSession} from "next-auth/react";
+import {getSession, useSession} from "next-auth/react";
 import {ILocation} from "@/types/ILocation";
 import {useRouter} from "next/router";
 
@@ -20,18 +20,14 @@ const CreateGathering = () => {
 
     const [name, setName] = useState<string | null | undefined>("")
     const router = useRouter()
+    const { data: session, status } = useSession()
 
     useEffect(() => {
-        const securePage = async () => {
-            const session = await getSession()
-            if (!session) {
-                await router.push("/login")
-            } else {
-                // setLoading(false)
-                setName(session.user?.name)
-            }
+        if(!session) {
+            router.push('/')
+        } else {
+            setName(session.user?.name)
         }
-        securePage()
     }, [])
 
     const today = new Date()

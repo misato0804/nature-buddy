@@ -20,6 +20,7 @@ const ActivityBlock = ({title, image, date, host, number, url, genre}: BlockType
              onClick={() => {router.push(`/${genre}/${url}`)}}
              sx={{
                  boxShadow: 2,
+                 cursor:'pointer',
                  transition: (theme) => theme.transitions.create('all', {duration: theme.transitions.duration.shortest,}),
                  '&:hover': {boxShadow: 5}
              }}>

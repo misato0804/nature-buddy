@@ -13,13 +13,6 @@ const SignupLocationChild = ({setChildComponent}: Props) => {
     const {location, setLocation, setName, setEmail} = useUserContext()
     const {data: session, status} = useSession()
 
-    // useEffect(() => {
-    //     if (session && session.user) {
-    //         setName(session.user.name as string)
-    //         setEmail(session.user.email as string)
-    //     }
-    // }, [status])
-
     return (
         <Box width="100%" height="26rem" sx={{position: "relative"}}>
             <Typography variant="h2" textAlign="center" my={4}>Create your account</Typography>

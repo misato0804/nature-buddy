@@ -40,6 +40,7 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
         coordinates: {type: [Number], required: true},
         address: String,
         place_id: String,
+        required: false
     },
     activities: [
         {

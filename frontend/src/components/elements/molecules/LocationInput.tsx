@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Dispatch, SetStateAction} from 'react';
+import React, {ChangeEvent, Dispatch, SetStateAction, useEffect} from 'react';
 import {Box, List, ListItemText, TextField} from "@mui/material";
 import usePlacesAutocomplete, {getGeocode, getLatLng} from "use-places-autocomplete";
 import {ILocation} from "@/types/ILocation";
@@ -69,7 +69,7 @@ const LocationInput = ({location, setLocation, placeholder, errorObj}: LocationP
                 value={value}
                 onChange={handleInput}
                 // disabled={!ready}
-                placeholder={placeholder}
+                placeholder={location ? location.address : placeholder}
                 label={placeholder}
                 fullWidth={true}
                 error={errorObj && errorObj.error}

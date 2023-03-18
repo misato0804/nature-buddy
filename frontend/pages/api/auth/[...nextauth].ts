@@ -1,4 +1,4 @@
-import NextAuth, {Awaitable, Session, SessionStrategy} from "next-auth";
+import NextAuth, {SessionStrategy} from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
@@ -8,6 +8,12 @@ import {User} from "@/lib/util/schema";
 import {NextApiRequest, NextApiResponse} from "next";
 import {MongoDBAdapter} from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/util/mongoClient";
+
+/**
+ * TODO: password hash compare
+ * @param req
+ * @param res
+ */
 
 const nextAuthOptions = async (req: NextApiRequest, res: NextApiResponse) => {
     return {
@@ -42,7 +48,7 @@ const nextAuthOptions = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
                 async authorize(credentials) {
                     await dbConnect().catch(e => {
-                        e : "Connected failed"
+                        console.log(e)
                     })
                     try {
                         const user = await User.findOne({email: credentials?.email,});
@@ -56,22 +62,8 @@ const nextAuthOptions = async (req: NextApiRequest, res: NextApiResponse) => {
         ],
         debug: process.env.NODE_ENV === "development",
         callbacks: {
-            async session({session, user}: any) {
-                // console.log("hei")
-                // console.log(session)
-                try {
-
-                } catch (e: any) {
-                    console.log(e)
-                    return session
-                }
+            async session({session}: any) {
                 return session
-            },
-            async signIn({account, profile}: any) {
-                // console.log('account', account)
-                // console.log('profile', profile)
-
-                return true
             }
         },
         secret: process.env.JWT_SECRET,
@@ -82,8 +74,7 @@ const nextAuthOptions = async (req: NextApiRequest, res: NextApiResponse) => {
             strategy: 'jwt' as SessionStrategy,
             maxAge: 30 * 24 * 60 * 60,
         },
-        signIn: '/login',
-
+        signIn: ['/login', '/signup'],
     }
 }
 
