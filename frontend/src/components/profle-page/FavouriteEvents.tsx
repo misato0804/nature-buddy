@@ -1,11 +1,11 @@
 import React from 'react';
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 import {Box} from "@mui/material";
-import {v4 as uuidv4} from "uuid";
 import {EventProps} from "@/types/Props";
+import { v4 as uuidv4 } from 'uuid';
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
 
-const JoinedEvents = ({activities}: EventProps) => {
+const FavouriteEvents = ({activities}: EventProps) => {
 
     const RenderActivities = activities?.map(activity => (
         <ActivityBlock
@@ -29,4 +29,4 @@ const JoinedEvents = ({activities}: EventProps) => {
     );
 };
 
-export default JoinedEvents;
+export default FavouriteEvents;

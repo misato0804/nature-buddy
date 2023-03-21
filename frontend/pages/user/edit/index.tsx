@@ -5,6 +5,8 @@ import {getSession, useSession} from "next-auth/react";
 import EditProfileField from "@/components/edit-profile-page/EditProfileField";
 import {GetServerSidePropsContext} from "next";
 import {IUserModel} from "@/lib/util/schema";
+import {useRouter} from 'next/router'
+import StickyButton from "@/components/elements/atoms/StickyButton";
 
 type UserProps = {
     user: IUserModel
@@ -14,20 +16,22 @@ const UserEdit = ({user}: UserProps) => {
 
     const {data: session} = useSession()
     const [showImageChange, setShowImageChange] = useState<string>('hidden')
+    const router = useRouter()
+
 
     const imageChangeBtn = (
         <Box sx={{
-            cursor:'pointer',
+            cursor: 'pointer',
             backgroundColor: '#000',
             color: '#fff',
             position: 'absolute',
             left: '50%',
-            bottom:-20,
+            bottom: -20,
             transform: 'translateX(-50%)',
             opacity: .6,
             px: 3,
             width: "100%",
-            py:1,
+            py: 1,
             visibility: showImageChange
         }}>
             <Typography variant='subtitle1' fontSize={12} textAlign='center'>Change Image</Typography>
@@ -43,17 +47,22 @@ const UserEdit = ({user}: UserProps) => {
                         title="View Profile"
                         color="grey"
                         style={{width: {xs: "50%", sm: "30%", md: "20%"}}}
-                        onClick={() => {
+                        onClick={async () => {
+                            await router.push('/user/profile')
                         }}
                     />
                 </Box>
                 <Stack
                     direction={{xs: 'column', md: 'row'}}
-                    // spacing={4}
-                    sx={{my:5}}
+                    sx={{my: 5}}
                 >
-                    <Box sx={{width:{xs:'100%', md:'30%'}}}>
-                        <Box sx={{position: 'relative', width: {xs: 100, sm: 150}, marginX:{xs:'auto'}, marginBottom:3}}>
+                    <Box sx={{width: {xs: '100%', md: '30%'}}}>
+                        <Box sx={{
+                            position: 'relative',
+                            width: {xs: 100, sm: 150},
+                            marginX: {xs: 'auto'},
+                            marginBottom: 3
+                        }}>
                             <Box
                                 sx={{
                                     width: {xs: 100, sm: 150},
@@ -62,20 +71,25 @@ const UserEdit = ({user}: UserProps) => {
                                     borderRadius: '50%',
                                     backgroundRepeat: 'no-repeat',
                                     backgroundSize: 'contain',
-                                    cursor:"pointer",
+                                    cursor: "pointer",
                                 }}
-                                onMouseEnter={() => {setShowImageChange('visible')}}
-                                onMouseLeave={() => {setShowImageChange('hidden')}}
+                                onMouseEnter={() => {
+                                    setShowImageChange('visible')
+                                }}
+                                onMouseLeave={() => {
+                                    setShowImageChange('hidden')
+                                }}
                             >
                             </Box>
                             {imageChangeBtn}
                         </Box>
                     </Box>
-                    <Box sx={{width: {xs:'100%', md:'70%'}}}>
+                    <Box sx={{width: {xs: '100%', md: '70%'}}}>
                         <EditProfileField user={user}/>
                     </Box>
                 </Stack>
             </Box>
+            <StickyButton/>
         </Container>
     );
 };
@@ -84,7 +98,7 @@ export default UserEdit;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const session = await getSession(context)
-    if(!session) {
+    if (!session) {
         return {
             props: {}
         }
@@ -98,7 +112,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         body: JSON.stringify({email})
     })
     const result = await res.json()
-    const userData : IUserModel = result.data.user
+    const userData: IUserModel = result.data.user
     return {
         props: {
             user: userData

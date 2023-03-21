@@ -3,20 +3,24 @@ import dbConnect from "@/lib/util/mongo";
 import {Activity, IActivityModel} from "@/lib/util/activitySchema";
 import {ObjectId} from "mongoose";
 import {IActivity} from "@/types/IActivity";
+import {User} from "@/lib/util/schema";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const {method} = req;
     await dbConnect()
-
     try {
-        const activity = await Activity.create(req.body)
+        const activity = await Activity.create(req.body.newEvent)
+        await User.updateMany({email: req.body.email}, {$push: { hostedActivities: activity } } )
+            .then(result => {console.log(result)})
         res.status(200).json({
             status: "success",
             data: activity
         })
-
     } catch (e: any) {
-        console.log(e)
+        res.status(500).json({
+            status: "failed",
+            message: e.message
+        })
     }
 }
 

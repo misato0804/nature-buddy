@@ -7,6 +7,8 @@ import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import { useRouter } from 'next/router'
 import JoinedEvents from "@/components/profle-page/JoinedEvents";
 import HostedEvents from "@/components/profle-page/HostedEvents";
+import FavouriteEvents from "@/components/profle-page/FavouriteEvents";
+import StickyButton from "@/components/elements/atoms/StickyButton";
 
 type UserProps = {
     user: IUserModel
@@ -15,14 +17,20 @@ type UserProps = {
 const Profile = ({user}: UserProps) => {
     const {data: session} = useSession()
     const router = useRouter()
-    const [showEvents, setShowEvents] = useState<JSX.Element>(<JoinedEvents/>)
+    const [showEvents, setShowEvents] = useState<JSX.Element>(<JoinedEvents activities={user.joinedActivities}/>)
+    const [bgColor, setBgColor] = useState<string>('joined')
 
     const border = <hr
         style={{marginTop: ".5rem", marginBottom: "1rem", border: "none", height: "1.2px", backgroundColor: "#A2A2A2"}}/>
 
+    const onCLickEventHandler = (child: JSX.Element, title: string) => {
+        setShowEvents(child)
+        setBgColor(title)
+    }
+
     return (
         <Container sx={{mt: {xs: 14, sm: 12}}}>
-            <Box sx={{boxShadow: 2, width: '100%', px: 8, py: 5}}>
+            <Box sx={{boxShadow: 2, width: '100%', px: {xs:2, md:8}, py: 5}}>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Typography variant='h2' fontWeight={500}>Profile</Typography>
                     <TriggerButton
@@ -51,21 +59,27 @@ const Profile = ({user}: UserProps) => {
                 </Stack>
                 {border}
                 <Box>
-                    <Stack direction='row' spacing={4}>
+                    <Stack direction='row' spacing={1.5} sx={{overflow:"scroll"}} py={2} px={1}>
                         <Box
-                            sx={{cursor: 'pointer', boxShadow:3, px:3, py:1.2, '&:active': {boxShadow:'none', border:.1}}}
-                            onClick={() => {setShowEvents(<JoinedEvents/>)}}>
-                            <Typography variant='h6'>Joined</Typography>
+                            sx={{ cursor: 'pointer', boxShadow:2, px:1, py:1, '&:active': {boxShadow:'none', border:.1}}}
+                            onClick={() => (onCLickEventHandler(<JoinedEvents activities={user.joinedActivities}/>, 'joined'))}>
+                            <Typography variant='h6' sx={{backgroundColor:`${bgColor === "joined" ? "#D6CFC7" : ""}`, px:3, py:1.2}}>Joined</Typography>
                         </Box>
                         <Box
-                            sx={{cursor: 'pointer', boxShadow:2, px:3, py:1.2, '&:active': {boxShadow:'none', border:.1}}}
-                            onClick={() => {setShowEvents(<HostedEvents/>)}}>
-                            <Typography variant='h6'>Hosted</Typography>
+                            sx={{cursor: 'pointer', boxShadow:3, px:1, py:1, '&:active': {boxShadow:'none', border:.1}}}
+                            onClick={() => (onCLickEventHandler(<HostedEvents activities={user.hostedActivities}/>, 'hosted'))}>
+                        <Typography variant='h6'sx={{backgroundColor:`${bgColor === "hosted" ? "#D6CFC7" : ""}`, px:3, py:1.2}}>Hosted</Typography>
+                        </Box>
+                        <Box
+                            sx={{cursor: 'pointer', boxShadow:3, px:1, py:1, '&:active': {boxShadow:'none', border:.1}}}
+                            onClick={() => (onCLickEventHandler(<FavouriteEvents activities={user.favouriteActivities}/>, 'favourite'))}>
+                        <Typography variant='h6' sx={{backgroundColor:`${bgColor === "favourite" ? "#D6CFC7" : ""}`, px:3, py:1.2}}>Favourite</Typography>
                         </Box>
                     </Stack>
                 </Box>
                 { showEvents }
             </Box>
+            <StickyButton/>
         </Container>
     );
 };
@@ -84,7 +98,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         body: JSON.stringify({email})
     })
     const result = await res.json()
-    const userData: IUserModel = result.data.user
+    const userData = result.data.user
     return {
         props: {
             user: userData

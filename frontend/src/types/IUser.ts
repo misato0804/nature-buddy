@@ -10,9 +10,10 @@ export interface IUser {
     passwordConfirm?: string,
     interests: Genre[],
     location: ILocation,
-    activities?: any[],
+    // activities?: IActivity[],
     socialMediaHandles?: Map<string, string>,
     image?: string,
-    hostedActivity? : string[],
-    joinedActivity? : string[]
+    hostedActivities? : IActivity[],
+    joinedActivities? : IActivity[],
+    favouriteActivities?: IActivity[],
 }

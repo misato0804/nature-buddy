@@ -42,12 +42,6 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
         place_id: String,
         required: false
     },
-    activities: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Activities"
-        }
-    ],
     socialMediaHandles: {
         tags: {
             type: Map,
@@ -59,7 +53,26 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
     },
     introduction: {
         type: String
-    }
+    },
+    hostedActivities: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Activities"
+        }
+    ],
+    joinedActivities: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Activities"
+        }
+    ],
+    favouriteActivities: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Activities"
+        }
+    ],
+
 })
 
 // UserSchema.path("email").validate(function (this: IUserModel) {

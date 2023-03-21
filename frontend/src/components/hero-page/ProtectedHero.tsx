@@ -23,23 +23,7 @@ const ProtectedHero = ({user}: any) => {
                                        image="https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMountain_Warehouse&psig=AOvVaw35jbuWvXkZYsP9ekSlrYg4&ust=1678162919218000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCNCnmZe6xv0CFQAAAAAdAAAAABAE"/>
                     </Box>
                 </Box>
-                <Box className="my-buddies" sx={{mt: 3, position: "relative"}}>
-                    <Typography variant="h2">Your buddies</Typography>
-                    {border}
-                    <Stack direction="row" spacing={3} sx={{py: 1.2}}>
-                        {/*<BuddyIcon src=""/>*/}
-                        {/*<BuddyIcon src=""/>*/}
-                        {/*<BuddyIcon src=""/>*/}
-                    </Stack>
-                    <Box
-                        sx={{position: "absolute", bottom: 0, right: 0, cursor: "pointer"}}
-                        onClick={() => {
-                            router.push(`/user/${user._id}/buddies`)
-                        }}
-                    >
-                        <Typography variant="subtitle1" fontWeight={600}>see your buddies</Typography>
-                    </Box>
-                </Box>
+
                 <Box className="my-buddies" sx={{mt: 3}}>
                     <Typography variant="h2" my={2}>Upcoming activities</Typography>
                     {border}

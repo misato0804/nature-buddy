@@ -13,9 +13,10 @@ import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import {getDate} from "@/lib/helpers/dateModifyer";
 import {ILocation} from "@/types/ILocation";
 import {IActivity} from "@/types/IActivity";
-import {  getCookie } from 'cookies-next';
+import {getCookie} from 'cookies-next';
 import {useRouter} from "next/router";
 import {ObjectId, Types} from "mongoose";
+import {useSession} from "next-auth/react";
 
 /**
  * TODO: Meetup Location
@@ -26,8 +27,9 @@ type ModalProps = {
     setOpenModal: Dispatch<SetStateAction<boolean>>
     uploadDate?: string,
     fileData?: FileList | undefined,
-    meetingPoint : ILocation,
-    meetingTime: string
+    meetingPoint: ILocation,
+    meetingTime: string,
+    userId: string
 }
 
 const style = {
@@ -39,13 +41,14 @@ const style = {
     bgcolor: 'background.paper',
     boxShadow: 12,
     p: 4,
+
 };
 
-const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoint, meetingTime}: ModalProps) => {
-
+const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoint, meetingTime, userId}: ModalProps) => {
+    const {data: session} = useSession()
+    console.log(session)
     const {...activity} = useActivityContext()
     const eventDate = getDate(activity.date)
-    const userId = getCookie("userId")
     const router = useRouter()
 
     useEffect(() => {
@@ -65,22 +68,21 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
                 method: "POST",
                 body: formData
             })
-            const imageData = await resFromCloudinary.json()
-            await activity.setCoverImage(imageData.secure_url)
-            const newEvent : IActivity = {
+            await resFromCloudinary.json().then(result => activity.setCoverImage(result.secure_url))
+            const newEvent: IActivity = {
                 ...activity,
                 host: new Types.ObjectId(userId as string)
             }
             const res = await fetch("/api/activity/create", {
                 method: "POST",
-                body: JSON.stringify(newEvent),
+                body: JSON.stringify({newEvent, email: session?.user?.email}),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
             console.log(res)
-            if(res.status === 200) {
-                await router.push(`/user/${userId}`)
+            if (res.status === 200) {
+                await router.push(`/`)
             }
         } catch (e: any) {
             console.log(e)
@@ -121,10 +123,13 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
                                             sx={{display: "flex", alignItems: "center"}}><DepartureBoardOutlinedIcon
                                     sx={{mr: 1}}/>Meeting
                                     Detail</Typography>
-                                <Typography variant="subtitle2" sx={{pl: 4}}>{activity.date.toLocaleDateString()}</Typography>
+                                <Typography variant="subtitle2"
+                                            sx={{pl: 4}}>{activity.date.toLocaleDateString()}</Typography>
                                 <Typography variant="subtitle2" sx={{pl: 4}}>{meetingTime}</Typography>
                                 <Typography variant="subtitle2" sx={{pl: 4}}>
-                                    <a rel='noopener noreferrer' href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${meetingPoint.place_id}`} target="_blank">{meetingPoint.address}</a>
+                                    <a rel='noopener noreferrer'
+                                       href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${meetingPoint.place_id}`}
+                                       target="_blank">{meetingPoint.address}</a>
                                 </Typography>
                             </Stack>
                             <Typography variant="h4" sx={{display: "flex", alignItems: "center"}}><InfoOutlinedIcon

@@ -1,6 +1,8 @@
 declare module 'jsonwebtoken';
 declare module 'bcryptjs';
 declare module "@react-google-maps/api"
+declare module 'uuid'
+
 //
 // declare module "next-auth" {
 //     /**

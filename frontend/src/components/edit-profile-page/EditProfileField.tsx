@@ -11,6 +11,8 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import { useRouter } from 'next/router';
+import Option from "@/components/elements/atoms/Option";
+import {useUserContext} from "@/lib/context/userInputContext";
 
 type UserProps = {
     user: IUserModel
@@ -23,37 +25,26 @@ type Activity = {
 }
 
 const EditProfileField = ({user}: UserProps) => {
-    const [clicked, setClicked] = useState<boolean>(false)
     const [updateUser, setUpdateUser] = useState<IUser>(user)
     const [updateLocation, setUpdateLocation] = useState<ILocation>(user.location)
     const router = useRouter()
+    const {interests, setInterests} = useUserContext()
+
+    useEffect(() => {
+        setInterests(user.interests)
+    }, [])
 
     useEffect(() => {
         setUpdateUser({...updateUser, location: updateLocation})
     }, [updateLocation])
 
-    const interestsRender = (activities: Activity[]): JSX.Element[] => {
-        return activities.map(activity =>
-            <Grid
-                key={activity.id}
-                item
-                onClick={() => {
-                }}
-                sx={{
-                    cursor: "pointer",
-                    background: clicked ? "green" : "grey",
-                    borderRadius: "25px",
-                    color: "#fff",
-                    px: "1.2rem",
-                    py: ".5rem",
-                    mr: ".3rem",
-                    mb: ".3rem"
-                }}>
-                <Typography variant="subtitle2" textAlign="center">{activity.title}</Typography>
-            </Grid>
-        )
-    }
+    useEffect(() => {
+        setUpdateUser({...updateUser, interests})
+    }, [interests])
 
+    const interestsRender = (activities: Activity[]): JSX.Element[] => {
+        return activities.map(activity => <Option key={activity.id} title={activity.title} />)
+    }
     const onCancel = async () => {
         await router.push('/user/profile')
     }
@@ -72,7 +63,13 @@ const EditProfileField = ({user}: UserProps) => {
               },
         })
         const data = await res.json()
-        console.log(data)
+        setUpdateUser(user)
+        setInterests([])
+        if(data.status === 'success') {
+            await router.push('/user/profile')
+        } else {
+            await router.push('/error')
+        }
     }
 
     return (

@@ -51,7 +51,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         body: JSON.stringify({email})
     })
     const result = await res.json()
-    const userData : IUserModel = result.data.user
+    const userData  = result.data.user
     return {
         props: {
             user: userData
