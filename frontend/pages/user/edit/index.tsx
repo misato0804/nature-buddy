@@ -7,6 +7,10 @@ import {GetServerSidePropsContext} from "next";
 import {IUserModel} from "@/lib/util/schema";
 import {useRouter} from 'next/router'
 import StickyButton from "@/components/elements/atoms/StickyButton";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import user_icon from '../../../public/assets/images/user_icon.png'
+import {IUser} from "@/types/IUser";
+import {ILocation} from "@/types/ILocation";
 
 type UserProps = {
     user: IUserModel
@@ -15,9 +19,12 @@ type UserProps = {
 const UserEdit = ({user}: UserProps) => {
 
     const {data: session} = useSession()
-    const [showImageChange, setShowImageChange] = useState<string>('hidden')
     const router = useRouter()
-
+    const [showImageChange, setShowImageChange] = useState<string>('hidden')
+    const [fileData, setFileData] = useState<FileList | undefined>()
+    const [uploadDate, setUploadDate] = useState<string | null | undefined>(user.image)
+    const [updateUser, setUpdateUser] = useState<IUser>(user)
+    const [updateLocation, setUpdateLocation] = useState<ILocation>(user.location)
 
     const imageChangeBtn = (
         <Box sx={{
@@ -37,6 +44,47 @@ const UserEdit = ({user}: UserProps) => {
             <Typography variant='subtitle1' fontSize={12} textAlign='center'>Change Image</Typography>
         </Box>
     )
+
+    const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const reader = new FileReader()
+        reader.onload = function (loadEvent) {
+            loadEvent.target && setUploadDate(loadEvent.target.result as string)
+        }
+        e.target.files && setFileData(e.target.files)
+        e.target.files && reader.readAsDataURL(e.target.files[0] as any)
+    }
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        const formData = new FormData()
+        fileData && formData.append("file", fileData[0])
+        formData.append('upload_preset', 'nature-buddy')
+        try {
+            const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
+                method: "POST",
+                body: formData
+            })
+            await resFromCloudinary.json().then(result => {
+                setUpdateUser({...updateUser, image: result.secure_url})
+            })
+        console.log(updateUser)
+            const res = await fetch('/api/user', {
+                method: "PATCH",
+                body: JSON.stringify({
+                    updateUser,
+                    id: user._id
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(res)
+            res.status === 200 && await router.push('/user/profile')
+        } catch (e: any) {
+            console.log(e)
+            await router.push('/')
+        }
+    }
 
     return (
         <Container sx={{mt: {xs: 14, sm: 12}}}>
@@ -63,29 +111,61 @@ const UserEdit = ({user}: UserProps) => {
                             marginX: {xs: 'auto'},
                             marginBottom: 3
                         }}>
-                            <Box
-                                sx={{
-                                    width: {xs: 100, sm: 150},
-                                    height: {xs: 100, sm: 150},
-                                    backgroundImage: `url(${session?.user?.image as string})`,
-                                    borderRadius: '50%',
-                                    backgroundRepeat: 'no-repeat',
-                                    backgroundSize: 'contain',
-                                    cursor: "pointer",
-                                }}
-                                onMouseEnter={() => {
-                                    setShowImageChange('visible')
-                                }}
-                                onMouseLeave={() => {
-                                    setShowImageChange('hidden')
-                                }}
-                            >
-                            </Box>
+                            <label htmlFor="file">
+                                <input
+                                    style={{display: "none"}}
+                                    id="file"
+                                    name="file"
+                                    type="file"
+                                    onChange={handleOnchange}
+                                />
+                                {uploadDate ? <Box
+                                        sx={{
+                                            width: {xs: 100, sm: 150},
+                                            height: {xs: 100, sm: 150},
+                                            backgroundImage: `url(${uploadDate})`,
+                                            borderRadius: '50%',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            cursor: "pointer",
+                                        }}
+                                        onMouseEnter={() => {
+                                            setShowImageChange('visible')
+                                        }}
+                                        onMouseLeave={() => {
+                                            setShowImageChange('hidden')
+                                        }}
+                                    >
+                                    </Box> :
+                                    <AccountCircleIcon
+                                        sx={{
+                                            width: {xs: 100, sm: 150},
+                                            height: {xs: 100, sm: 150},
+                                            opacity: .4,
+                                            cursor: 'pointer'
+                                        }}
+                                        onMouseEnter={() => {
+                                            setShowImageChange('visible')
+                                        }}
+                                        onMouseLeave={() => {
+                                            setShowImageChange('hidden')
+                                        }}
+
+                                    />}
+                            </label>
                             {imageChangeBtn}
                         </Box>
                     </Box>
                     <Box sx={{width: {xs: '100%', md: '70%'}}}>
-                        <EditProfileField user={user}/>
+                        <EditProfileField
+                            user={user}
+                            updateUser={updateUser}
+                            setUpdateUser={setUpdateUser}
+                            setUpdateLocation={setUpdateLocation}
+                            updateLocation={updateLocation}
+                            handleSubmit={handleSubmit}
+                        />
                     </Box>
                 </Stack>
             </Box>

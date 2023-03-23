@@ -7,6 +7,7 @@ import {useUserContext} from "@/lib/context/userInputContext";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import { signIn, useSession} from "next-auth/react";
 import Router, {useRouter} from 'next/router'
+import {IUser} from "@/types/IUser";
 
 type Activity = {
     id: number
@@ -34,15 +35,17 @@ const SignupInterestChild = () => {
     }, [])
 
     const handleSubmit = async () => {
+        const body: IUser = {
+            name,
+            email,
+            password,
+            interests,
+            location,
+            image: session?.user?.image
+        }
         const response = await fetch('/api/user/register', {
             method: "POST",
-            body: JSON.stringify({
-                name,
-                email,
-                password,
-                interests,
-                location
-            }),
+            body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json'
             }

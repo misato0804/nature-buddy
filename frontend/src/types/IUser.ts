@@ -12,7 +12,7 @@ export interface IUser {
     location: ILocation,
     // activities?: IActivity[],
     socialMediaHandles?: Map<string, string>,
-    image?: string,
+    image?: string | null,
     hostedActivities? : IActivity[],
     joinedActivities? : IActivity[],
     favouriteActivities?: IActivity[],

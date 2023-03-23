@@ -2,81 +2,60 @@ import React, {useEffect} from 'react';
 import {useRouter} from "next/router";
 import {Box, Container, Grid, Stack, Typography} from "@mui/material";
 import SortButton from "@/components/elements/atoms/SortButton";
-import mountain from "../../public/assets/images/biking.jpg";
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
+import {GetServerSidePropsContext} from "next";
+import {IActivityProps} from "@/types/Props";
 
-const Activity = () => {
+type PageProps = {
+    activities: IActivityProps[]
+}
+
+const Activity = ({activities}: PageProps) => {
     const {query} = useRouter()
-    let activity : string;
-    activity = query.genre as string
-    console.log(activity)
+    let genre : string;
+    genre = query.genre as string
+    genre = genre!.charAt(0).toUpperCase() + genre.slice(1)
 
-    if(!activity) return <h1>Loading...</h1>
+    if(!activities) return <h1>Loading...</h1>
 
     return (
-        <Container component="main" sx={{mt: 6}} maxWidth="xl">
-            <Typography variant="h1">{activity}</Typography>
+        <Container component="main" sx={{mt: {xs:14, sm:6}}} maxWidth="xl">
+            <Typography variant="h1">{genre}</Typography>
             <Stack
-                width={500}
-                direction={{xs: "column", md: "row"}}
+                width='100%'
+                direction='row'
                 mb={2}
                 spacing={2}
                 position={"relative"}
                 zIndex={10}
             >
-                <SortButton title={"day"} sortedByArr={["tomorrow", "Today", "This week"]}/>
-                <SortButton title={"size"} sortedByArr={["tomorrow", "Today", "This week"]}/>
+                <SortButton title={"Day"} sortedByArr={["tomorrow", "Today", "This week"]}/>
+                <SortButton title={"Size"} sortedByArr={["tomorrow", "Today", "This week"]}/>
                 <SortButton title={"distance"} sortedByArr={["tomorrow", "Today", "This week"]}/>
             </Stack>
             <hr style={{}}/>
-            <Grid container display="flex" justifyContent="space-evenly" rowSpacing={3} columnSpacing={2}>
-                <Grid item xs={10} lg={6}>
-                    <ActivityBlock
-                        image={mountain}
-                        title={"Adventure"}
-                        date={new Date().toString()}
-                        host={"Misato"}
-                        number={3}
-                        genre={"Hiking"}
-                        url={"/"}
-                    />
-                </Grid>
-                <Grid item xs={10} lg={6}>
-                    <ActivityBlock
-                        image={mountain}
-                        title={"Adventure"}
-                        date={new Date().toString()}
-                        host={"Misato"}
-                        number={3}
-                        genre={"Hiking"}
-                        url={"/"}
-                    />
-                </Grid>
-                <Grid item xs={10} lg={6}>
-                    <ActivityBlock
-                        image={mountain}
-                        title={"Adventure"}
-                        date={new Date().toString()}
-                        host={"Misato"}
-                        number={3}
-                        genre={"Hiking"}
-                        url={"/"}
-                    />
-                </Grid>
-                <Grid item xs={10} lg={6}>
-                    <ActivityBlock
-                        image={mountain}
-                        title={"Adventure"}
-                        date={new Date().toString()}
-                        host={"Misato"}
-                        number={3}
-                        genre={"Hiking"}
-                        url={"/"}
-                    />
-                </Grid>
-            </Grid>
+            <Stack direction='column' my={3} spacing={3}>
+                { activities.map(activity => (
+                    <Box key={activity._id}>
+                        <ActivityBlock props={activity}/>
+                    </Box>
+                ))}
+            </Stack>
         </Container>
     );
 };
 
 export default Activity;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const {genre} = context.query
+    console.log(genre)
+    const res = await fetch(`http://localhost:3000/api/activities/${genre}`)
+    const data = await res.json()
+    console.log(data)
+    return {
+        props: {
+            activities: data.data
+        }
+    }
+}

@@ -4,6 +4,7 @@ import climbing from "../../../public/assets/images/climbing.jpg";
 import snowactivity from "../../../public/assets/images/snowactivity.jpg";
 
 import {StaticImageData} from "next/image";
+import Genre from "@/types/Genre";
 
 type Activity = {
     id: number
@@ -14,42 +15,42 @@ type Activity = {
 export const activitiesList : Activity[] = [
     {
         id: 1,
-        title: "Hiking",
+        title: Genre.HIKING,
         image: hiking
     },
     {
         id: 2,
-        title: "Biking",
+        title: Genre.BIKING,
         image: biking
     },
     {
         id: 3,
-        title: "Climbing",
+        title: Genre.CLIMBING,
         image: climbing
     },
     {
         id: 4,
-        title: "Snow activities",
+        title: Genre.SNOW_ACTIVITY,
         image: snowactivity
     },
     {
         id: 5,
-        title: "Road trip",
+        title: Genre.ROAD_TRIP,
         image: snowactivity
     },
     {
         id: 6,
-        title: "Fishing",
+        title: Genre.FISHING,
         image: snowactivity
     },
     {
         id: 7,
-        title: "Picnicking",
+        title: Genre.PICNICKING,
         image: snowactivity
     },
     {
         id: 8,
-        title: "Exploring town",
+        title: Genre.EXPLORE_TOWN,
         image: snowactivity
     }
 ]

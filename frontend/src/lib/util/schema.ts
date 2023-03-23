@@ -2,6 +2,7 @@ import mongoose, {Schema, Document, CallbackWithoutResultAndOptionalError} from 
 import {IUser} from "@/types/IUser";
 import bcrypt from "bcryptjs";
 import {Genre} from "@/types/Genre";
+import {Activity} from "@/lib/util/activitySchema";
 
 export interface IUserModel extends IUser, Document{}
 
@@ -57,19 +58,19 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
     hostedActivities: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Activities"
+            ref: Activity
         }
     ],
     joinedActivities: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Activities"
+            ref: Activity
         }
     ],
     favouriteActivities: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Activities"
+            ref: Activity
         }
     ],
 

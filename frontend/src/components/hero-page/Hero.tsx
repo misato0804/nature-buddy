@@ -43,6 +43,7 @@ const Hero: FC = () => {
                     src={imagesArr[currentIndex]}
                     alt="outdoor pictures"
                     style={styles.imageStyle as React.CSSProperties}
+                    priority
                 />
                 <Typography
                     textAlign="center"

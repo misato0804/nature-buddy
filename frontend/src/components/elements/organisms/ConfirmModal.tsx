@@ -46,7 +46,6 @@ const style = {
 
 const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoint, meetingTime, userId}: ModalProps) => {
     const {data: session} = useSession()
-    console.log(session)
     const {...activity} = useActivityContext()
     const eventDate = getDate(activity.date)
     const router = useRouter()

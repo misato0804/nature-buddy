@@ -1,14 +1,13 @@
 import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
 import Link from "next/link";
 import {signOut, useSession} from "next-auth/react"
-import {deleteCookie} from 'cookies-next';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import HeaderCommand from "@/components/elements/atoms/HeaderCommand";
+import {useRouter} from "next/router";
 
 
 const Header = () => {
 
     const {data: session, status} = useSession()
+    const router = useRouter()
 
     const unauthorizedHeader = [
         {
@@ -39,7 +38,7 @@ const Header = () => {
     ]
 
     const signout = async () => {
-        deleteCookie("userId")
+        await router.push('/')
         await signOut()
     }
 

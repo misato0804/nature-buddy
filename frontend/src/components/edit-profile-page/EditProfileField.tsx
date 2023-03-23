@@ -15,7 +15,12 @@ import Option from "@/components/elements/atoms/Option";
 import {useUserContext} from "@/lib/context/userInputContext";
 
 type UserProps = {
-    user: IUserModel
+    user: IUserModel,
+    updateUser: IUser,
+    setUpdateUser: React.Dispatch<React.SetStateAction<IUser>>,
+    updateLocation: ILocation,
+    setUpdateLocation: React.Dispatch<React.SetStateAction<ILocation>>,
+    handleSubmit: (e: React.MouseEvent<HTMLElement>) => Promise<void>
 }
 
 type Activity = {
@@ -24,9 +29,7 @@ type Activity = {
     image: StaticImageData,
 }
 
-const EditProfileField = ({user}: UserProps) => {
-    const [updateUser, setUpdateUser] = useState<IUser>(user)
-    const [updateLocation, setUpdateLocation] = useState<ILocation>(user.location)
+const EditProfileField = ({user, updateUser, setUpdateUser, updateLocation, setUpdateLocation, handleSubmit}: UserProps) => {
     const router = useRouter()
     const {interests, setInterests} = useUserContext()
 
@@ -47,29 +50,6 @@ const EditProfileField = ({user}: UserProps) => {
     }
     const onCancel = async () => {
         await router.push('/user/profile')
-    }
-
-    const onSubmit = async () => {
-        const userData = {
-            id: user._id,
-            updateUser
-        }
-
-        const res = await fetch('/api/user', {
-            method: "PATCH",
-            body: JSON.stringify(userData),
-            headers: {
-                "Content-Type": "application/json",
-              },
-        })
-        const data = await res.json()
-        setUpdateUser(user)
-        setInterests([])
-        if(data.status === 'success') {
-            await router.push('/user/profile')
-        } else {
-            await router.push('/error')
-        }
     }
 
     return (
@@ -164,7 +144,7 @@ const EditProfileField = ({user}: UserProps) => {
                 </Box>
             </Stack>
             <Stack direction="row" spacing={3} width='50%' marginRight={0}>
-                <TriggerButton title='Save' color="green" onClick={() => onSubmit()}/>
+                <TriggerButton title='Save' color="green" onClick={(e) => handleSubmit(e)}/>
                 <TriggerButton title='Cancel' color="grey" onClick={() => onCancel()}/>
             </Stack>
         </Stack>

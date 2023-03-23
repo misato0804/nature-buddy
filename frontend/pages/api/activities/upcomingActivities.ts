@@ -1,19 +1,19 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import dbConnect from "@/lib/util/mongo";
 import {Activity} from "@/lib/util/activitySchema";
-import {User} from "@/lib/util/schema";
+
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await dbConnect()
     try {
-        const activity = await Activity.create(req.body.newEvent)
-        await User.updateMany({email: req.body.email}, {$push: { hostedActivities: activity } } )
-            .then(result => {console.log(result)})
+        const allActivities = await Activity.find().populate('host')
+        console.log(allActivities)
         res.status(200).json({
-            status: "success",
-            data: activity
+            status: 'success',
+            data: allActivities
         })
     } catch (e: any) {
+        console.log(e)
         res.status(500).json({
             status: "failed",
             message: e.message
@@ -21,4 +21,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 }
 
-export default handler;
+export default handler
