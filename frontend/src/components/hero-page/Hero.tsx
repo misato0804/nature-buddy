@@ -43,6 +43,7 @@ const Hero: FC = () => {
                     src={imagesArr[currentIndex]}
                     alt="outdoor pictures"
                     style={styles.imageStyle as React.CSSProperties}
+                    priority
                 />
                 <Typography
                     textAlign="center"
@@ -62,19 +63,6 @@ const Hero: FC = () => {
             </HeroTop>
             <Box my={4}>
                 <Container maxWidth="xl">
-                    {/*<Typography variant="h2">Top popular activities</Typography>*/}
-                    {/*<Grid container rowSpacing={4} sx={{ marginX: "auto", marginY: 4, display: "flex", justifyContent: "center"}}>*/}
-                    {/*    {activitiesList.map((activity) => (*/}
-                    {/*        <Grid item key={activity.id} sm={6} md={5} lg={4} sx={{display: "flex", justifyContent: "center"}}>*/}
-                    {/*            <ActivityTopCard*/}
-                    {/*                title={activity.title}*/}
-                    {/*                activityImage={activity.image}*/}
-                    {/*                link={activity.title}*/}
-                    {/*            />*/}
-                    {/*        </Grid>*/}
-                    {/*    ))}*/}
-                    {/*</Grid>*/}
-
                     <Stack sx={{alignItems:"center"}} direction={{md: "row"}} spacing={10}>
                         <Box>
                             <Typography variant="h3" mb={4}>This is the platformThis is the platformThis is the platformThis is the platformThis is the platform</Typography>

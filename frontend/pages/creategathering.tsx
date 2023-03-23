@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import {Box, Container,  MenuItem, Paper, Stack, TextField, Typography} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {activitiesList} from "@/lib/util/activitiesList";
@@ -8,31 +8,23 @@ import LocationInput from "@/components/elements/molecules/LocationInput";
 import useValidator from "@/lib/hooks/useValidator";
 import initialActivityError from "@/lib/helpers/initialActivityError";
 import {dateValidation, getCurrentTime, getDate, modifier, stringToDate} from "@/lib/helpers/dateModifyer";
-import {getSession} from "next-auth/react";
+import {getSession, useSession} from "next-auth/react";
 import {ILocation} from "@/types/ILocation";
 import {useRouter} from "next/router";
+import {GetServerSidePropsContext} from "next";
+import {IUserModel} from "@/lib/util/schema";
 
-const CreateGathering = () => {
+type UserProps = {
+    user: IUserModel
+}
 
+const CreateGathering = ({user}: UserProps) => {
     /**
      * TODO: GET USER DATA
      */
-
     const [name, setName] = useState<string | null | undefined>("")
     const router = useRouter()
-
-    useEffect(() => {
-        const securePage = async () => {
-            const session = await getSession()
-            if (!session) {
-                await router.push("/login")
-            } else {
-                // setLoading(false)
-                setName(session.user?.name)
-            }
-        }
-        securePage()
-    }, [])
+    const { data: session, status } = useSession()
 
     const today = new Date()
     const {...context} = useActivityContext()
@@ -146,7 +138,6 @@ const CreateGathering = () => {
                 <Typography variant="h1" textAlign="center" py={2}> Create Gathering </Typography>
                 <Paper sx={{maxWidth: "lg", py: 4, mb: 6}}>
                     <Container>
-
                         <Box width="100%" sx={{height: "10rem", backgroundColor: "#EFF2F5", position: "relative"}}>
                             {uploadDate ? <img src={uploadDate}
                                                style={{
@@ -176,7 +167,7 @@ const CreateGathering = () => {
                         </Box>
                         <Box my={2}>
                             <Typography variant="h6" sx={{color: "grey"}}>Host</Typography>
-                            <Typography variant="h6" sx={{color: "grey"}}>{name}</Typography>
+                            <Typography variant="h6" sx={{color: "grey"}}>{user.name}</Typography>
                         </Box>
                         <Stack direction='column' my={2} spacing={3}>
                             <TextField
@@ -271,6 +262,7 @@ const CreateGathering = () => {
                                     defaultValue={activitiesList[0].title}
                                     helperText="Please select activity genre"
                                     fullWidth={true}
+                                    onChange={(e) => {context.setGenre(e.target.value)}}
                                 >
                                     {activitiesList.length > 0 && activitiesList.map((option) => (
                                         <MenuItem key={option.id} value={option.title}>
@@ -314,22 +306,34 @@ const CreateGathering = () => {
                 meetingPoint={meetingPoint}
                 fileData={fileData}
                 meetingTime={meetingTime}
+                userId={user._id}
             /> : null}
         </Box>
     );
 };
 
 export default CreateGathering;
-//
-// export async function getServerSideProps() {
-//
-//     const res = await fetch('http://localhost:3000/api/user/640046988dbaa4a6bfae6a15')
-//     const user = await res.json()
-//
-//     console.log(user)
-//     return {
-//         props: {
-//             user: user.data
-//         }
-//     }
-// }
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const session = await getSession(context)
+    if (!session) {
+        return {
+            props: {}
+        }
+    }
+    const email = session?.user?.email
+    const res = await fetch(`http://localhost:3000/api/user`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({email})
+    })
+    const result = await res.json()
+    const userData: IUserModel = result.data.user
+    return {
+        props: {
+            user: userData
+        }
+    }
+}

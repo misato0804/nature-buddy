@@ -36,12 +36,13 @@ const LoginInputChild = ({setChildComponent}: Props) => {
     };
 
     const loginUser = async () => {
-        const res: any = await signIn("credentials", {
-            email: email,
-            password: password,
+        await signIn("credentials", {
+            email,
+            password,
             callbackUrl: `/user`,
         });
-        console.log(res)
+        setEmail("")
+        setPassword("")
     }
 
     return (

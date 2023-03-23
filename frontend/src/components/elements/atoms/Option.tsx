@@ -1,29 +1,29 @@
 import {Box, Grid, Typography} from "@mui/material";
-import {useState} from "react";
+import {Dispatch, SetStateAction, useState} from "react";
 import {useUserContext} from "@/lib/context/userInputContext";
+import {Genre} from "@/types/Genre";
 
 type OptionProps = {
     title: string,
 }
 
 const Option = ({title}: OptionProps) => {
-
-    const [clicked, setClicked] = useState<boolean>(false)
     const {interests, setInterests} = useUserContext()
+    const hasInterest = interests.includes(title as any)
+    const [bgColor, setBgColor] = useState(hasInterest ? 'green' :'grey')
 
     const clickHandler = (e: React.MouseEvent<HTMLElement>) => {
-        const activity = e.currentTarget.innerText
-        setClicked(!clicked)
+        const activity = e.currentTarget.innerText as Genre
+        bgColor === 'grey' ? setBgColor('green') : setBgColor('grey')
         interests.includes(activity) ? setInterests(interests.filter(interest => interest !== activity)) : setInterests([...interests, activity])
     }
-
     return (
         <Grid
             item
             onClick={clickHandler}
             sx={{
                 cursor: "pointer",
-                background: clicked ? "green" : "grey",
+                background: bgColor,
                 borderRadius: "25px",
                 color: "#fff",
                 px: "1.2rem",

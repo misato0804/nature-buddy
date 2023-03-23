@@ -2,6 +2,7 @@ import mongoose, {Schema, Document, CallbackWithoutResultAndOptionalError} from 
 import {IUser} from "@/types/IUser";
 import bcrypt from "bcryptjs";
 import {Genre} from "@/types/Genre";
+import {Activity} from "@/lib/util/activitySchema";
 
 export interface IUserModel extends IUser, Document{}
 
@@ -40,13 +41,8 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
         coordinates: {type: [Number], required: true},
         address: String,
         place_id: String,
+        required: false
     },
-    activities: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Activities"
-        }
-    ],
     socialMediaHandles: {
         tags: {
             type: Map,
@@ -58,7 +54,26 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
     },
     introduction: {
         type: String
-    }
+    },
+    hostedActivities: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Activity
+        }
+    ],
+    joinedActivities: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Activity
+        }
+    ],
+    favouriteActivities: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Activity
+        }
+    ],
+
 })
 
 // UserSchema.path("email").validate(function (this: IUserModel) {

@@ -1,13 +1,13 @@
 import {Box, Stack, Typography, Grid} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import Option from "@/components/elements/atoms/Option";
-import {activitiesList}from "../../lib/util/activitiesList"
+import {activitiesList} from "../../lib/util/activitiesList"
 import {StaticImageData} from "next/image";
 import {useUserContext} from "@/lib/context/userInputContext";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
-import {session} from "next-auth/core/routes";
-import {useSession} from "next-auth/react";
+import { signIn, useSession} from "next-auth/react";
 import Router, {useRouter} from 'next/router'
+import {IUser} from "@/types/IUser";
 
 type Activity = {
     id: number
@@ -16,45 +16,62 @@ type Activity = {
 }
 
 const activitiesRender = (list: Activity[]) => {
-    return list.map( activity => <Option key={activity.id} title={activity.title}/> )
+    return list.map(activity => <Option key={activity.id} title={activity.title}/>)
 }
 
 const SignupInterestChild = () => {
-    const { data: session, status } = useSession()
+    const {data: session, status} = useSession()
     const router = useRouter()
-    const {location, name, email, password, passwordConfirm, interests, setName, setEmail} = useUserContext()
+    const {
+        location, name, email, password, interests, setName, setEmail,
+        setInterests, setLocation, setPasswordConfirm, setPassword
+    } = useUserContext()
 
     useEffect(() => {
         if(session && session.user) {
-            setName(session.user.name as string)
-            setEmail(session.user.email as string)
+            setName(session.user?.name as string)
+            setEmail(session.user?.email as string)
         }
     }, [])
 
     const handleSubmit = async () => {
-        try {
-            const res = await fetch("/api/user/register", {
-                method: "POST",
-                body: JSON.stringify({
-                    name,
-                    email,
-                    password,
-                    passwordConfirm,
-                    interests,
-                    location: {
-                        type: "point",
-                        coordinates: [location.coordinates[0], location!.coordinates[1]]
-                    }
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+        const body: IUser = {
+            name,
+            email,
+            password,
+            interests,
+            location,
+            image: session?.user?.image
+        }
+        const response = await fetch('/api/user/register', {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const userData = await response.json()
+        setName('')
+        setEmail('')
+        setInterests([])
+        setPassword('')
+        setPasswordConfirm('')
+        setLocation({
+            type: "spot",
+            address: "",
+            place_id: "",
+            coordinates: [0, 0]
+        })
+        if (userData.status === 'success' && session === null) {
+            await signIn('credentials', {
+                email,
+                password,
+                callbackUrl: `/`
             })
-            console.log(res)
-            const userdata = await res.json()
-            userdata.status === "success" ? await router.push('/user') : await router.push('/error')
-        } catch (e: any) {
-            console.log(e)
+        } else if (userData.status === 'success' && session) {
+            await router.push(`/`)
+        } else {
+            await router.push('/error')
         }
     }
 

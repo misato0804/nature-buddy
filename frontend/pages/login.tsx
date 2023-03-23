@@ -7,11 +7,6 @@ import LoginInputChild from "@/components/login-page/LoginInput.child";
 
 const Login = () => {
     const [childComponent, setChildComponent] = useState<number>(1)
-    const {data: session, status} = useSession()
-
-    useEffect(() => {
-        console.log({session})
-    }, [status])
 
     const LoginChild = (childComponent: number) => {
         switch (childComponent) {

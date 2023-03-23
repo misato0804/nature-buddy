@@ -3,7 +3,6 @@ import {Container, Typography, Box, Stack} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {useRouter} from "next/router";
 
-
 const Footer = () => {
     const router = useRouter()
 

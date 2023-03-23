@@ -1,5 +1,6 @@
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useState} from "react";
 import {ILocation} from "@/types/ILocation";
+import {Genre} from "@/types/Genre";
 
 type Props = {
     children: ReactNode
@@ -12,8 +13,8 @@ type userContext = {
     password: string,
     passwordConfirm: string,
     location:ILocation,
-    interests: string[],
-    setInterests: Dispatch<SetStateAction<string[]>>,
+    interests: Genre[],
+    setInterests: Dispatch<SetStateAction<Genre[]>>,
     setLocation: Dispatch<SetStateAction<ILocation >>,
     setName:Dispatch<SetStateAction<string>>,
     setEmail:Dispatch<SetStateAction<string>>,
@@ -38,7 +39,7 @@ export const UserProvider = ({children}: Props) => {
         place_id: "",
         coordinates: [0,0]
     })
-    const [interests, setInterests] = useState<string[]>([])
+    const [interests, setInterests] = useState<Genre[]>([])
 
     return(
         <userContext.Provider value={{

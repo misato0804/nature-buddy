@@ -1,22 +1,25 @@
 import Head from 'next/head'
 import Hero from "@/components/hero-page/Hero";
-import {useSession} from "next-auth/react";
+import {getSession, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import {useEffect} from "react";
+import {Session} from "next-auth";
+import ProtectedHero from "@/components/hero-page/ProtectedHero";
+import {GetServerSidePropsContext} from "next";
+import {IUserModel} from "@/lib/util/schema";
 
-export default function Home() {
+type UserProps = {
+    user: IUserModel
+}
+
+export default function Home({user}: UserProps) {
 
     const {data: session, status} = useSession()
     const router = useRouter()
 
-    useEffect(() => {
-        session && router.push("/user")
-    }, [status])
-
-    if(status === "loading") {
+    if (status === "loading") {
         return <h1>Loading...</h1>
     }
-
     return (
         <>
             <Head>
@@ -25,7 +28,33 @@ export default function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
-            <Hero/>
+            {
+                session ? <ProtectedHero user={user}/> : <Hero/>
+            }
         </>
     )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const session = await getSession(context)
+    if(!session) {
+        return {
+            props: {}
+        }
+    }
+    const email = session?.user?.email
+    const res = await fetch(`http://localhost:3000/api/user`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({email})
+    })
+    const result = await res.json()
+    const userData  = result.data.user
+    return {
+        props: {
+            user: userData
+        }
+    }
 }

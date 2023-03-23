@@ -5,14 +5,15 @@ import {IActivity} from "@/types/IActivity";
 export interface IUser {
     name: string,
     email: string,
-    introduction: string,
+    introduction?: string,
     password?: string,
     passwordConfirm?: string,
     interests: Genre[],
     location: ILocation,
-    activities: any[],
+    // activities?: IActivity[],
     socialMediaHandles?: Map<string, string>,
-    image?: string,
-    hostedActivity? : string[],
-    joinedActivity? : string[]
+    image?: string | null,
+    hostedActivities? : IActivity[],
+    joinedActivities? : IActivity[],
+    favouriteActivities?: IActivity[],
 }

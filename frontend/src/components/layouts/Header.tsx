@@ -1,12 +1,14 @@
-import React from 'react';
 import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
 import Link from "next/link";
 import {signOut, useSession} from "next-auth/react"
-import { deleteCookie } from 'cookies-next';
+import {useRouter} from "next/router";
+
 
 const Header = () => {
 
     const {data: session, status} = useSession()
+    const router = useRouter()
+
     const unauthorizedHeader = [
         {
             title: "home",
@@ -25,18 +27,19 @@ const Header = () => {
 
     const authorizedHeader = [
         {
-            title: "home",
-            link: "/"
+            title: "profile",
+            link: "/user/profile"
         },
         {
-            title: "my page",
-            link: "/user"
+            title: "notification",
+            link: "/user/notification"
         }
+
     ]
 
-    const signout = () => {
-        deleteCookie("userId")
-        signOut()
+    const signout = async () => {
+        await router.push('/')
+        await signOut()
     }
 
     return (
@@ -71,13 +74,13 @@ const Header = () => {
                             </Button>))
                         :
                         unauthorizedHeader.map((item) => (
-                        <Button key={item.title} sx={{color: '#fff'}}>
-                            <Link href={item.link} style={{textDecoration: "none", color: "#fff"}}>
-                                {item.title}
-                            </Link>
-                        </Button>
-                    ))}
-                    {session && <Button sx={{color: '#fff'}} onClick={() => signout()}>SIGN OUT</Button>}
+                            <Button key={item.title} sx={{color: '#fff'}}>
+                                <Link href={item.link} style={{textDecoration: "none", color: "#fff"}}>
+                                    {item.title}
+                                </Link>
+                            </Button>
+                        ))}
+                    {session && <Button sx={{color: '#fff', fontWeight:600}} onClick={() => signout()}>SIGN OUT</Button>}
                 </Box>
             </Toolbar>
         </AppBar>
