@@ -10,8 +10,7 @@ import {SessionProvider} from "next-auth/react"
 import type {Session} from "next-auth"
 import {UserProvider} from "@/lib/context/userInputContext";
 import {ActivityProvider} from "@/lib/context/activityInputContext";
-import {useEffect} from "react";
-import { io } from "socket.io-client";
+import {NotificationProvider} from "@/lib/context/socketContext";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -31,10 +30,12 @@ export default function App({Component, pageProps, emotionCache = clientSideEmot
                     <SessionProvider session={pageProps.session}>
                         <UserProvider>
                             <ActivityProvider>
-                                <Layouts>
-                                    <CssBaseline/>
-                                    <Component {...pageProps} />
-                                </Layouts>
+                                <NotificationProvider>
+                                    <Layouts>
+                                        <CssBaseline/>
+                                        <Component {...pageProps} />
+                                    </Layouts>
+                                </NotificationProvider>
                             </ActivityProvider>
                         </UserProvider>
                     </SessionProvider>

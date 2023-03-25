@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {GetServerSidePropsContext} from "next";
 import {getSession, useSession} from "next-auth/react";
 import {IUserModel} from "@/lib/util/schema";
@@ -11,20 +11,25 @@ import FavouriteEvents from "@/components/profle-page/FavouriteEvents";
 import StickyButton from "@/components/elements/atoms/StickyButton";
 import {IActivityProps} from "@/types/Props";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import Link from "next/link";
 
 type UserProps = {
     user: IUserModel
 }
 
 const Profile = ({user}: UserProps) => {
-    const {data: session} = useSession()
+
+    useEffect(()=> {
+
+    }, [user.favouriteActivities])
+
     const router = useRouter()
     const [showEvents, setShowEvents] = useState<JSX.Element>(<JoinedEvents
         activities={user.joinedActivities as IActivityProps[]}/>)
     const [bgColor, setBgColor] = useState<string>('joined')
-
-    console.log(user)
-    console.log(session)
 
     const border = <hr
         style={{
@@ -70,11 +75,19 @@ const Profile = ({user}: UserProps) => {
                             sx={{
                                 width: {xs: 100, sm: 150},
                                 height: {xs: 100, sm: 150},
-                                opacity: .4
+                                opacity: .4,
+                                marginX: {xs: 'auto', md: '0'}
                             }}
                         />}
                     <Box>
-                        <Typography variant='h2'>{user.name}</Typography>
+                        <Box sx={{display: 'flex', alignItems:'center'}}>
+                            <Typography variant='h2'>{user.name}</Typography>
+                            <Stack direction="row" spacing={2} sx={{opacity: '.5', ml:4}}>
+                                {user.socialMediaHandles?.Instagram?.link  ? <Link style={{display: 'block', textDecoration:'none'}} href={user.socialMediaHandles.Instagram.link} target="_blank"><InstagramIcon/></Link> : null}
+                                {user.socialMediaHandles?.Twitter?.link  ? <Link style={{display: 'block', textDecoration:'none'}} href={user.socialMediaHandles.Twitter.link} target="_blank"><TwitterIcon/></Link> : null}
+                                {user.socialMediaHandles?.Facebook?.link  ? <Link style={{display: 'block', textDecoration:'none'}} href={user.socialMediaHandles.Facebook.link} target="_blank"><FacebookIcon/></Link>: null}
+                            </Stack>
+                        </Box>
                         <Typography>{user.introduction ? user.introduction : "Your introduction is shown here"}</Typography>
                     </Box>
                 </Stack>
@@ -141,7 +154,6 @@ const Profile = ({user}: UserProps) => {
 export default Profile;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-
     const session = await getSession(context)
     const email = session?.user?.email
     const res = await fetch(`http://localhost:3000/api/user`, {

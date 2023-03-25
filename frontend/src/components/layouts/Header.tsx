@@ -2,12 +2,16 @@ import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/materia
 import Link from "next/link";
 import {signOut, useSession} from "next-auth/react"
 import {useRouter} from "next/router";
+import {useEffect} from "react";
+import {useNotificationContext} from "@/lib/context/socketContext";
+import {INotification} from "@/types/INotification";
 
 
 const Header = () => {
 
     const {data: session, status} = useSession()
     const router = useRouter()
+    const {socket} = useNotificationContext()
 
     const unauthorizedHeader = [
         {
@@ -41,6 +45,10 @@ const Header = () => {
         await router.push('/')
         await signOut()
     }
+
+    useEffect(() => {
+
+    }, [socket])
 
     return (
         <AppBar component="nav">

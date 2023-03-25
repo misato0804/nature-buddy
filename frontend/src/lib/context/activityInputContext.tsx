@@ -33,7 +33,6 @@ export const useActivityContext = () => {
 }
 
 export const ActivityProvider = ({children}: Props) => {
-
     const defaultDate = new Date()
     const [title, setTitle] = useState<string>("")
     const [date, setDate] = useState<Date>(defaultDate)

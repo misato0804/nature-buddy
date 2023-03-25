@@ -1,8 +1,9 @@
 import mongoose, {Schema, Document, CallbackWithoutResultAndOptionalError} from "mongoose";
-import {IUser} from "@/types/IUser";
+import {IUser, socialMediaType} from "@/types/IUser";
 import bcrypt from "bcryptjs";
 import {Genre} from "@/types/Genre";
 import {Activity} from "@/lib/util/activitySchema";
+
 
 export interface IUserModel extends IUser, Document{}
 
@@ -44,10 +45,17 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
         required: false
     },
     socialMediaHandles: {
-        tags: {
-            type: Map,
-            of: String
-        }
+        type: {
+            Twitter: {
+                link: String,
+            },
+            Instagram: {
+                link: String,
+            },
+            Facebook: {
+                link: String
+            }
+        },
     },
     image: {
         type: String

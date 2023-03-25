@@ -16,6 +16,8 @@ import Groups2OutlinedIcon from "@mui/icons-material/Groups2Outlined";
 import {IActivityProps} from "@/types/Props";
 import {useSession} from "next-auth/react";
 import LoginModal from "@/components/elements/organisms/LoginModal";
+import {useNotificationContext} from "@/lib/context/socketContext";
+import IOnlineUser from "@/types/IOnlineUser";
 
 type PageProps = {
     activity: IActivityProps
@@ -29,12 +31,27 @@ const containerStyle = {
 const Activity = ({activity}: PageProps) => {
 
     const [openModal, setOpenModal] = useState<boolean>(false)
+    const {notification, setNotification, askingUser, socket} = useNotificationContext()
+    const [hostToAsk, setHostToAsk] = useState<IOnlineUser | undefined>({email: activity.host.email, name: activity.host.name})
     const router = useRouter()
-
     const {data: session} = useSession()
+    const [asked, setAsked] = useState<boolean>(false)
+
+    useEffect(() => {
+        setNotification({
+            ...notification,
+            host: hostToAsk!,
+            activity_id: activity._id.toString(),
+            sender: askingUser
+        })
+    }, [askingUser])
 
     const AskToJoin = () => {
-        console.log(session)
+        const sendSubmission = () => {
+            socket.emit('send_ask_to_join', notification)
+            setAsked(true)
+        }
+        session !== undefined ? sendSubmission() : setOpenModal(true)
     }
 
     const seeHostProfile = async () => {
@@ -118,9 +135,9 @@ const Activity = ({activity}: PageProps) => {
                         </Box>
                     </Container>
                     <GoogleMapComponent containerStyle={containerStyle} center={center} zoom={13}/>
-                    <TriggerButton title="Ask to join" color="green"
-                                   style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}
-                                   onClick={AskToJoin}/>
+                    {!asked ? <TriggerButton title="Ask to join" color="green"
+                                    style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}
+                                    onClick={AskToJoin}/> : <TriggerButton title='Pending' color={'grey'}/>}
                 </Box>
 
             </Stack>

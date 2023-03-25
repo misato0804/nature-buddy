@@ -1,31 +1,35 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
-import {Box} from "@mui/material";
-import {EventProps} from "@/types/Props";
-import { v4 as uuidv4 } from 'uuid';
+import {Box, Stack} from "@mui/material";
+import {EventProps, IActivityProps} from "@/types/Props";
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
 
 const FavouriteEvents = ({activities}: EventProps) => {
 
-    const RenderActivities = activities?.map(activity => (
+    const [favourites, setFavourites] = useState<IActivityProps[] | undefined>([])
+
+    useEffect(() => {
+        setFavourites(activities)
+    }, [])
+
+    useEffect(() => {
+        setFavourites(activities)
+    }, [activities])
+
+    const RenderActivities = favourites?.map(activity => (
         <ActivityBlock
-            key={uuidv4()}
-            title={activity.title}
-            number={activity.spots}
-            host="misato"
-            date={new Date(activity.date).toLocaleDateString()}
-            genre={activity.genre}
-            url="123"
-            image={activity.coverImage}
+            key={activity._id}
+            props={activity}
+            initialFavourite={true}
         />
     ))
 
     return (
-        <Box sx={{boxShadow: 3, py: 2, px: 4}}>
+        <Stack sx={{boxShadow: 3, py: 2, px: 4}} spacing={2}>
             {
-                activities && activities?.length > 0 ? RenderActivities : <NoEventBlock/>
+                favourites && favourites?.length > 0 ? RenderActivities : <NoEventBlock/>
             }
-        </Box>
+        </Stack>
     );
 };
 
