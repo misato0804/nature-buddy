@@ -1,7 +1,6 @@
 import {Box, Stack} from '@mui/material';
 import React from 'react';
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
-import {v4 as uuidv4} from "uuid";
 import {EventProps} from "@/types/Props";
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
 

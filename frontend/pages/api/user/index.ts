@@ -14,8 +14,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             })
         }
         try {
-            const user = await User.findOne({email}).populate('hostedActivities')
-            console.log(user)
+            const user = await User.findOne({email})
+                .populate('hostedActivities')
+                .populate('favouriteActivities')
+                .populate('joinedActivities')
             res.status(200).json({
                 status: "success",
                 data: {
@@ -32,7 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } else if (method === 'PATCH') {
         const {id, updateUser} = req.body
         try {
-        const newUser = await User.updateMany({_id: id}, updateUser)
+            const newUser = await User.updateMany({_id: id}, updateUser)
             res.status(200).json({
                 status: 'success',
                 data: newUser

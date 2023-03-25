@@ -5,11 +5,13 @@ import BrowseByActivity from "@/components/elements/organisms/BrowseByActivity";
 import StickyButton from "@/components/elements/atoms/StickyButton";
 import {IActivityModel} from "@/lib/util/activitySchema";
 import NoEventBlock from '../elements/molecules/NoEventBlock';
+import {IActivityProps} from "@/types/Props";
 
 const ProtectedHero = ({user}: any) => {
 
-    const [upcomingActivities, setUpcomingActivities] = useState<IActivityModel[] | undefined>()
+    const [upcomingActivities, setUpcomingActivities] = useState<IActivityProps[] | undefined>()
     const [loading, setLoading] = useState<boolean>(true)
+
 
     useEffect(() => {
         async function getUpcoming() {
@@ -18,19 +20,23 @@ const ProtectedHero = ({user}: any) => {
             setUpcomingActivities(events.data)
             setLoading(false)
         }
-
         getUpcoming()
     }, [])
+
 
     const border = <hr
         style={{marginTop: ".5rem", marginBottom: "1rem", border: "none", height: "2px", backgroundColor: "#A2A2A2"}}/>
 
-    const nextEvent = (activities: IActivityModel[]) => {
+    const nextEvent = (activities: IActivityProps[]) => {
         activities.sort((a, b) =>
             (new Date(a.meetingDetail.meetingTime).getTime() - new Date(b.meetingDetail.meetingTime).getTime())
         )
         return activities[0]
     }
+
+    const isFavourite = (activity: IActivityProps) => user.favouriteActivities.filter((favourite : any) => {
+        return favourite.title === activity.title
+    })
 
     return (
         <Container sx={{mt: {xs: 12, sm: 6}}}>
@@ -49,8 +55,12 @@ const ProtectedHero = ({user}: any) => {
                     <Typography variant="h2" my={2}>Upcoming activities</Typography>
                     {border}
                     <Stack spacing={3}>
-                        {loading ? <h1>Loading...</h1> : upcomingActivities?.map(activity => <ActivityBlock
-                            key={activity._id} props={activity}/>)}
+                        { loading ?
+                            <h1>Loading...</h1> :
+                            upcomingActivities?.map(activity =>
+                                isFavourite(activity).length !== 0 ? <ActivityBlock key={activity._id} props={activity} initialFavourite={true}/> : <ActivityBlock key={activity._id} props={activity}/>
+                            )
+                        }
                     </Stack>
                 </Box>
                 <Box className="my-buddies" sx={{mt: 3}}>

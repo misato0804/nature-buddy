@@ -1,25 +1,55 @@
 import Head from 'next/head'
 import Hero from "@/components/hero-page/Hero";
 import {getSession, useSession} from "next-auth/react";
-import {useRouter} from "next/router";
-import {useEffect} from "react";
-import {Session} from "next-auth";
 import ProtectedHero from "@/components/hero-page/ProtectedHero";
 import {GetServerSidePropsContext} from "next";
 import {IUserModel} from "@/lib/util/schema";
+import {useEffect, useState} from "react";
+import {useNotificationContext} from "@/lib/context/socketContext";
+import {INotification} from "@/types/INotification";
 
 type UserProps = {
     user: IUserModel
 }
 
 export default function Home({user}: UserProps) {
-
     const {data: session, status} = useSession()
-    const router = useRouter()
+    const {askingUser, setAskingUser, socket} = useNotificationContext()
+
+    useEffect(() => {
+        console.log(askingUser)
+        console.log(session)
+        askingUser.name && askingUser.email && socket.emit('newUser', askingUser)
+
+        const updateUserNotification = async () => {
+            const res = await fetch('/api/user', {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                //Add Notification
+                body: JSON.stringify({})
+            })
+        }
+
+        socket.on('get_asked_to_join', (notification: INotification) => {
+            console.log(notification)
+        })
+
+    }, [socket])
+
+    useEffect(() => {
+        session?.user && setAskingUser({
+            ...askingUser,
+            name: session.user.name!,
+            email: session.user.email!
+        })
+    }, [session])
 
     if (status === "loading") {
         return <h1>Loading...</h1>
     }
+
     return (
         <>
             <Head>
@@ -37,7 +67,7 @@ export default function Home({user}: UserProps) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const session = await getSession(context)
-    if(!session) {
+    if (!session) {
         return {
             props: {}
         }
@@ -51,7 +81,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         body: JSON.stringify({email})
     })
     const result = await res.json()
-    const userData  = result.data.user
+    const userData = result.data.user
     return {
         props: {
             user: userData

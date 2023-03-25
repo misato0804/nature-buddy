@@ -107,8 +107,8 @@ const EditProfileField = ({user, updateUser, setUpdateUser, updateLocation, setU
                         id="instagram"
                         label="instagram link"
                         variant="outlined"
-                        // value={updateUser.socialMediaHandles?.has('')}
-                        // onChange={}
+                        value={updateUser.socialMediaHandles?.Instagram?.link || ''}
+                        onChange={(e) => {setUpdateUser({...updateUser, socialMediaHandles: {...updateUser.socialMediaHandles, Instagram: {link: e.target.value}}})}}
                         fullWidth={true}
                     />
                 </Box>
@@ -122,8 +122,8 @@ const EditProfileField = ({user, updateUser, setUpdateUser, updateLocation, setU
                         id="facebook"
                         label="Facebook link"
                         variant="outlined"
-                        // value={updateUser.introduction}
-                        // onChange={}
+                        value={updateUser.socialMediaHandles?.Facebook?.link || ''}
+                        onChange={(e) => {setUpdateUser({...updateUser, socialMediaHandles: {...updateUser.socialMediaHandles, Facebook: {link: e.target.value}}})}}
                         fullWidth={true}
                     />
                 </Box>
@@ -137,8 +137,8 @@ const EditProfileField = ({user, updateUser, setUpdateUser, updateLocation, setU
                         id="Twitter"
                         label="Twitter link"
                         variant="outlined"
-                        // value={updateUser.introduction}
-                        // onChange={}
+                        value={updateUser.socialMediaHandles?.Twitter?.link || ''}
+                        onChange={(e) => {setUpdateUser({...updateUser, socialMediaHandles: {...updateUser.socialMediaHandles, Twitter: {link: e.target.value}}})}}
                         fullWidth={true}
                     />
                 </Box>

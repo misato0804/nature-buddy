@@ -7,12 +7,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await dbConnect();
     try {
         const user = await User.findById(userId)
-
+        res.status(200).json({
+            status: 'success',
+            data: user
+        })
     } catch (e: any) {
-
+        console.log(e)
+        res.status(500).json({
+            status: 'failed',
+            message: e.message
+        })
     }
-
-
 }
 
 export default handler;

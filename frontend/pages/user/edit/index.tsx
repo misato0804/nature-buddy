@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Container, Stack, Typography} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {getSession, useSession} from "next-auth/react";
@@ -25,6 +25,12 @@ const UserEdit = ({user}: UserProps) => {
     const [uploadDate, setUploadDate] = useState<string | null | undefined>(user.image)
     const [updateUser, setUpdateUser] = useState<IUser>(user)
     const [updateLocation, setUpdateLocation] = useState<ILocation>(user.location)
+
+    // setUpdateUser({...updateUser, socialMediaHandles: {twitter:'sss'}})
+
+    useEffect(() => {
+        setUpdateUser({...updateUser, socialMediaHandles: {Twitter: {link:""}, Facebook:{link:""},Instagram:{link:""}}})
+    }, [])
 
     const imageChangeBtn = (
         <Box sx={{
