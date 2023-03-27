@@ -1,8 +1,9 @@
-
 import IOnlineUser from "@/types/IOnlineUser";
+import mongoose from "mongoose";
 
-export type INotification = {
+export interface INotification {
     host: IOnlineUser,
-    activity_id: string
-    sender: IOnlineUser
+    activity_id: string | mongoose.Schema.Types.ObjectId,
+    sender: IOnlineUser,
+    replied ? : boolean
 }

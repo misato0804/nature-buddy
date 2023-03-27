@@ -2,16 +2,31 @@ import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/materia
 import Link from "next/link";
 import {signOut, useSession} from "next-auth/react"
 import {useRouter} from "next/router";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useNotificationContext} from "@/lib/context/socketContext";
-import {INotification} from "@/types/INotification";
-
 
 const Header = () => {
 
     const {data: session, status} = useSession()
     const router = useRouter()
-    const {socket} = useNotificationContext()
+    const {socket, notification, setNotification} = useNotificationContext()
+
+    console.log(notification)
+
+    useEffect(() => {
+        const getUser = async (email: string) => {
+            const user = await fetch('/api/user/notification', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email})
+            })
+            const userData = await user.json()
+            setNotification(userData.data.notifications.received)
+        }
+        session ? getUser(session.user?.email!) : null
+    }, [])
 
     const unauthorizedHeader = [
         {
@@ -26,29 +41,12 @@ const Header = () => {
             title: "sign up",
             link: "/signup"
         },
-
-    ]
-
-    const authorizedHeader = [
-        {
-            title: "profile",
-            link: "/user/profile"
-        },
-        {
-            title: "notification",
-            link: "/user/notification"
-        }
-
     ]
 
     const signout = async () => {
         await router.push('/')
         await signOut()
     }
-
-    useEffect(() => {
-
-    }, [socket])
 
     return (
         <AppBar component="nav">
@@ -74,12 +72,29 @@ const Header = () => {
                 </Typography>
                 <Box sx={{display: {xs: 'none', sm: 'block'}}}>
                     {session ?
-                        authorizedHeader.map((item) => (
-                            <Button key={item.title} sx={{color: '#fff'}}>
-                                <Link href={item.link} style={{textDecoration: "none", color: "#fff"}}>
-                                    {item.title}
+                        <>
+                            <Button key="profile" sx={{color: '#fff'}}>
+                                <Link href='/user/profile' style={{textDecoration: "none", color: "#fff"}}>
+                                    Profile
                                 </Link>
-                            </Button>))
+                            </Button>
+                            <Button key="notification" sx={{color: '#fff', position: 'relative'}}>
+                                <Link href='/user/notification' style={{textDecoration: "none", color: "#fff"}}>
+                                    Notification
+                                </Link>
+                                <span
+                                    style={{
+                                        position: 'absolute',
+                                        width:'12px', height:'12px',
+                                        backgroundColor: 'red',
+                                        borderRadius: '50%',
+                                        right: 0,
+                                        top:2,
+                                        zIndex:0,
+                                        visibility: notification && notification.length > 0 ? 'visible' : 'hidden'
+                                }}></span>
+                            </Button>
+                        </>
                         :
                         unauthorizedHeader.map((item) => (
                             <Button key={item.title} sx={{color: '#fff'}}>
@@ -87,8 +102,10 @@ const Header = () => {
                                     {item.title}
                                 </Link>
                             </Button>
-                        ))}
-                    {session && <Button sx={{color: '#fff', fontWeight:600}} onClick={() => signout()}>SIGN OUT</Button>}
+                        ))
+                    }
+                    {session &&
+                        <Button sx={{color: '#fff', fontWeight: 600}} onClick={() => signout()}>SIGN OUT</Button>}
                 </Box>
             </Toolbar>
         </AppBar>

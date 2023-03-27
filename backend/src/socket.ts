@@ -1,6 +1,5 @@
 import {Server} from "socket.io";
-import {User} from "./model/schema";
-import { INotification } from "./types/INotification";
+import INotification from "./types/INotification";
 import IOnlineUser from "./types/IOnlineUser";
 
 //Should update whenever user connects or leaves
@@ -27,16 +26,12 @@ const Sockets = (io: Server) => {
         })
 
         socket.on('send_ask_to_join', (notification : INotification) => {
-            console.log(notification)
             const receiver = getUser(notification.host.email)
-            console.log(receiver)
             if(receiver?.socket_id) {
-                console.log(receiver.socket_id)
                 io.to(receiver?.socket_id).emit('get_asked_to_join',  notification)
             }
         })
 
-        
         socket.on('disconnect', () => {
             removeUser(socket.id)
             console.log(`${socket.id} has left`)

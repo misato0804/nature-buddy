@@ -19,13 +19,6 @@ type UserProps = {
 }
 
 const CreateGathering = ({user}: UserProps) => {
-    /**
-     * TODO: GET USER DATA
-     */
-    const [name, setName] = useState<string | null | undefined>("")
-    const router = useRouter()
-    const { data: session, status } = useSession()
-
     const today = new Date()
     const {...context} = useActivityContext()
     const {stringValidator, allValidator} = useValidator()

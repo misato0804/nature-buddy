@@ -33,6 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
     } else if (method === 'PATCH') {
         const {id, updateUser} = req.body
+        console.log(updateUser)
         try {
             const newUser = await User.updateMany({_id: id}, updateUser)
             res.status(200).json({

@@ -49,10 +49,8 @@ export default Activity;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {genre} = context.query
-    console.log(genre)
     const res = await fetch(`http://localhost:3000/api/activities/${genre}`)
     const data = await res.json()
-    console.log(data)
     return {
         props: {
             activities: data.data
