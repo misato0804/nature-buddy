@@ -3,7 +3,7 @@ import {IUser, socialMediaType} from "@/types/IUser";
 import bcrypt from "bcryptjs";
 import {Genre} from "@/types/Genre";
 import {Activity} from "@/lib/util/activitySchema";
-
+import {Notifications} from "@/lib/util/notificationSchema";
 
 export interface IUserModel extends IUser, Document{}
 
@@ -81,7 +81,20 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
             ref: Activity
         }
     ],
-
+    notifications: {
+        sent: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: Notifications
+            }
+        ],
+        received: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: Notifications
+            }
+        ]
+    }
 })
 
 // UserSchema.path("email").validate(function (this: IUserModel) {

@@ -18,6 +18,7 @@ import {useSession} from "next-auth/react";
 import LoginModal from "@/components/elements/organisms/LoginModal";
 import {useNotificationContext} from "@/lib/context/socketContext";
 import IOnlineUser from "@/types/IOnlineUser";
+import {INotification} from "@/types/INotification";
 
 type PageProps = {
     activity: IActivityProps
@@ -31,8 +32,12 @@ const containerStyle = {
 const Activity = ({activity}: PageProps) => {
 
     const [openModal, setOpenModal] = useState<boolean>(false)
-    const {notification, setNotification, askingUser, socket} = useNotificationContext()
-    const [hostToAsk, setHostToAsk] = useState<IOnlineUser | undefined>({email: activity.host.email, name: activity.host.name})
+    const { askingUser, socket} = useNotificationContext()
+    const [notification, setNotification] = useState<INotification | undefined>()
+    const [hostToAsk, setHostToAsk] = useState<IOnlineUser | undefined>({
+        email: activity.host.email,
+        name: activity.host.name
+    })
     const router = useRouter()
     const {data: session} = useSession()
     const [asked, setAsked] = useState<boolean>(false)
@@ -47,11 +52,18 @@ const Activity = ({activity}: PageProps) => {
     }, [askingUser])
 
     const AskToJoin = () => {
-        const sendSubmission = () => {
+        const sendSubmission = async () => {
             socket.emit('send_ask_to_join', notification)
+            await fetch('/api/notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({notification})
+            })
             setAsked(true)
         }
-        session !== undefined ? sendSubmission() : setOpenModal(true)
+        session !== undefined ? sendSubmission().then(() => router.push('/')) : setOpenModal(true)
     }
 
     const seeHostProfile = async () => {
@@ -135,9 +147,9 @@ const Activity = ({activity}: PageProps) => {
                         </Box>
                     </Container>
                     <GoogleMapComponent containerStyle={containerStyle} center={center} zoom={13}/>
-                    {!asked ? <TriggerButton title="Ask to join" color="green"
-                                    style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}
-                                    onClick={AskToJoin}/> : <TriggerButton title='Pending' color={'grey'}/>}
+                     <TriggerButton title="Ask to join" color="green"
+                                             style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}
+                                             onClick={AskToJoin}/>
                 </Box>
 
             </Stack>

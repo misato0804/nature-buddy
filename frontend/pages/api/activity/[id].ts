@@ -17,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 data: activity
             })
         }
-        case "PUT": {
+        case "PATCH": {
             //Modify
             break
         }

@@ -13,8 +13,8 @@ export interface INotificationContext {
     socket: any,
     askingUser: IOnlineUser,
     setAskingUser: Dispatch<SetStateAction<IOnlineUser>>,
-    notification: INotification | undefined,
-    setNotification: React.Dispatch<React.SetStateAction<INotification | undefined>>
+    notification: INotification[] | undefined,
+    setNotification: React.Dispatch<React.SetStateAction<INotification[] | undefined>>
 }
 
 const notificationContext = createContext({} as INotificationContext)
@@ -26,11 +26,9 @@ export const useNotificationContext = () => {
 
 export const NotificationProvider = ({children}: Props) => {
     const initialUser = {name: '', email: ''}
-
     const socket = io('http://localhost:8080')
-    const [notification, setNotification] = useState<INotification | undefined>()
+    const [notification, setNotification] = useState<INotification[] | undefined>([])
     const [askingUser, setAskingUser] = useState<IOnlineUser>(initialUser)
-    // const [socket, setSocket] = useState<any>()
 
     return (
         <notificationContext.Provider value={{socket, notification, setNotification, askingUser, setAskingUser}}>

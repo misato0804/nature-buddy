@@ -7,6 +7,8 @@ import {IUserModel} from "@/lib/util/schema";
 import {useEffect, useState} from "react";
 import {useNotificationContext} from "@/lib/context/socketContext";
 import {INotification} from "@/types/INotification";
+import {IUser} from "@/types/IUser";
+import mongoose from "mongoose";
 
 type UserProps = {
     user: IUserModel
@@ -15,27 +17,29 @@ type UserProps = {
 export default function Home({user}: UserProps) {
     const {data: session, status} = useSession()
     const {askingUser, setAskingUser, socket} = useNotificationContext()
+    const [updateUser, setUpdateUser] = useState<IUser>(user)
+    const [data, setData] = useState<INotification|undefined>()
 
     useEffect(() => {
-        console.log(askingUser)
-        console.log(session)
         askingUser.name && askingUser.email && socket.emit('newUser', askingUser)
 
-        const updateUserNotification = async () => {
-            const res = await fetch('/api/user', {
+        const updateUserNotification = async (notification: INotification) => {
+            await fetch('/api/user/notification', {
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                //Add Notification
-                body: JSON.stringify({})
+                body: JSON.stringify({
+                    data: notification,
+                    id: user._id
+                })
             })
         }
 
         socket.on('get_asked_to_join', (notification: INotification) => {
             console.log(notification)
+            // updateUserNotification(notification)
         })
-
     }, [socket])
 
     useEffect(() => {
@@ -82,6 +86,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     })
     const result = await res.json()
     const userData = result.data.user
+
     return {
         props: {
             user: userData
