@@ -42,6 +42,8 @@ const Activity = ({activity}: PageProps) => {
     const {data: session} = useSession()
     const [asked, setAsked] = useState<boolean>(false)
 
+    console.log(activity)
+
     useEffect(() => {
         setNotification({
             ...notification,
@@ -114,9 +116,10 @@ const Activity = ({activity}: PageProps) => {
                     <Typography variant="subtitle1" my={2}>{activity.description}</Typography>
                     <Typography variant="subtitle1" my={2}>{activity.description}</Typography>
                     <Typography variant="subtitle1" my={2}>{activity.description}</Typography>
+
                     <Typography variant="h4">Your buddies</Typography>
                     <Stack direction="row" spacing={5} py={2}>
-                        {activity.buddies?.length! > 0 ? <h1>Buddy</h1> :
+                        {activity.buddies?.length! > 0 ? <>Hello</> :
                             <Typography variant="subtitle1">No buddies has joined yet</Typography>}
                     </Stack>
                     <Stack direction="row" spacing={2} justifyContent="space-around" my={3}>

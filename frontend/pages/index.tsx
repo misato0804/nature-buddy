@@ -17,29 +17,11 @@ type UserProps = {
 export default function Home({user}: UserProps) {
     const {data: session, status} = useSession()
     const {askingUser, setAskingUser, socket} = useNotificationContext()
-    const [updateUser, setUpdateUser] = useState<IUser>(user)
-    const [data, setData] = useState<INotification|undefined>()
+
 
     useEffect(() => {
         askingUser.name && askingUser.email && socket.emit('newUser', askingUser)
 
-        const updateUserNotification = async (notification: INotification) => {
-            await fetch('/api/user/notification', {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    data: notification,
-                    id: user._id
-                })
-            })
-        }
-
-        socket.on('get_asked_to_join', (notification: INotification) => {
-            console.log(notification)
-            // updateUserNotification(notification)
-        })
     }, [socket])
 
     useEffect(() => {

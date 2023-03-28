@@ -4,14 +4,13 @@ import {signOut, useSession} from "next-auth/react"
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {useNotificationContext} from "@/lib/context/socketContext";
+import {INotification} from "@/types/INotification";
 
 const Header = () => {
 
     const {data: session, status} = useSession()
     const router = useRouter()
     const {socket, notification, setNotification} = useNotificationContext()
-
-    console.log(notification)
 
     useEffect(() => {
         const getUser = async (email: string) => {
@@ -23,10 +22,14 @@ const Header = () => {
                 body: JSON.stringify({email})
             })
             const userData = await user.json()
-            setNotification(userData.data.notifications.received)
+            setNotification(() => {
+                return userData.data.notifications.received.filter((item: INotification)=> {
+                    return item.replied === false
+                })
+            })
         }
         session ? getUser(session.user?.email!) : null
-    }, [])
+    }, [session])
 
     const unauthorizedHeader = [
         {

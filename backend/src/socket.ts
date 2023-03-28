@@ -31,6 +31,12 @@ const Sockets = (io: Server) => {
                 io.to(receiver?.socket_id).emit('get_asked_to_join',  notification)
             }
         })
+        socket.on('send_approval', (notification: INotification) => {
+            const sender = getUser(notification.sender.email)
+            if(sender?.socket_id) {
+                io.to(sender?.socket_id).emit('get_approval', notification)
+            }
+        })
 
         socket.on('disconnect', () => {
             removeUser(socket.id)
