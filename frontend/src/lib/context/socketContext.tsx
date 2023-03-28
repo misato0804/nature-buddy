@@ -4,6 +4,7 @@ import IOnlineUser from "@/types/IOnlineUser";
 import {Socket} from "socket.io";
 import {DefaultEventsMap} from "@socket.io/component-emitter";
 import io from "socket.io-client";
+import {INotificationModel} from "@/lib/util/notificationSchema";
 
 type Props = {
     children: ReactNode
@@ -13,8 +14,8 @@ export interface INotificationContext {
     socket: any,
     askingUser: IOnlineUser,
     setAskingUser: Dispatch<SetStateAction<IOnlineUser>>,
-    notification: INotification[] | undefined,
-    setNotification: React.Dispatch<React.SetStateAction<INotification[] | undefined>>
+    notification: INotificationModel[] | undefined,
+    setNotification: React.Dispatch<React.SetStateAction<INotificationModel[] | undefined>>
 }
 
 const notificationContext = createContext({} as INotificationContext)
@@ -27,7 +28,7 @@ export const useNotificationContext = () => {
 export const NotificationProvider = ({children}: Props) => {
     const initialUser = {name: '', email: ''}
     const socket = io('http://localhost:8080')
-    const [notification, setNotification] = useState<INotification[] | undefined>([])
+    const [notification, setNotification] = useState<INotificationModel[] | undefined>([])
     const [askingUser, setAskingUser] = useState<IOnlineUser>(initialUser)
 
     return (

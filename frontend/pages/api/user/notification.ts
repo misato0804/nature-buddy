@@ -9,6 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const notification = await User
             .findOne({email})
             .select('notifications')
+            .select('email')
             .populate({path: 'notifications', populate: {path:'received', model:'Notifications'}})
             .populate({path: 'notifications', populate: {path:'sent', model:'Notifications'}})
         res.status(200).json({
