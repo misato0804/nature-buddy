@@ -19,6 +19,7 @@ import LoginModal from "@/components/elements/organisms/LoginModal";
 import {useNotificationContext} from "@/lib/context/socketContext";
 import IOnlineUser from "@/types/IOnlineUser";
 import {INotification} from "@/types/INotification";
+import {IUserModel} from "@/lib/util/schema";
 
 type PageProps = {
     activity: IActivityProps
@@ -84,6 +85,12 @@ const Activity = ({activity}: PageProps) => {
         return new Date(date).toLocaleString()
     }
 
+    const imageUrl = 'https://res.cloudinary.com/dpbmhiqim/image/upload/v1677308198/cld-sample-5.jpg'
+
+    const renderBuddy = (buddies: any[]) => {
+        return buddies.map( buddy => <BuddyIcon key={buddy._id} buddy_id={buddy._id} src={buddy.image ? buddy.image : imageUrl}/>)
+    }
+
     const lat = activity.meetingDetail.meetingPoint.coordinates[0] as number
     const lng = activity.meetingDetail.meetingPoint.coordinates[1] as number
     const center: CenterCoordinate = {
@@ -95,6 +102,7 @@ const Activity = ({activity}: PageProps) => {
         return <h1>Loading...</h1>
     }
 
+    console.log('image',activity.coverImage)
     return (
         <Container sx={{mt: {xs: 14, sm: 12}}}>
             <Typography variant="h4">{getLocalDate(activity.date)}</Typography>
@@ -119,7 +127,7 @@ const Activity = ({activity}: PageProps) => {
 
                     <Typography variant="h4">Your buddies</Typography>
                     <Stack direction="row" spacing={5} py={2}>
-                        {activity.buddies?.length! > 0 ? <>Hello</> :
+                        {activity.buddies?.length!> 0  && activity.buddies ? renderBuddy(activity.buddies) :
                             <Typography variant="subtitle1">No buddies has joined yet</Typography>}
                     </Stack>
                     <Stack direction="row" spacing={2} justifyContent="space-around" my={3}>

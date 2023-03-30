@@ -1,10 +1,13 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useRouter} from "next/router";
 import {Box, Container, Grid, Stack, Typography} from "@mui/material";
 import SortButton from "@/components/elements/atoms/SortButton";
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 import {GetServerSidePropsContext} from "next";
 import {IActivityProps} from "@/types/Props";
+import TriggerButton from "@/components/elements/atoms/TriggerButton";
+import {getNextWeekend, getThisSunday, getTomorrow} from "@/lib/helpers/getThisSunday";
+import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
 
 type PageProps = {
     activities: IActivityProps[]
@@ -12,34 +15,95 @@ type PageProps = {
 
 const Activity = ({activities}: PageProps) => {
     const {query} = useRouter()
-    let genre : string;
+    let genre: string;
     genre = query.genre as string
     genre = genre!.charAt(0).toUpperCase() + genre.slice(1)
+    const [shownActivities, setShowActivities] = useState<IActivityProps[] | undefined>()
+    const [sortedBy, setSortedBy] = useState<string>('')
 
-    if(!activities) return <h1>Loading...</h1>
+    const sortActivities = (sortedBy: string, activities: IActivityProps[]) => {
+        switch (sortedBy) {
+            case 'tomorrow':
+                const tomorrow = getTomorrow().toLocaleDateString()
+                const newArrOfTomorrow = activities.filter(item => {
+                    const eventDate = new Date(item.date).toLocaleDateString()
+                    return tomorrow === eventDate
+                })
+                return setShowActivities(newArrOfTomorrow)
+            case 'this weekend':
+                const newArr = activities.filter(item => {
+                    const activityDate = new Date(item.date).getTime()
+                    const thisWeekends = getThisSunday()
+                    const activityDateNum = new Date(item.date).getDay()
+                    return thisWeekends - activityDate > 0 && (activityDateNum == 6 || activityDateNum == 0)
+                })
+                return setShowActivities(newArr)
+            case 'next week':
+                const newArrOfNextWeek = activities.filter(item => {
+                    const activityDate = new Date(item.date).getTime()
+                    const thisWeekends = getThisSunday()
+                    const nextWeekends = getNextWeekend()
+                    return activityDate > thisWeekends && nextWeekends > activityDate
+                })
+                return setShowActivities(newArrOfNextWeek)
+            case '3 〜 5':
+                const groupOf3Arr = activities.filter(item => {
+                    return item.spots >= 3 && item.spots < 6
+                })
+                return  setShowActivities(groupOf3Arr)
+            case '5 〜 10':
+                const groupOf5Arr = activities.filter(item => {
+                    return item.spots >= 5 && item.spots < 11
+                })
+                return  setShowActivities(groupOf5Arr)
+            case '10 〜 ':
+                const groupOf10Arr = activities.filter(item => {
+                    return item.spots >= 10
+                })
+                return  setShowActivities(groupOf10Arr)
+        }
+
+    }
+
+    const onClear = () => {
+        setShowActivities(activities)
+        setSortedBy('')
+    }
+
+    useEffect(() => {
+        setShowActivities(activities)
+    }, [])
+
+    useEffect(() => {
+        sortActivities(sortedBy, activities)
+    }, [sortedBy])
+
+    if (shownActivities === undefined) {
+        return <h1>Loading...</h1>
+    }
 
     return (
-        <Container component="main" sx={{mt: {xs:14, sm:6}}} maxWidth="xl">
-            <Typography variant="h1">{genre}</Typography>
+        <Container component="main" sx={{mt: {xs: 14, sm: 6}}} maxWidth="lg">
+            <Typography variant="h1" mt={8} mb={3}>{genre}</Typography>
             <Stack
-                width='100%'
+                width={{xs: '100%', md: '50%'}}
                 direction='row'
                 mb={2}
                 spacing={2}
                 position={"relative"}
-                zIndex={10}
             >
-                <SortButton title={"Day"} sortedByArr={["tomorrow", "Today", "This week"]}/>
-                <SortButton title={"Size"} sortedByArr={["tomorrow", "Today", "This week"]}/>
-                <SortButton title={"distance"} sortedByArr={["tomorrow", "Today", "This week"]}/>
+                <SortButton title={"Day"} setSortedBy={setSortedBy}
+                            sortedByArr={['tomorrow', 'this weekend', 'next week']}/>
+                <SortButton title={"Size"} setSortedBy={setSortedBy} sortedByArr={["3 〜 5", "5 〜 10", "10 〜 "]}/>
+                <TriggerButton title={'Clear'} color='#E5E4E2' style={{color: "#000"}} onClick={onClear}/>
             </Stack>
-            <hr style={{}}/>
+            <hr/>
             <Stack direction='column' my={3} spacing={3}>
-                { activities.map(activity => (
+                {shownActivities.length !== 0 ? shownActivities.map(activity => (
                     <Box key={activity._id}>
                         <ActivityBlock props={activity}/>
                     </Box>
-                ))}
+                )) : <NoEventBlock/>}
             </Stack>
         </Container>
     );

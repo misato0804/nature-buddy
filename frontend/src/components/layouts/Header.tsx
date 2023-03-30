@@ -10,9 +10,19 @@ const Header = () => {
 
     const {data: session, status} = useSession()
     const router = useRouter()
-    const {socket, notification, setNotification} = useNotificationContext()
+    const {socket, notification, setNotification, askingUser, setAskingUser, } = useNotificationContext()
 
     useEffect(() => {
+        askingUser.name && askingUser.email && socket.emit('newUser', askingUser)
+    }, [socket])
+
+    useEffect(() => {
+        session?.user && setAskingUser({
+            ...askingUser,
+            name: session.user.name!,
+            email: session.user.email!
+        })
+
         const getUser = async (email: string) => {
             const user = await fetch('/api/user/notification', {
                 method: "POST",

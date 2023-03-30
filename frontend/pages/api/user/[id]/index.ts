@@ -6,7 +6,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const userId = req.query.id
     await dbConnect();
     try {
-        const user = await User.findById(userId)
+        const user = await User.findById(userId).populate('joinedActivities')
         res.status(200).json({
             status: 'success',
             data: user

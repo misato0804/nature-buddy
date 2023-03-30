@@ -10,7 +10,6 @@ import initialActivityError from "@/lib/helpers/initialActivityError";
 import {dateValidation, getCurrentTime, getDate, modifier, stringToDate} from "@/lib/helpers/dateModifyer";
 import {getSession, useSession} from "next-auth/react";
 import {ILocation} from "@/types/ILocation";
-import {useRouter} from "next/router";
 import {GetServerSidePropsContext} from "next";
 import {IUserModel} from "@/lib/util/schema";
 

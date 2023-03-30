@@ -11,7 +11,6 @@ import {v4 as uuidv4} from 'uuid';
 import {useNotificationContext} from "@/lib/context/socketContext";
 import CheckedNotificationBlock from "@/components/notification-page/CheckedNotificationBlock";
 import GotPermission from "@/components/notification-page/GotPermission";
-import {IUser} from "@/types/IUser";
 import {useRouter} from "next/router";
 
 type pageProps = {
@@ -30,17 +29,13 @@ const Notification = ({user}: pageProps) => {
     const router = useRouter()
 
     useEffect(() => {
-        socket.on('get_asked_to_join', (notification: INotification) => {
-            console.log('get')
+        socket.on('get_asked_to_join', (data: INotification) => {
             router.reload()
         })
 
-        socket.on('get_approval', (notification: INotification) => {
-            console.log('get')
+        socket.on('get_approval', (data: INotification) => {
             router.reload()
         })
-
-
     }, [socket])
 
     // New request
@@ -53,7 +48,6 @@ const Notification = ({user}: pageProps) => {
         }
         return unRepliedArr.map(item => <NotificationBlock key={uuidv4()} notificationData={item}/>)
     }
-
     // Checked Notification
     const checkedRequestArr = (notifications: INotification[]) => {
         const repliedArr = notifications.filter(item => {
@@ -64,7 +58,6 @@ const Notification = ({user}: pageProps) => {
         }
         return repliedArr.map(item => <CheckedNotificationBlock key={uuidv4()} notification={item}/>)
     }
-
     // Received Permission
     const receivedPermissionArr = (notifications: INotification[]) => {
         const receivedPermissionArr = notifications.filter(item => {
@@ -76,8 +69,11 @@ const Notification = ({user}: pageProps) => {
         return receivedPermissionArr.map(item => <GotPermission key={uuidv4()} notification={item}/>)
     }
 
-    const renderUnreadContents = () => {
+    if(!user) {
+        return <h1>Loading...</h1>
+    }
 
+    const renderUnreadContents = () => {
         return (
             <>
                 <Stack direction='column' spacing={2} mt={2}>
@@ -102,9 +98,6 @@ const Notification = ({user}: pageProps) => {
                 <Typography variant='h2' fontWeight={500} mb={3}>Notification</Typography>
                 <Box className='unread'>
                     {renderUnreadContents()}
-                </Box>
-                <Box className='read'>
-
                 </Box>
             </Box>
             <StickyButton/>

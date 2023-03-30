@@ -13,14 +13,9 @@ import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import {getDate} from "@/lib/helpers/dateModifyer";
 import {ILocation} from "@/types/ILocation";
 import {IActivity} from "@/types/IActivity";
-import {getCookie} from 'cookies-next';
 import {useRouter} from "next/router";
 import {ObjectId, Types} from "mongoose";
 import {useSession} from "next-auth/react";
-
-/**
- * TODO: Meetup Location
- */
 
 type ModalProps = {
     openModal: boolean,
@@ -67,11 +62,14 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
                 method: "POST",
                 body: formData
             })
-            await resFromCloudinary.json().then(result => activity.setCoverImage(result.secure_url))
+            await resFromCloudinary.json()
+                .then(result => activity.setCoverImage(result.secure_url))
+
             const newEvent: IActivity = {
                 ...activity,
                 host: new Types.ObjectId(userId as string)
             }
+
             const res = await fetch("/api/activity/create", {
                 method: "POST",
                 body: JSON.stringify({newEvent, email: session?.user?.email}),
@@ -79,8 +77,26 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(res)
+
             if (res.status === 200) {
+                activity.setTitle('')
+                activity.setDate(new Date())
+                activity.setEndDate(new Date())
+                activity.setDescription('')
+                activity.setDuration('')
+                activity.setMeetingDetail({
+                    meetingPoint: {
+                        type: "spot",
+                        address: "",
+                        place_id: "",
+                        coordinates: [0,0]
+                    },
+                    meetingTime: new Date()
+                })
+                activity.setGenre('')
+                activity.setSpots(0)
+                activity.setCoverImage('')
+
                 await router.push(`/`)
             }
         } catch (e: any) {

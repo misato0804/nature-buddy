@@ -1,23 +1,27 @@
 import {Box} from "@mui/material";
 import Image from "next/image";
 import useWindowSize from "@/lib/hooks/useWindowSize";
+import {useRouter} from "next/router";
 
 type IconProps = {
     src: string
+    buddy_id? : string
 }
 
-const BuddyIcon = ({src}: IconProps) => {
+const BuddyIcon = ({src, buddy_id}: IconProps) => {
 
     const [width] = useWindowSize()
+    const router = useRouter()
 
     return (
-        <Box sx={{cursor: "pointer"}}>
+        <Box sx={{cursor: "pointer"}} onClick={() => {router.push(`/user/${buddy_id}`)}}>
             <Image
-                src="https://res.cloudinary.com/dpbmhiqim/image/upload/v1677308198/cld-sample-5.jpg"
+                src={src}
                 alt="my icon"
                 width={width > 600 ? 75 : 50}
                 height={width > 600 ? 75 : 50}
                 style={{borderRadius:"50%"}}
+
             />
         </Box>
     );
