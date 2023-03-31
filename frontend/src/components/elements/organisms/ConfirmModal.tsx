@@ -52,24 +52,30 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
         })
     }, [meetingPoint])
 
-    const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault()
-        const formData = new FormData()
-        fileData && formData.append("file", fileData[0])
-        formData.append('upload_preset', 'nature-buddy')
-        try {
+    useEffect(() => {
+        const uploadData = async () => {
+            const formData = new FormData()
+            fileData && formData.append("file", fileData[0])
+            formData.append('upload_preset', 'nature-buddy')
             const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
                 method: "POST",
                 body: formData
             })
-            await resFromCloudinary.json()
-                .then(result => activity.setCoverImage(result.secure_url))
+            const fileDataRes = await resFromCloudinary.json()
+            await activity.setCoverImage(fileDataRes.secure_url)
+        }
 
+        fileData !== undefined && uploadData()
+    }, [fileData])
+
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        try {
             const newEvent: IActivity = {
                 ...activity,
                 host: new Types.ObjectId(userId as string)
             }
-
             const res = await fetch("/api/activity/create", {
                 method: "POST",
                 body: JSON.stringify({newEvent, email: session?.user?.email}),
@@ -96,7 +102,6 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
                 activity.setGenre('')
                 activity.setSpots(0)
                 activity.setCoverImage('')
-
                 await router.push(`/`)
             }
         } catch (e: any) {

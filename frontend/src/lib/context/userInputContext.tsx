@@ -13,8 +13,8 @@ type userContext = {
     password: string,
     passwordConfirm: string,
     location:ILocation,
-    interests: Genre[],
-    setInterests: Dispatch<SetStateAction<Genre[]>>,
+    interests: string[],
+    setInterests: Dispatch<SetStateAction<string[]>>,
     setLocation: Dispatch<SetStateAction<ILocation >>,
     setName:Dispatch<SetStateAction<string>>,
     setEmail:Dispatch<SetStateAction<string>>,
@@ -39,7 +39,7 @@ export const UserProvider = ({children}: Props) => {
         place_id: "",
         coordinates: [0,0]
     })
-    const [interests, setInterests] = useState<Genre[]>([])
+    const [interests, setInterests] = useState<string[]>([])
 
     return(
         <userContext.Provider value={{

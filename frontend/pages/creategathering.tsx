@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Container,  MenuItem, Paper, Stack, TextField, Typography} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {activitiesList} from "@/lib/util/activitiesList";
@@ -59,7 +59,6 @@ const CreateGathering = ({user}: UserProps) => {
             ...errorObj,
             image: {error: true}
         })
-        console.log(errorObj.image)
     }
 
     const titleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {

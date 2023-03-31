@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useRouter} from "next/router";
-import {Box, Container, Grid, Stack, Typography} from "@mui/material";
+import {Box, Container, Stack, Typography} from "@mui/material";
 import SortButton from "@/components/elements/atoms/SortButton";
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 import {GetServerSidePropsContext} from "next";
@@ -9,8 +9,8 @@ import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {getNextWeekend, getThisSunday, getTomorrow} from "@/lib/helpers/getThisSunday";
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
 import sortByDate from "@/lib/helpers/sortByDate";
-import {signOut, useSession} from "next-auth/react"
-
+import {useSession} from "next-auth/react";
+import StickyButton from "@/components/elements/atoms/StickyButton";
 
 type PageProps = {
     activities: IActivityProps[]
@@ -23,7 +23,7 @@ const Activity = ({activities}: PageProps) => {
     genre = genre!.charAt(0).toUpperCase() + genre.slice(1)
     const [shownActivities, setShowActivities] = useState<IActivityProps[] | undefined>()
     const [sortedBy, setSortedBy] = useState<string>('')
-    const [numberOfDisplay, setNumberOfDisplay] = useState<number>(5)
+    const {data: session} =useSession()
 
     const sortActivities = (sortedBy: string, activities: IActivityProps[]) => {
         switch (sortedBy) {
@@ -89,7 +89,6 @@ const Activity = ({activities}: PageProps) => {
     return (
         <Container component="main" sx={{mt: {xs: 14, sm: 6}}} maxWidth="lg">
             <Typography variant="h1" mt={8} mb={3}>{genre}</Typography>
-            {/*<h1 onClick={() => {signOut()}}>SIGN OUT</h1>*/}
             <Stack
                 width={{xs: '100%', md: '50%'}}
                 direction='row'
@@ -110,6 +109,7 @@ const Activity = ({activities}: PageProps) => {
                     </Box>
                 )) : <NoEventBlock/>}
             </Stack>
+            {session && < StickyButton/>}
         </Container>
     );
 };

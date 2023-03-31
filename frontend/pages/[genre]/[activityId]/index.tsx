@@ -19,7 +19,6 @@ import LoginModal from "@/components/elements/organisms/LoginModal";
 import {useNotificationContext} from "@/lib/context/socketContext";
 import IOnlineUser from "@/types/IOnlineUser";
 import {INotification} from "@/types/INotification";
-import {IUserModel} from "@/lib/util/schema";
 
 type PageProps = {
     activity: IActivityProps
@@ -43,7 +42,17 @@ const Activity = ({activity}: PageProps) => {
     const {data: session} = useSession()
     const [asked, setAsked] = useState<boolean>(false)
 
-    console.log(activity)
+    const canAsk = (email: string, activity: IActivityProps) => {
+        const isHost = activity.host.email === email
+        const joinedBuddy = activity.buddies?.forEach(item => {
+            return item.email === email
+        })
+        if(isHost || joinedBuddy) {
+            return false
+        }
+        return true
+    }
+
 
     useEffect(() => {
         setNotification({
@@ -101,8 +110,6 @@ const Activity = ({activity}: PageProps) => {
     if (!activity) {
         return <h1>Loading...</h1>
     }
-
-    console.log('image',activity.coverImage)
     return (
         <Container sx={{mt: {xs: 14, sm: 12}}}>
             <Typography variant="h4">{getLocalDate(activity.date)}</Typography>
@@ -127,7 +134,7 @@ const Activity = ({activity}: PageProps) => {
 
                     <Typography variant="h4">Your buddies</Typography>
                     <Stack direction="row" spacing={5} py={2}>
-                        {activity.buddies?.length!> 0  && activity.buddies ? renderBuddy(activity.buddies) :
+                        {activity.buddies?.length! > 0  && activity.buddies ? renderBuddy(activity.buddies) :
                             <Typography variant="subtitle1">No buddies has joined yet</Typography>}
                     </Stack>
                     <Stack direction="row" spacing={2} justifyContent="space-around" my={3}>
@@ -158,9 +165,11 @@ const Activity = ({activity}: PageProps) => {
                         </Box>
                     </Container>
                     <GoogleMapComponent containerStyle={containerStyle} center={center} zoom={13}/>
-                     <TriggerButton title="Ask to join" color="green"
-                                             style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}
-                                             onClick={AskToJoin}/>
+                    {session?.user?.email && canAsk(session?.user?.email, activity) ? <TriggerButton title="Ask to join" color="green"
+                        style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}
+                        onClick={AskToJoin}/> : <TriggerButton title='You already joined' color='grey' style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}/>}
+
+
                 </Box>
 
             </Stack>

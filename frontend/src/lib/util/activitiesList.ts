@@ -6,10 +6,7 @@ import roadtrip from "../../../public/assets/images/roadtrip.jpg"
 import fishing from '../../../public/assets/images/fishing.jpg'
 import explore from '../../../public/assets/images/explore.jpg'
 import picnic from '../../../public/assets/images/picnic.jpg'
-
 import {StaticImageData} from "next/image";
-import Genre from "@/types/Genre";
-import {parseIni} from "@aws-sdk/shared-ini-file-loader/dist-types/parseIni";
 
 type Activity = {
     id: number
@@ -20,42 +17,42 @@ type Activity = {
 export const activitiesList : Activity[] = [
     {
         id: 1,
-        title: Genre.HIKING,
+        title: 'Hiking',
         image: hiking
     },
     {
         id: 2,
-        title: Genre.BIKING,
+        title: 'Biking',
         image: biking
     },
     {
         id: 3,
-        title: Genre.CLIMBING,
+        title: 'Climbing',
         image: climbing
     },
     {
         id: 4,
-        title: Genre.SNOW_ACTIVITY,
+        title: 'Snow activities',
         image: snowactivity
     },
     {
         id: 5,
-        title: Genre.ROAD_TRIP,
+        title: "Roadtrip",
         image: roadtrip
     },
     {
         id: 6,
-        title: Genre.FISHING,
+        title: 'Fishing',
         image: fishing
     },
     {
         id: 7,
-        title: Genre.PICNICKING,
+        title: 'Picnic',
         image: picnic
     },
     {
         id: 8,
-        title: Genre.EXPLORE_TOWN,
+        title: "Explore town",
         image: explore
     }
 ]

@@ -6,7 +6,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method } = req;
     let { genre } = req.query;
     genre = genre as string
-    genre = genre!.charAt(0).toUpperCase() + genre.slice(1)
+    genre = genre!.charAt(0).toUpperCase() + genre.slice(1).replace('-', ' ')
     await dbConnect();
     if(method === "GET") {
         try {

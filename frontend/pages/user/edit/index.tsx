@@ -8,7 +8,6 @@ import {IUserModel} from "@/lib/util/schema";
 import {useRouter} from 'next/router'
 import StickyButton from "@/components/elements/atoms/StickyButton";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import user_icon from '../../../public/assets/images/user_icon.png'
 import {IUser} from "@/types/IUser";
 import {ILocation} from "@/types/ILocation";
 
@@ -17,8 +16,6 @@ type UserProps = {
 }
 
 const UserEdit = ({user}: UserProps) => {
-
-    const {data: session} = useSession()
     const router = useRouter()
     const [showImageChange, setShowImageChange] = useState<string>('hidden')
     const [fileData, setFileData] = useState<FileList | undefined>()

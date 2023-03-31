@@ -42,7 +42,7 @@ const ActivitySchema: Schema = new mongoose.Schema<IActivityModel>({
     },
     genre: {
         type: String,
-        enum: ["Hiking", "Biking", "Climbing", "Snow activities", "Road trip", "Fishing", "Picnicking", "Exploring town"],
+        enum: ["Hiking", "Biking", "Climbing", "Snow activities", "Road trip", "Fishing", "Picnicking", "Explore town"],
         required: [true, "Genre must be required"]
     },
     spots: {
