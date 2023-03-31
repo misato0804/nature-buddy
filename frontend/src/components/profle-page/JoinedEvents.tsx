@@ -3,11 +3,12 @@ import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 import {Box, Stack} from "@mui/material";
 import {EventProps} from "@/types/Props";
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
+import ActivityBlockWithoutFavourite from "@/components/elements/molecules/ActivityBlockWithoutFavourite";
 
 const JoinedEvents = ({activities}: EventProps) => {
 
     const RenderActivities = activities?.map(activity => (
-        <ActivityBlock
+        <ActivityBlockWithoutFavourite
             key={activity._id}
             props={activity}
         />

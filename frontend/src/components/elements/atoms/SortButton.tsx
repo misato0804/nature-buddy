@@ -5,40 +5,50 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 type SortButtonProps = {
     title: string,
-    sortedByArr: string[]
+    sortedByArr: string[],
+    setSortedBy :  React.Dispatch<React.SetStateAction<string>>
 }
 
-const SortButton = ({title,sortedByArr}: SortButtonProps) => {
+const SortButton = ({title, sortedByArr, setSortedBy}: SortButtonProps) => {
 
     const [clicked, setClicked] = useState<boolean>(false)
 
     const containerStyle = {
         display: "flex",
-        justifyContent:"center",
+        justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E5E4E2",
         borderRadius: "25px",
-        py:"0.3rem",
-        position:"relative",
-        width:"100%",
-        zIndex:"100",
-    }
-
-    const clickSortHandler = () => {
-
+        py: "0.3rem",
+        position: "relative",
+        width: "100%",
+        zIndex: "100",
+        cursor: 'pointer'
     }
 
     return (
         <Box sx={containerStyle} onClick={() => setClicked(!clicked)}>
             <Typography variant="subtitle1" fontWeight="500">{title}</Typography>
             {clicked ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
-            <Box sx={{display :clicked ? "block" : "none", boxShadow: 4, backgroundColor:"#fff",position:"absolute", top:45, py:2, width:"100%", zIndex:"101"}}>
+            <Box sx={{
+                display: clicked ? "block" : "none",
+                boxShadow: 4,
+                backgroundColor: "#fff",
+                position: "absolute",
+                top: 45,
+                py: 2,
+                width: "100%",
+                zIndex: "101"
+            }}>
                 {sortedByArr.map(item =>
                     <Typography
                         color="grey"
                         key={item}
-                        onClick={() => {}}
-                        sx={{px:3, py:1.2, cursor:"pointer", ":hover":{backgroundColor:"#E5E4E2"}}}
+                        title={item}
+                        onClick={(e) => {
+                            setSortedBy(e.currentTarget.title)
+                        }}
+                        sx={{px: 3, py: 1.2, cursor: "pointer", ":hover": {backgroundColor: "#E5E4E2"}}}
                     >{item}
                     </Typography>
                 )}

@@ -9,12 +9,6 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {MongoDBAdapter} from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/util/mongoClient";
 
-/**
- * TODO: password hash compare
- * @param req
- * @param res
- */
-
 const nextAuthOptions = async (req: NextApiRequest, res: NextApiResponse) => {
     return {
         adapter: MongoDBAdapter(clientPromise, {

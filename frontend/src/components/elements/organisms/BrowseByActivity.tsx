@@ -6,6 +6,10 @@ import {useRouter} from "next/router";
 
 const BrowseByActivity = () => {
     const router = useRouter()
+    const modifyQuery = (genre: string) => {
+        const query = genre.toLowerCase().replace(' ', '-')
+        return query
+    }
 
     return (
         <Box
@@ -19,10 +23,9 @@ const BrowseByActivity = () => {
         >
             <Container >
                 <Typography variant="h3">Browse by genre</Typography>
-                <Stack spacing={3} direction="row" justifyContent="space-between" sx={{width:"100%", overflow:"scroll"}}>
-
+                <Stack spacing={5} direction="row" justifyContent="space-between" sx={{width:"100%", overflow:"scroll"}}>
                 {activitiesList.map((activity) => (
-                    <Box key={activity.id} sx={{cursor:"pointer"}} onClick={() => {router.push(`/${activity.title.toLowerCase()}`)}}>
+                    <Box key={activity.id} sx={{cursor:"pointer"}} onClick={() => {router.push(`/${modifyQuery(activity.title)}`)}}>
                         <Image
                             src={activity.image}
                             alt="activity"

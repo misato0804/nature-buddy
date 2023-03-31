@@ -3,10 +3,10 @@ import INotification from "./types/INotification";
 import IOnlineUser from "./types/IOnlineUser";
 
 //Should update whenever user connects or leaves
-let onLineUsers : IOnlineUser[] = [];
+let onLineUsers: IOnlineUser[] = [];
 
 const addNewUser = (user: IOnlineUser, socket_id: string) => {
-    !onLineUsers.some((onlineUser: IOnlineUser) => user.email === onlineUser.email )
+    !onLineUsers.some((onlineUser: IOnlineUser) => user.email === onlineUser.email)
     && onLineUsers.push({...user, socket_id})
 }
 
@@ -25,15 +25,22 @@ const Sockets = (io: Server) => {
             console.log(onLineUsers)
         })
 
-        socket.on('send_ask_to_join', (notification : INotification) => {
+        socket.on('test', (data) => {
+                console.log(data)
+            io.emit('test_back', data)
+            }
+        )
+
+        socket.on('send_ask_to_join', (notification: INotification) => {
             const receiver = getUser(notification.host.email)
-            if(receiver?.socket_id) {
-                io.to(receiver?.socket_id).emit('get_asked_to_join',  notification)
+            if (receiver?.socket_id) {
+                io.to(receiver?.socket_id).emit('get_asked_to_join', notification)
             }
         })
         socket.on('send_approval', (notification: INotification) => {
+            console.log('get socket')
             const sender = getUser(notification.sender.email)
-            if(sender?.socket_id) {
+            if (sender?.socket_id) {
                 io.to(sender?.socket_id).emit('get_approval', notification)
             }
         })

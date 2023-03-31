@@ -39,7 +39,7 @@ const LoginInputChild = ({setChildComponent}: Props) => {
         await signIn("credentials", {
             email,
             password,
-            callbackUrl: `/user`,
+            callbackUrl: `/`,
         });
         setEmail("")
         setPassword("")

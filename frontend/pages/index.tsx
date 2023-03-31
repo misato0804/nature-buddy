@@ -4,11 +4,6 @@ import {getSession, useSession} from "next-auth/react";
 import ProtectedHero from "@/components/hero-page/ProtectedHero";
 import {GetServerSidePropsContext} from "next";
 import {IUserModel} from "@/lib/util/schema";
-import {useEffect, useState} from "react";
-import {useNotificationContext} from "@/lib/context/socketContext";
-import {INotification} from "@/types/INotification";
-import {IUser} from "@/types/IUser";
-import mongoose from "mongoose";
 
 type UserProps = {
     user: IUserModel
@@ -16,21 +11,6 @@ type UserProps = {
 
 export default function Home({user}: UserProps) {
     const {data: session, status} = useSession()
-    const {askingUser, setAskingUser, socket} = useNotificationContext()
-
-
-    useEffect(() => {
-        askingUser.name && askingUser.email && socket.emit('newUser', askingUser)
-
-    }, [socket])
-
-    useEffect(() => {
-        session?.user && setAskingUser({
-            ...askingUser,
-            name: session.user.name!,
-            email: session.user.email!
-        })
-    }, [session])
 
     if (status === "loading") {
         return <h1>Loading...</h1>
@@ -45,7 +25,7 @@ export default function Home({user}: UserProps) {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             {
-                session ? <ProtectedHero user={user}/> : <Hero/>
+                session && user ? <ProtectedHero user={user}/> : <Hero/>
             }
         </>
     )

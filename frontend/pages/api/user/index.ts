@@ -18,6 +18,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 .populate('hostedActivities')
                 .populate('favouriteActivities')
                 .populate('joinedActivities')
+
+            if(!user) {
+                res.status(200).json({
+                    status: "failed",
+                    data: {
+                        user
+                    }
+                })
+            }
+
             res.status(200).json({
                 status: "success",
                 data: {
@@ -33,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
     } else if (method === 'PATCH') {
         const {id, updateUser} = req.body
-        console.log(updateUser)
+        console.log('body',updateUser)
         try {
             const newUser = await User.updateMany({_id: id}, updateUser)
             res.status(200).json({

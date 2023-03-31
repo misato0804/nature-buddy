@@ -3,21 +3,24 @@ import {Box, Container, Stack, Typography} from "@mui/material";
 import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 import BrowseByActivity from "@/components/elements/organisms/BrowseByActivity";
 import StickyButton from "@/components/elements/atoms/StickyButton";
-import {IActivityModel} from "@/lib/util/activitySchema";
 import NoEventBlock from '../elements/molecules/NoEventBlock';
 import {IActivityProps} from "@/types/Props";
+import ActivityBlockWithoutFavourite from "@/components/elements/molecules/ActivityBlockWithoutFavourite";
+import sortByDate from "@/lib/helpers/sortByDate";
 
 const ProtectedHero = ({user}: any) => {
 
     const [upcomingActivities, setUpcomingActivities] = useState<IActivityProps[] | undefined>()
     const [loading, setLoading] = useState<boolean>(true)
 
+    console.log(user)
 
     useEffect(() => {
         async function getUpcoming() {
-            const res = await fetch('/api/activities/upcomingActivities')
+            const res = await fetch(`/api/user/${user._id}/upcomingActivities`)
             const events = await res.json()
-            setUpcomingActivities(events.data)
+            const sortedEvent = sortByDate(events.data)
+            setUpcomingActivities(sortedEvent)
             setLoading(false)
         }
         getUpcoming()
@@ -34,7 +37,7 @@ const ProtectedHero = ({user}: any) => {
         return activities[0]
     }
 
-    const isFavourite = (activity: IActivityProps) => user.favouriteActivities.filter((favourite : any) => {
+    const isFavourite = (activity: IActivityProps) => user.favouriteActivities.filter((favourite: any) => {
         return favourite.title === activity.title
     })
 
@@ -46,30 +49,24 @@ const ProtectedHero = ({user}: any) => {
                     <Typography variant="h2">Your next activity</Typography>
                     {border}
                     <Box sx={{width: "100%"}}>
-                        {user.joinedActivities.length > 0 ? <ActivityBlock props={nextEvent(user.joinedActivities)}/> :
+                        {user.joinedActivities.length > 0 ? <ActivityBlockWithoutFavourite props={nextEvent(user.joinedActivities)}/> :
                             <NoEventBlock/>}
                     </Box>
                 </Box>
-
                 <Box className="my-buddies" sx={{mt: 3}}>
-                    <Typography variant="h2" my={2}>Upcoming activities</Typography>
-                    {border}
-                    <Stack spacing={3}>
-                        { loading ?
-                            <h1>Loading...</h1> :
-                            upcomingActivities?.map(activity =>
-                                isFavourite(activity).length !== 0 ? <ActivityBlock key={activity._id} props={activity} initialFavourite={true}/> : <ActivityBlock key={activity._id} props={activity}/>
-                            )
-                        }
-                    </Stack>
-                </Box>
-                <Box className="my-buddies" sx={{mt: 3}}>
-                    <Typography variant="h2" my={2}>Activities you are likely interested in</Typography>
-                    {border}
-                    <Stack spacing={3}>
-                        {/*  GET User interests    */}
-                    </Stack>
-                </Box>
+                <Typography variant="h2" my={2}>Upcoming activities</Typography>
+                {border}
+                <Stack spacing={3}>
+                    {loading ?
+                        <h1>Loading...</h1> :
+                        upcomingActivities?.map(activity =>
+                            isFavourite(activity).length !== 0 ?
+                                <ActivityBlock key={activity._id} props={activity} initialFavourite={true}/> :
+                                <ActivityBlock key={activity._id} props={activity}/>
+                        )
+                    }
+                </Stack>
+            </Box>
                 <BrowseByActivity/>
             </Box>
             <StickyButton/>

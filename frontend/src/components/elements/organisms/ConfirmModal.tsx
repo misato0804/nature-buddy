@@ -13,14 +13,9 @@ import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import {getDate} from "@/lib/helpers/dateModifyer";
 import {ILocation} from "@/types/ILocation";
 import {IActivity} from "@/types/IActivity";
-import {getCookie} from 'cookies-next';
 import {useRouter} from "next/router";
 import {ObjectId, Types} from "mongoose";
 import {useSession} from "next-auth/react";
-
-/**
- * TODO: Meetup Location
- */
 
 type ModalProps = {
     openModal: boolean,
@@ -57,17 +52,26 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
         })
     }, [meetingPoint])
 
-    const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault()
-        const formData = new FormData()
-        fileData && formData.append("file", fileData[0])
-        formData.append('upload_preset', 'nature-buddy')
-        try {
+    useEffect(() => {
+        const uploadData = async () => {
+            const formData = new FormData()
+            fileData && formData.append("file", fileData[0])
+            formData.append('upload_preset', 'nature-buddy')
             const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
                 method: "POST",
                 body: formData
             })
-            await resFromCloudinary.json().then(result => activity.setCoverImage(result.secure_url))
+            const fileDataRes = await resFromCloudinary.json()
+            await activity.setCoverImage(fileDataRes.secure_url)
+        }
+
+        fileData !== undefined && uploadData()
+    }, [fileData])
+
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        try {
             const newEvent: IActivity = {
                 ...activity,
                 host: new Types.ObjectId(userId as string)
@@ -79,8 +83,25 @@ const ConfirmModal = ({openModal, setOpenModal, uploadDate, fileData, meetingPoi
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(res)
+
             if (res.status === 200) {
+                activity.setTitle('')
+                activity.setDate(new Date())
+                activity.setEndDate(new Date())
+                activity.setDescription('')
+                activity.setDuration('')
+                activity.setMeetingDetail({
+                    meetingPoint: {
+                        type: "spot",
+                        address: "",
+                        place_id: "",
+                        coordinates: [0,0]
+                    },
+                    meetingTime: new Date()
+                })
+                activity.setGenre('')
+                activity.setSpots(0)
+                activity.setCoverImage('')
                 await router.push(`/`)
             }
         } catch (e: any) {

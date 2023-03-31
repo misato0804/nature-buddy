@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import ActivityBlock from "@/components/elements/molecules/ActivityBlock";
 import {Box, Stack} from "@mui/material";
 import {EventProps, IActivityProps} from "@/types/Props";
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
+import ActivityBlockWithoutFavourite from "@/components/elements/molecules/ActivityBlockWithoutFavourite";
 
 const FavouriteEvents = ({activities}: EventProps) => {
 
@@ -17,10 +17,9 @@ const FavouriteEvents = ({activities}: EventProps) => {
     }, [activities])
 
     const RenderActivities = favourites?.map(activity => (
-        <ActivityBlock
+        <ActivityBlockWithoutFavourite
             key={activity._id}
             props={activity}
-            initialFavourite={true}
         />
     ))
 

@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Container,  MenuItem, Paper, Stack, TextField, Typography} from "@mui/material";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {activitiesList} from "@/lib/util/activitiesList";
@@ -10,7 +10,6 @@ import initialActivityError from "@/lib/helpers/initialActivityError";
 import {dateValidation, getCurrentTime, getDate, modifier, stringToDate} from "@/lib/helpers/dateModifyer";
 import {getSession, useSession} from "next-auth/react";
 import {ILocation} from "@/types/ILocation";
-import {useRouter} from "next/router";
 import {GetServerSidePropsContext} from "next";
 import {IUserModel} from "@/lib/util/schema";
 
@@ -60,7 +59,6 @@ const CreateGathering = ({user}: UserProps) => {
             ...errorObj,
             image: {error: true}
         })
-        console.log(errorObj.image)
     }
 
     const titleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {

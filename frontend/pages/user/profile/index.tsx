@@ -22,10 +22,6 @@ type UserProps = {
 
 const Profile = ({user}: UserProps) => {
 
-    useEffect(()=> {
-
-    }, [user.favouriteActivities])
-
     const router = useRouter()
     const [showEvents, setShowEvents] = useState<JSX.Element>(<JoinedEvents
         activities={user.joinedActivities as IActivityProps[]}/>)
@@ -67,7 +63,8 @@ const Profile = ({user}: UserProps) => {
                                 backgroundImage: `url(${user.image as string})`,
                                 borderRadius: '50%',
                                 backgroundRepeat: 'no-repeat',
-                                backgroundSize: 'contain',
+                                backgroundSize: 'cover',
+                                backgroundPosition:'center',
                                 marginX: {xs: 'auto', md: '0'}
                             }}>
                         </Box> :

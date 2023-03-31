@@ -42,7 +42,17 @@ const Activity = ({activity}: PageProps) => {
     const {data: session} = useSession()
     const [asked, setAsked] = useState<boolean>(false)
 
-    console.log(activity)
+    const canAsk = (email: string, activity: IActivityProps) => {
+        const isHost = activity.host.email === email
+        const joinedBuddy = activity.buddies?.forEach(item => {
+            return item.email === email
+        })
+        if(isHost || joinedBuddy) {
+            return false
+        }
+        return true
+    }
+
 
     useEffect(() => {
         setNotification({
@@ -84,6 +94,12 @@ const Activity = ({activity}: PageProps) => {
         return new Date(date).toLocaleString()
     }
 
+    const imageUrl = 'https://res.cloudinary.com/dpbmhiqim/image/upload/v1677308198/cld-sample-5.jpg'
+
+    const renderBuddy = (buddies: any[]) => {
+        return buddies.map( buddy => <BuddyIcon key={buddy._id} buddy_id={buddy._id} src={buddy.image ? buddy.image : imageUrl}/>)
+    }
+
     const lat = activity.meetingDetail.meetingPoint.coordinates[0] as number
     const lng = activity.meetingDetail.meetingPoint.coordinates[1] as number
     const center: CenterCoordinate = {
@@ -94,7 +110,6 @@ const Activity = ({activity}: PageProps) => {
     if (!activity) {
         return <h1>Loading...</h1>
     }
-
     return (
         <Container sx={{mt: {xs: 14, sm: 12}}}>
             <Typography variant="h4">{getLocalDate(activity.date)}</Typography>
@@ -119,7 +134,7 @@ const Activity = ({activity}: PageProps) => {
 
                     <Typography variant="h4">Your buddies</Typography>
                     <Stack direction="row" spacing={5} py={2}>
-                        {activity.buddies?.length! > 0 ? <>Hello</> :
+                        {activity.buddies?.length! > 0  && activity.buddies ? renderBuddy(activity.buddies) :
                             <Typography variant="subtitle1">No buddies has joined yet</Typography>}
                     </Stack>
                     <Stack direction="row" spacing={2} justifyContent="space-around" my={3}>
@@ -150,9 +165,11 @@ const Activity = ({activity}: PageProps) => {
                         </Box>
                     </Container>
                     <GoogleMapComponent containerStyle={containerStyle} center={center} zoom={13}/>
-                     <TriggerButton title="Ask to join" color="green"
-                                             style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}
-                                             onClick={AskToJoin}/>
+                    {session?.user?.email && canAsk(session?.user?.email, activity) ? <TriggerButton title="Ask to join" color="green"
+                        style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}
+                        onClick={AskToJoin}/> : <TriggerButton title='You already joined' color='grey' style={{width: "80%", marginX: "auto", marginY: 2, borderRadius: "5px"}}/>}
+
+
                 </Box>
 
             </Stack>

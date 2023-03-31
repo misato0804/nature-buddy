@@ -6,15 +6,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method } = req;
     let { genre } = req.query;
     genre = genre as string
-    genre = genre!.charAt(0).toUpperCase() + genre.slice(1)
+    genre = genre!.charAt(0).toUpperCase() + genre.slice(1).replace('-', ' ')
     await dbConnect();
     if(method === "GET") {
         try {
             const activities = await Activity.find({genre})
-            console.log(activities)
+            const today = new Date().getTime()
+            const upcoming = activities.filter(activity => {
+                const eventDate = new Date(activity.date).getTime()
+                return eventDate > today
+            })
             res.status(200).json({
                 status:"success",
-                data: activities
+                data: upcoming
             })
         } catch (e: any) {
             res.status(400).json({
