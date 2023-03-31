@@ -61,7 +61,7 @@ const Footer = () => {
                             <Link href='https://github.com/misato0804/nature-buddy'
                                   style={{textDecoration: 'none'}}><TriggerButton title={"Go to Github"}
                                                                                   color={"black"}/></Link>
-                            <Link href='https://github.com/misato0804/nature-buddy'
+                            <Link href='https://linkedin.com/in/misato-tanno-a2b475221'
                                   style={{textDecoration: 'none'}}><TriggerButton title={"Created by"} color={"black"}/></Link>
                         </Stack>
                     </Box>

@@ -8,6 +8,7 @@ import {IActivityProps} from "@/types/Props";
 import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {getNextWeekend, getThisSunday, getTomorrow} from "@/lib/helpers/getThisSunday";
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
+import sortByDate from "@/lib/helpers/sortByDate";
 
 type PageProps = {
     activities: IActivityProps[]
@@ -20,6 +21,7 @@ const Activity = ({activities}: PageProps) => {
     genre = genre!.charAt(0).toUpperCase() + genre.slice(1)
     const [shownActivities, setShowActivities] = useState<IActivityProps[] | undefined>()
     const [sortedBy, setSortedBy] = useState<string>('')
+    const [numberOfDisplay, setNumberOfDisplay] = useState<number>(5)
 
     const sortActivities = (sortedBy: string, activities: IActivityProps[]) => {
         switch (sortedBy) {
@@ -29,7 +31,7 @@ const Activity = ({activities}: PageProps) => {
                     const eventDate = new Date(item.date).toLocaleDateString()
                     return tomorrow === eventDate
                 })
-                return setShowActivities(newArrOfTomorrow)
+                return setShowActivities(sortByDate(newArrOfTomorrow))
             case 'this weekend':
                 const newArr = activities.filter(item => {
                     const activityDate = new Date(item.date).getTime()
@@ -37,7 +39,7 @@ const Activity = ({activities}: PageProps) => {
                     const activityDateNum = new Date(item.date).getDay()
                     return thisWeekends - activityDate > 0 && (activityDateNum == 6 || activityDateNum == 0)
                 })
-                return setShowActivities(newArr)
+                return setShowActivities(sortByDate(newArr))
             case 'next week':
                 const newArrOfNextWeek = activities.filter(item => {
                     const activityDate = new Date(item.date).getTime()
@@ -45,33 +47,33 @@ const Activity = ({activities}: PageProps) => {
                     const nextWeekends = getNextWeekend()
                     return activityDate > thisWeekends && nextWeekends > activityDate
                 })
-                return setShowActivities(newArrOfNextWeek)
+                return setShowActivities(sortByDate(newArrOfNextWeek))
             case '3 〜 5':
                 const groupOf3Arr = activities.filter(item => {
                     return item.spots >= 3 && item.spots < 6
                 })
-                return  setShowActivities(groupOf3Arr)
+                return  setShowActivities(sortByDate(groupOf3Arr))
             case '5 〜 10':
                 const groupOf5Arr = activities.filter(item => {
                     return item.spots >= 5 && item.spots < 11
                 })
-                return  setShowActivities(groupOf5Arr)
+                return  setShowActivities(sortByDate(groupOf5Arr))
             case '10 〜 ':
                 const groupOf10Arr = activities.filter(item => {
                     return item.spots >= 10
                 })
-                return  setShowActivities(groupOf10Arr)
+                return  setShowActivities(sortByDate(groupOf10Arr))
         }
 
     }
 
     const onClear = () => {
-        setShowActivities(activities)
+        setShowActivities(sortByDate(activities))
         setSortedBy('')
     }
 
     useEffect(() => {
-        setShowActivities(activities)
+        setShowActivities(sortByDate(activities))
     }, [])
 
     useEffect(() => {
@@ -99,7 +101,7 @@ const Activity = ({activities}: PageProps) => {
             </Stack>
             <hr/>
             <Stack direction='column' my={3} spacing={3}>
-                {shownActivities.length !== 0 ? shownActivities.map(activity => (
+                {shownActivities.length !== 0 ? shownActivities.slice(0,5).map(activity => (
                     <Box key={activity._id}>
                         <ActivityBlock props={activity}/>
                     </Box>

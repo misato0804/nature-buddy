@@ -11,10 +11,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if(method === "GET") {
         try {
             const activities = await Activity.find({genre})
-            console.log(activities)
+            const today = new Date().getTime()
+            const upcoming = activities.filter(activity => {
+                const eventDate = new Date(activity.date).getTime()
+                return eventDate > today
+            })
             res.status(200).json({
                 status:"success",
-                data: activities
+                data: upcoming
             })
         } catch (e: any) {
             res.status(400).json({

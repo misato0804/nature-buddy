@@ -34,7 +34,6 @@ const UserSchema : Schema  = new mongoose.Schema<IUserModel>({
     },
     interests: {
         type: [String],
-        enum: Genre,
         required: [true, 'Interests must be provided'],
     },
     location: {

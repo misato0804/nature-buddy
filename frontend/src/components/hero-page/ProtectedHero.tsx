@@ -6,6 +6,7 @@ import StickyButton from "@/components/elements/atoms/StickyButton";
 import NoEventBlock from '../elements/molecules/NoEventBlock';
 import {IActivityProps} from "@/types/Props";
 import ActivityBlockWithoutFavourite from "@/components/elements/molecules/ActivityBlockWithoutFavourite";
+import sortByDate from "@/lib/helpers/sortByDate";
 
 const ProtectedHero = ({user}: any) => {
 
@@ -16,10 +17,10 @@ const ProtectedHero = ({user}: any) => {
         async function getUpcoming() {
             const res = await fetch(`/api/user/${user._id}/upcomingActivities`)
             const events = await res.json()
-            setUpcomingActivities(events.data)
+            const sortedEvent = sortByDate(events.data)
+            setUpcomingActivities(sortedEvent)
             setLoading(false)
         }
-
         getUpcoming()
     }, [])
 

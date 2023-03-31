@@ -24,7 +24,7 @@ export interface IUser {
     introduction?: string,
     password?: string,
     passwordConfirm?: string,
-    interests: Genre[],
+    interests: string[],
     location: ILocation,
     socialMediaHandles?: socialMedias,
     image?: string | null,

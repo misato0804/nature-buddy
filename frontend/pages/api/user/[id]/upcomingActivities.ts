@@ -11,9 +11,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const filteredArr = await allActivities.filter( activity => {
             return activity.host._id !== id && !activity.buddies.includes(id)
         })
-        res.status(200).json({
+        const today = new Date().getTime()
+        const upcoming = filteredArr.filter(activity => {
+            const eventDate = new Date(activity.date).getTime()
+            return eventDate > today
+        })
+            res.status(200).json({
             status: 'success',
-            data: filteredArr
+            data: upcoming
         })
     } catch (e: any) {
         console.log(e)
