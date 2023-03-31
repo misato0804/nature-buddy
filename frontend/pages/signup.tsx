@@ -1,12 +1,12 @@
 import {useEffect, useState} from "react";
-import mountain from "../public/assets/images/climbing.jpg";
 import FormTemplate from "@/components/elements/organisms/FormTemplate";
 import SignupTopChild from "@/components/signup-page/SignupTop.child";
 import SignupInputChild from "@/components/signup-page/SignupInput.child";
 import SignupLocationChild from "@/components/signup-page/SignupLocation.child";
 import SignupInterestChild from "@/components/signup-page/SignupInterest.child";
 import { useSession} from "next-auth/react";
-import { signOut } from "next-auth/react";
+import create from "../public/assets/images/createEventTop.jpg";
+
 
 const Signup = () => {
 
@@ -39,7 +39,7 @@ const Signup = () => {
     }
 
     return (
-        <FormTemplate image={mountain} childComponent={child(childComponent)}/>
+        <FormTemplate image={create} childComponent={child(childComponent)}/>
     );
 };
 

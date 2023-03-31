@@ -4,8 +4,6 @@ import {getSession, useSession} from "next-auth/react";
 import ProtectedHero from "@/components/hero-page/ProtectedHero";
 import {GetServerSidePropsContext} from "next";
 import {IUserModel} from "@/lib/util/schema";
-import {useEffect, useState} from "react";
-import {useNotificationContext} from "@/lib/context/socketContext";
 
 type UserProps = {
     user: IUserModel
@@ -27,7 +25,7 @@ export default function Home({user}: UserProps) {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             {
-                session ? <ProtectedHero user={user}/> : <Hero/>
+                session && user ? <ProtectedHero user={user}/> : <Hero/>
             }
         </>
     )

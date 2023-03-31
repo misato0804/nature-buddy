@@ -22,7 +22,7 @@ theme.breakpoints.values = {
 
 theme.typography.h1 = {
     fontFamily: prompt.style.fontFamily,
-    fontSize: '1.2rem',
+    fontSize: '1.8rem',
     fontWeight: 900,
     [theme.breakpoints.up("sm")]: {
         fontSize: "2.4rem",
@@ -34,41 +34,41 @@ theme.typography.h1 = {
 
 theme.typography.h2 = {
     fontFamily: prompt.style.fontFamily,
-    fontSize: '1rem',
-    [theme.breakpoints.up("sm")]: {
-        fontSize: "1.5rem"
-    }
-}
-
-theme.typography.h3 = {
-    fontFamily: prompt.style.fontFamily,
     fontSize: '1.5rem',
     [theme.breakpoints.up("sm")]: {
         fontSize: "2rem"
     }
 }
 
+theme.typography.h3 = {
+    fontFamily: prompt.style.fontFamily,
+    fontSize: '1.2rem',
+    [theme.breakpoints.up("sm")]: {
+        fontSize: "1.8rem"
+    }
+}
+
 theme.typography.h4 = {
     fontFamily: prompt.style.fontFamily,
-    fontSize: '.8rem',
+    fontSize: '1rem',
     fontWeight: 500,
     [theme.breakpoints.up("sm")]: {
-        fontSize: "1.0rem",
+        fontSize: "1.2rem",
     },
     [theme.breakpoints.up("md")]: {
-        fontSize: "1.2rem"
+        fontSize: "1.4rem"
     },
 }
 
 theme.typography.h5 = {
     fontFamily: prompt.style.fontFamily,
-    fontSize: '.6rem',
+    fontSize: '.8rem',
     fontWeight: 500,
     [theme.breakpoints.up("sm")]: {
-        fontSize: ".8rem",
+        fontSize: "1rem",
     },
     [theme.breakpoints.up("md")]: {
-        fontSize: "1.0rem"
+        fontSize: "1.2rem"
     },
 }
 
@@ -83,8 +83,6 @@ theme.typography.h6 = {
         fontSize: "1.0rem"
     },
 }
-
-
 
 
 export default theme;

@@ -1,6 +1,5 @@
-import {useSession} from "next-auth/react"
 import {useEffect, useState} from "react";
-import mountain from "../public/assets/images/climbing.jpg";
+import create from "../public/assets/images/createEventTop.jpg";
 import FormTemplate from "@/components/elements/organisms/FormTemplate";
 import LoginTopChild from "@/components/login-page/LoginTop.child";
 import LoginInputChild from "@/components/login-page/LoginInput.child";
@@ -20,7 +19,7 @@ const Login = () => {
     }
 
     return (
-        <FormTemplate image={mountain} childComponent={LoginChild(childComponent)}/>
+        <FormTemplate image={create} childComponent={LoginChild(childComponent)}/>
     );
 };
 

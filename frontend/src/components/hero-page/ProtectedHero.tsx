@@ -13,6 +13,8 @@ const ProtectedHero = ({user}: any) => {
     const [upcomingActivities, setUpcomingActivities] = useState<IActivityProps[] | undefined>()
     const [loading, setLoading] = useState<boolean>(true)
 
+    console.log(user)
+
     useEffect(() => {
         async function getUpcoming() {
             const res = await fetch(`/api/user/${user._id}/upcomingActivities`)
@@ -65,13 +67,6 @@ const ProtectedHero = ({user}: any) => {
                     }
                 </Stack>
             </Box>
-                <Box className="my-buddies" sx={{mt: 3}}>
-                    <Typography variant="h2" my={2}>Activities you are likely interested in</Typography>
-                    {border}
-                    <Stack spacing={3}>
-                        {/*  GET User interests    */}
-                    </Stack>
-                </Box>
                 <BrowseByActivity/>
             </Box>
             <StickyButton/>

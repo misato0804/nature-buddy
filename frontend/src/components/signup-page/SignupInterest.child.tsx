@@ -26,6 +26,7 @@ const SignupInterestChild = () => {
         location, name, email, password, interests, setName, setEmail,
         setInterests, setLocation, setPasswordConfirm, setPassword
     } = useUserContext()
+    const [userData, setUserData] = useState<IUser|undefined>()
 
     useEffect(() => {
         if(session && session.user) {
@@ -33,6 +34,14 @@ const SignupInterestChild = () => {
             setEmail(session.user?.email as string)
         }
     }, [])
+
+    useEffect(() => {
+        if(session?.user?.image) {
+            setUserData({...userData, name, email, password, interests, location, image: session.user.image})
+        }
+        setUserData({...userData, name, email, password, interests, location})
+
+    }, [session])
 
     const handleSubmit = async () => {
         const body: IUser = {

@@ -26,10 +26,11 @@ const UserEdit = ({user}: UserProps) => {
     const [updateUser, setUpdateUser] = useState<IUser>(user)
     const [updateLocation, setUpdateLocation] = useState<ILocation>(user.location)
 
-    // setUpdateUser({...updateUser, socialMediaHandles: {twitter:'sss'}})
-
     useEffect(() => {
-        setUpdateUser({...updateUser, socialMediaHandles: {Twitter: {link:""}, Facebook:{link:""},Instagram:{link:""}}})
+        setUpdateUser({
+            ...updateUser,
+            socialMediaHandles: {Twitter: {link: ""}, Facebook: {link: ""}, Instagram: {link: ""}}
+        })
     }, [])
 
     const imageChangeBtn = (
@@ -60,20 +61,24 @@ const UserEdit = ({user}: UserProps) => {
         e.target.files && reader.readAsDataURL(e.target.files[0] as any)
     }
 
-    const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault()
-        const formData = new FormData()
-        fileData && formData.append("file", fileData[0])
-        formData.append('upload_preset', 'nature-buddy')
-        try {
+    useEffect(() => {
+        const changeImageData = async () => {
+            const formData = new FormData()
+            fileData && formData.append("file", fileData[0])
+            formData.append('upload_preset', 'nature-buddy')
             const resFromCloudinary = await fetch("https://api.cloudinary.com/v1_1/dpbmhiqim/image/upload", {
                 method: "POST",
                 body: formData
             })
-            await resFromCloudinary.json().then(result => {
-                setUpdateUser({...updateUser, image: result.secure_url})
-            })
-        console.log(updateUser)
+            const fileDataRes = await resFromCloudinary.json()
+            await setUpdateUser(prev => ({...prev, image: fileDataRes.secure_url}))
+        }
+        fileData !== undefined && changeImageData()
+    }, [fileData])
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        try {
             const res = await fetch('/api/user', {
                 method: "PATCH",
                 body: JSON.stringify({
@@ -84,7 +89,6 @@ const UserEdit = ({user}: UserProps) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(res)
             res.status === 200 && await router.push('/user/profile')
         } catch (e: any) {
             console.log(e)

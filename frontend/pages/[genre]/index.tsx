@@ -9,6 +9,8 @@ import TriggerButton from "@/components/elements/atoms/TriggerButton";
 import {getNextWeekend, getThisSunday, getTomorrow} from "@/lib/helpers/getThisSunday";
 import NoEventBlock from "@/components/elements/molecules/NoEventBlock";
 import sortByDate from "@/lib/helpers/sortByDate";
+import {signOut, useSession} from "next-auth/react"
+
 
 type PageProps = {
     activities: IActivityProps[]
@@ -87,6 +89,7 @@ const Activity = ({activities}: PageProps) => {
     return (
         <Container component="main" sx={{mt: {xs: 14, sm: 6}}} maxWidth="lg">
             <Typography variant="h1" mt={8} mb={3}>{genre}</Typography>
+            {/*<h1 onClick={() => {signOut()}}>SIGN OUT</h1>*/}
             <Stack
                 width={{xs: '100%', md: '50%'}}
                 direction='row'

@@ -6,10 +6,12 @@ import {Activity} from "@/lib/util/activitySchema";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await dbConnect()
     const {id} = req.query
+    console.log(req.query)
     try {
-        const allActivities = await Activity.find().populate('host')
+        const allActivities = await Activity.find()
         const filteredArr = await allActivities.filter( activity => {
-            return activity.host._id !== id && !activity.buddies.includes(id)
+
+            return activity.host._id.toString() !== id && !activity.buddies.includes(id)
         })
         const today = new Date().getTime()
         const upcoming = filteredArr.filter(activity => {

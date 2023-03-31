@@ -27,6 +27,8 @@ const BuddyProfile = ({user}: PageProps) => {
     const [showEvents, setShowEvents] = useState<JSX.Element>(<JoinedEvents
         activities={sortByDate(user.joinedActivities as IActivityProps[])}/>)
 
+    console.log(user.image)
+
     useEffect(() => {
         user ? null : router.push('/error')
     }, [])
@@ -47,7 +49,6 @@ const BuddyProfile = ({user}: PageProps) => {
             </Typography>
         )
     }
-
 
     return (
         <Container sx={{mt: {xs: 14, sm: 12}}}>

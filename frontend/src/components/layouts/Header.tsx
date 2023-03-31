@@ -10,36 +10,55 @@ const Header = () => {
 
     const {data: session, status} = useSession()
     const router = useRouter()
-    const {socket, notification, setNotification, askingUser, setAskingUser, } = useNotificationContext()
+    const [userStatus, setUserStatus] = useState()
+    const {socket, notification, setNotification, askingUser, setAskingUser,} = useNotificationContext()
+
+    const existUser = async (email: string) => {
+        const user = await fetch('/api/user', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email})
+        })
+        const userData = await user.json()
+        await setUserStatus(userData.status)
+    }
+
+    const getUser = async (email: string) => {
+        const user = await fetch('/api/user/notification', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email})
+        })
+        const userData = await user.json()
+        setNotification(() => {
+            return userData.data.notifications.received.filter((item: INotification) => {
+                return item.replied === false
+            })
+        })
+    }
 
     useEffect(() => {
         askingUser.name && askingUser.email && socket.emit('newUser', askingUser)
     }, [socket])
 
     useEffect(() => {
+
         session?.user && setAskingUser({
             ...askingUser,
             name: session.user.name!,
             email: session.user.email!
         })
+        session && existUser(session.user?.email!)
+        userStatus === 'failed' ? signout(): null
 
-        const getUser = async (email: string) => {
-            const user = await fetch('/api/user/notification', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({email})
-            })
-            const userData = await user.json()
-            setNotification(() => {
-                return userData.data.notifications.received.filter((item: INotification)=> {
-                    return item.replied === false
-                })
-            })
-        }
-        session ? getUser(session.user?.email!) : null
+        session && userStatus === 'success' && getUser(session?.user?.email!)
+
     }, [session])
+
 
     const unauthorizedHeader = [
         {
@@ -84,7 +103,7 @@ const Header = () => {
                     </Link>
                 </Typography>
                 <Box sx={{display: {xs: 'none', sm: 'block'}}}>
-                    {session ?
+                    {session && userStatus === 'success' ?
                         <>
                             <Button key="profile" sx={{color: '#fff'}}>
                                 <Link href='/user/profile' style={{textDecoration: "none", color: "#fff"}}>
@@ -98,14 +117,14 @@ const Header = () => {
                                 <span
                                     style={{
                                         position: 'absolute',
-                                        width:'12px', height:'12px',
+                                        width: '12px', height: '12px',
                                         backgroundColor: 'red',
                                         borderRadius: '50%',
                                         right: 0,
-                                        top:2,
-                                        zIndex:0,
+                                        top: 2,
+                                        zIndex: 0,
                                         visibility: notification && notification.length > 0 ? 'visible' : 'hidden'
-                                }}></span>
+                                    }}></span>
                             </Button>
                         </>
                         :
@@ -117,7 +136,7 @@ const Header = () => {
                             </Button>
                         ))
                     }
-                    {session &&
+                    {session  && userStatus === 'success' &&
                         <Button sx={{color: '#fff', fontWeight: 600}} onClick={() => signout()}>SIGN OUT</Button>}
                 </Box>
             </Toolbar>
