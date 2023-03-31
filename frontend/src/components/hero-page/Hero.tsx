@@ -83,7 +83,7 @@ const Hero: FC = () => {
                                 <Typography variant='subtitle1' fontWeight={600}>First things first, why don&apos;t you
                                     create your account?</Typography>
                                 <TriggerButton title='create account' color='#4E8497'
-                                               style={{width: {sm:'50%'}, mt: 1}}/>
+                                               style={{width: {sm:'50%'}, mt: 1, ml:1}}/>
                             </Box>
                         </Box>
                         <Box width={"100%"}>
