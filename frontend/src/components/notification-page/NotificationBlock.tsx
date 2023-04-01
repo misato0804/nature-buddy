@@ -19,7 +19,6 @@ const NotificationBlock = ({notificationData}: pageProps) => {
     const [color, setColor] = useState('black')
     const [activityTitle, setActivityTitle] = useState<string>('')
     const [sendBackData, setSendBackData] = useState(notificationData)
-    const {socket} = useNotificationContext()
 
     useEffect(() => {
         const getBuddy = async (email: string) => {
@@ -44,7 +43,6 @@ const NotificationBlock = ({notificationData}: pageProps) => {
     }, [])
 
     const clickOnApprove = async () => {
-        socket.emit('send_approval', notificationData)
         await fetch('/api/notification', {
             method: 'PATCH',
             headers: {
