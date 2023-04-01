@@ -42,10 +42,6 @@ const Header = () => {
     }
 
     useEffect(() => {
-        askingUser.name && askingUser.email && socket.emit('newUser', askingUser)
-    }, [socket])
-
-    useEffect(() => {
 
         session?.user && setAskingUser({
             ...askingUser,
