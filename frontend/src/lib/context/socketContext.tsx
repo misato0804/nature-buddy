@@ -27,7 +27,7 @@ export const useNotificationContext = () => {
 
 export const NotificationProvider = ({children}: Props) => {
     const initialUser = {name: '', email: ''}
-    const socket = io('http://localhost:8080')
+    const socket = io(process.env.SOCKET_SERVER_URL as string)
     const [notification, setNotification] = useState<INotificationModel[] | undefined>([])
     const [askingUser, setAskingUser] = useState<IOnlineUser>(initialUser)
 
