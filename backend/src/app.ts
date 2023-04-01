@@ -11,6 +11,11 @@ dotenv.config()
 const app: Express = express();
 const port = process.env.PORT || 8080;
 
+const allowed_origins = [
+    "http://localhost:3000",
+    "https://nature-buddy-f5r5.vercel.app/",
+];
+
 // connectDB();
 app.use(morgan('tiny'));
 app.use(express.json());
@@ -27,7 +32,7 @@ const server = app.listen(port, () => {
 
 const io = new Server(server,{
     cors: {
-        origin: "http://localhost:3000"
+        origin: allowed_origins
     }
 });
 

@@ -9,7 +9,7 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {MongoDBAdapter} from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/util/mongoClient";
 
-const nextAuthOptions = async (req: NextApiRequest, res: NextApiResponse) => {
+export const nextAuthOptions = async (req: NextApiRequest, res: NextApiResponse) => {
     return {
         adapter: MongoDBAdapter(clientPromise, {
             databaseName: 'NatureBuddy'
