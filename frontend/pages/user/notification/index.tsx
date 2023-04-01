@@ -8,11 +8,8 @@ import {INotification} from "@/types/INotification";
 import NoNotificationBlock from "@/components/elements/molecules/NoNotificationBlock";
 import NotificationBlock from "@/components/notification-page/NotificationBlock";
 import {v4 as uuidv4} from 'uuid';
-import {useNotificationContext} from "@/lib/context/socketContext";
 import CheckedNotificationBlock from "@/components/notification-page/CheckedNotificationBlock";
 import GotPermission from "@/components/notification-page/GotPermission";
-import {useRouter} from "next/router";
-
 type pageProps = {
     user: {
         _id: string | mongoose.Types.ObjectId,
@@ -25,18 +22,6 @@ type pageProps = {
 }
 
 const Notification = ({user}: pageProps) => {
-    const {socket, notification} = useNotificationContext()
-    const router = useRouter()
-
-    useEffect(() => {
-        socket.on('get_asked_to_join', (data: INotification) => {
-            router.reload()
-        })
-
-        socket.on('get_approval', (data: INotification) => {
-            router.reload()
-        })
-    }, [socket])
 
     // New request
     const newRequestArr = (notifications: INotification[]) => {

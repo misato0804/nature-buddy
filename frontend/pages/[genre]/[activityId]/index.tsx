@@ -32,7 +32,7 @@ const containerStyle = {
 const Activity = ({activity}: PageProps) => {
 
     const [openModal, setOpenModal] = useState<boolean>(false)
-    const { askingUser, socket} = useNotificationContext()
+    const { askingUser} = useNotificationContext()
     const [notification, setNotification] = useState<INotification | undefined>()
     const [hostToAsk, setHostToAsk] = useState<IOnlineUser | undefined>({
         email: activity.host.email,
@@ -65,7 +65,6 @@ const Activity = ({activity}: PageProps) => {
 
     const AskToJoin = () => {
         const sendSubmission = async () => {
-            socket.emit('send_ask_to_join', notification)
             await fetch('/api/notification', {
                 method: 'POST',
                 headers: {
