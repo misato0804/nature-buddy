@@ -11,7 +11,7 @@ const Header = () => {
     const {data: session, status} = useSession()
     const router = useRouter()
     const [userStatus, setUserStatus] = useState()
-    const {socket, notification, setNotification, askingUser, setAskingUser,} = useNotificationContext()
+    const { notification, setNotification, askingUser, setAskingUser,} = useNotificationContext()
 
     const existUser = async (email: string) => {
         const user = await fetch('/api/user', {
