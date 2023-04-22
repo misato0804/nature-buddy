@@ -19,7 +19,6 @@ interface MyAppProps extends AppProps<{ session: Session }> {
 }
 
 export default function App({Component, pageProps, emotionCache = clientSideEmotionCache}: MyAppProps) {
-
     return (
         <>
             <CacheProvider value={emotionCache}>
