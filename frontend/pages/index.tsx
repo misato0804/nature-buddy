@@ -5,16 +5,9 @@ import ProtectedHero from "@/components/hero-page/ProtectedHero";
 import {GetServerSidePropsContext} from "next";
 import {IUserModel} from "@/lib/util/schema";
 
-type UserProps = {
-    user: IUserModel
-}
 
-export default function Home({user}: UserProps) {
-    const {data: session, status} = useSession()
 
-    if (status === "loading") {
-        return <h1>Loading...</h1>
-    }
+export default function Home() {
 
     return (
         <>
@@ -24,34 +17,7 @@ export default function Home({user}: UserProps) {
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
-            {
-                session && user ? <ProtectedHero user={user}/> : <Hero/>
-            }
+            <Hero/>
         </>
     )
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const session = await getSession(context)
-    if (!session) {
-        return {
-            props: {}
-        }
-    }
-    const email = session?.user?.email
-    const res = await fetch(`http://localhost:3000/api/user`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({email})
-    })
-    const result = await res.json()
-    const userData = result.data.user
-
-    return {
-        props: {
-            user: userData
-        }
-    }
 }

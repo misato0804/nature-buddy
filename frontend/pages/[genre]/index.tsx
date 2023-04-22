@@ -23,7 +23,7 @@ const Activity = ({activities}: PageProps) => {
     genre = genre!.charAt(0).toUpperCase() + genre.slice(1)
     const [shownActivities, setShowActivities] = useState<IActivityProps[] | undefined>()
     const [sortedBy, setSortedBy] = useState<string>('')
-    const {data: session} =useSession()
+    const {data: session} = useSession()
 
     const sortActivities = (sortedBy: string, activities: IActivityProps[]) => {
         switch (sortedBy) {
@@ -109,7 +109,7 @@ const Activity = ({activities}: PageProps) => {
                     </Box>
                 )) : <NoEventBlock/>}
             </Stack>
-            {session && < StickyButton/>}
+            {session && < StickyButton />}
         </Container>
     );
 };
@@ -118,7 +118,7 @@ export default Activity;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {genre} = context.query
-    const res = await fetch(`http://localhost:3000/api/activities/${genre}`)
+    const res = await fetch(`http://127.0.0.1:3000/api/activities/${genre}`)
     const data = await res.json()
     return {
         props: {
